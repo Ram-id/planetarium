@@ -19,6 +19,7 @@ interface PlanetInfo {
   orbitTime: string;
   scienceFact: string;
   reflectionNote: string;
+  challengeTitle: string;
   q: string;
   a1: string;
   a2: string;
@@ -62,14 +63,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     temp: "~5.500 °C",
     orbitTime: "230 Juta Tahun Galaksi",
     scienceFact:
-      "Matahari menyumbang 99,86% dari total massa tata surya. Reaksi fusi nuklir pada intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, menghasilkan energi radiasi yang sampai ke permukaan Bumi dalam waktu 8 menit 20 detik.",
+      "Matahari menyumbang 99,86% dari total massa tata surya. Reaksi fusi nuklir pada intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan foton yang mencapai orbit pengamat dalam 8 menit 20 detik.",
     reflectionNote:
       "Sebagaimana Matahari yang menjadi jangkar gravitasi dan sumber kehangatan bagi seluruh orbit di sekelilingnya, kehadiranmu senantiasa menghadirkan ketenangan, semangat, dan arah yang jernih dalam setiap hariku.",
+    challengeTitle: "MISI SEKTOR 1: Kalibrasi Frekuensi Reaktor Foton",
     q: "Berapa lama waktu yang dibutuhkan cahaya dari pusat tata surya untuk mencapai orbit pengamat?",
     a1: "8 Menit 20 Detik Cahaya",
     a2: "Seketika sejak pertama kali kita saling mengenal",
     correct: 2,
-    msg: "Observasi tepat: Kehadiranmu senantiasa memberi kehangatan dan ketenangan.",
+    msg: "Kalibrasi berhasil! Koordinat Hyperdrive ke Sektor 2 (Merkurius) telah terbuka.",
     icon: "☀️",
   },
   Merkurius: {
@@ -82,14 +84,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     temp: "-180 °C hingga +430 °C",
     orbitTime: "88 Hari Bumi",
     scienceFact:
-      "Merkurius mengorbit dengan kecepatan rata-rata 47,4 km/detik, menjadikannya planet dengan revolusi tercepat. Karena tidak memiliki atmosfer tebal untuk menahan panas, fluktuasi suhunya merupakan yang paling ekstrem.",
+      "Merkurius mengorbit dengan kecepatan 47,4 km/detik. Tanpa atmosfer tebal untuk memerangkap panas, fluktuasi suhunya merupakan yang paling ekstrem di tata surya.",
     reflectionNote:
-      "Di planet dengan laju revolusi tercepat ini, kita tersadar betapa berharganya setiap momen. Waktu selalu terasa berlalu begitu cepat saat kita berbagi cerita dan tawa.",
+      "Di planet dengan laju revolusi tercepat ini, kita tersadar betapa berharganya setiap waktu. Detik demi detik obrolan bersamamu selalu berlalu begitu cepat dan berharga.",
+    challengeTitle: "MISI SEKTOR 2: Penyelarasan Sensor Termal Ekstrem",
     q: "Mengapa perputaran waktu terasa begitu singkat saat kita berbincang?",
     a1: "Pengaruh kecepatan revolusi orbital",
     a2: "Karena setiap percakapan bersamamu selalu terasa nyaman dan berharga",
     correct: 2,
-    msg: "Catatan terverifikasi: Setiap detik yang kita lalui bersama adalah waktu yang bermakna.",
+    msg: "Sensor termal stabil! Koordinat Hyperdrive ke Sektor 3 (Venus) telah terbuka.",
     icon: "🪨",
   },
   Venus: {
@@ -102,14 +105,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     temp: "465 °C",
     orbitTime: "225 Hari Bumi",
     scienceFact:
-      "Venus merupakan objek alami paling terang di langit malam setelah Bulan. Lapisan awan tebalnya memantulkan sebagian besar sinar matahari. Venus juga berotasi secara retrograde dari timur ke barat secara perlahan.",
+      "Venus merupakan objek alami paling terang di langit malam setelah Bulan. Lapisan awan tebalnya memantulkan 75% sinar matahari. Venus berotasi mundur secara retrograde dari timur ke barat.",
     reflectionNote:
       "Venus dikenal sebagai permata yang paling bercahaya di cakrawala malam. Namun bagi saya, ketulusan budi dan binar senyumanmu adalah keindahan sejati yang paling menyejukkan hati.",
+    challengeTitle: "MISI SEKTOR 3: Penetrasi Radar Awan Atmosfer",
     q: "Di antara fenomena visual di cakrawala malam, hal apakah yang paling menyejukkan pandangan?",
     a1: "Luminansi atmosfer Venus",
     a2: "Senyuman tulus dan ketenangan dari Nana",
     correct: 2,
-    msg: "Observasi terverifikasi: Ketulusan hatimu adalah pemandangan terindah di semesta ini.",
+    msg: "Penetrasi radar sukses! Koordinat Hyperdrive ke Sektor 4 (Bumi) telah terbuka.",
     icon: "✨",
   },
   Bumi: {
@@ -123,14 +127,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     temp: "15 °C",
     orbitTime: "365,25 Hari",
     scienceFact:
-      "Bumi adalah satu-satunya oasis kehidupan yang diketahui memiliki air cair stabil dan atmosfer kaya oksigen-nitrogen. Gravitasi Bulan menjaga kemiringan sumbu rotasi Bumi pada 23,5° sehingga iklim tetap stabil.",
+      "Bumi adalah satu-satunya oasis kehidupan dengan air cair stabil dan atmosfer kaya oksigen. Gravitasi Bulan menstabilkan kemiringan sumbu rotasi aksial Bumi pada 23,5°.",
     reflectionNote:
       "Di antara bentangan luas semesta dan miliaran kemungkinan di planet biru ini, dipertemukan dan berjalan beriringan denganmu adalah anugerah terindah yang selalu saya syukuri.",
+    challengeTitle: "MISI SEKTOR 4: Harmonisasi Poros Aksial & Gravitasi Bulan",
     q: "Di manakah titik koordinat tempat hati merasa paling tenang dan berlabuh?",
     a1: "Pusat Observatorium Antariksa",
     a2: "Di dekat Nana, tempat di mana rasa syukur selalu hadir",
     correct: 2,
-    msg: "Koordinat terkunci: Bersamamu adalah tempat di mana ketenangan selalu bermula.",
+    msg: "Gravitasi harmonis! Koordinat Hyperdrive ke Sektor 5 (Mars) telah terbuka.",
     icon: "🌍",
   },
   Mars: {
@@ -143,14 +148,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     temp: "-60 °C",
     orbitTime: "687 Hari Bumi",
     scienceFact:
-      "Mars memiliki Olympus Mons, gunung berapi perisai setinggi 21,9 km yang merupakan gunung tertinggi di tata surya. Warna kemerahannya berasal dari kandungan besi oksida di permukaannya.",
+      "Mars memiliki Olympus Mons (21,9 km), gunung berapi tertinggi di tata surya. Warna merahnya berasal dari kandungan besi oksida (karat alami) di permukaannya.",
     reflectionNote:
-      "Warna merah Mars melambangkan keteguhan dan daya juang. Saya akan selalu ada di sampingmu untuk mendukung setiap langkah, cita-cita, dan impian besar yang sedang kamu perjuangkan.",
+      "Warna merah Mars melambangkan keteguhan dan daya juang. Saya akan selalu ada di sampingmu untuk mendukung setiap langkah, cita-cita, dan impian besar yang kamu perjuangkan.",
+    challengeTitle: "MISI SEKTOR 5: Pemindaian Elevasi Puncak Olympus Mons",
     q: "Seberapa tinggi harapan dan dukungan yang senantiasa dipanjatkan untuk langkahmu ke depan?",
     a1: "Setinggi puncak gunung Olympus Mons",
     a2: "Melampaui luasnya horizon semesta",
     correct: 2,
-    msg: "Catatan terverifikasi: Doa dan dukungan terbaik selalu menyertai setiap langkahmu.",
+    msg: "Elevasi terkunci! Koordinat Hyperdrive melintasi Sabuk Asteroid ke Sektor 6 (Yupiter) terbuka.",
     icon: "🔴",
   },
   Yupiter: {
@@ -163,14 +169,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     temp: "-110 °C",
     orbitTime: "11,86 Tahun Bumi",
     scienceFact:
-      "Jupiter memiliki massa lebih dari dua kali lipat gabungan seluruh planet lainnya. Medan gravitasi raksasanya berfungsi sebagai perisai alami yang menyerap dan membelokkan lintasan komet dari tata surya bagian dalam.",
+      "Jupiter memiliki massa lebih dari dua kali lipat gabungan seluruh planet lainnya. Medan gravitasi raksasanya berfungsi sebagai perisai alami yang menyerap tabrakan komet berbahaya.",
     reflectionNote:
-      "Sebagaimana peran Jupiter yang menjaga keseimbangan tata surya, saya berikhtiar untuk selalu menjadi pendengar yang baik, pelindung yang setia, dan ruang aman bagimu untuk bercerita apa adanya.",
+      "Sebagaimana peran Jupiter yang menjaga keseimbangan tata surya, saya berikhtiar untuk selalu menjadi pendengar yang baik, pelindung yang setia, dan ruang aman bagimu untuk bercerita.",
+    challengeTitle: "MISI SEKTOR 6: Penguatan Deflektor Perisai Gravitasi",
     q: "Sebesar apa komitmen untuk menjaga dan mendampingi perjalanan ini?",
     a1: "Sebesar kapasitas planet Jupiter",
     a2: "Tak terhingga, melampaui batas ruang dan waktu",
     correct: 2,
-    msg: "Observasi tervalidasi: Komitmen dan ketulusan ini akan selalu terjaga utuh untukmu.",
+    msg: "Perisai gravitasi aktif! Koordinat Hyperdrive ke Sektor 7 (Saturnus) telah terbuka.",
     icon: "🪐",
   },
   Saturnus: {
@@ -184,14 +191,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     temp: "-140 °C",
     orbitTime: "29,45 Tahun Bumi",
     scienceFact:
-      "Sistem cincin spektakuler Saturnus membentang hingga 282.000 km namun ketebalannya rata-rata hanya 10 meter. Cincin ini tersusun atas miliaran partikel es murni dan batuan dengan Celah Cassini yang terbentuk secara presisi.",
+      "Sistem cincin fotorealistis Saturnus membentang hingga 282.000 km dengan ketebalan hanya 10 meter, tersusun atas miliaran kristal es murni dan Celah Cassini yang presisi.",
     reflectionNote:
-      "Cincin Saturnus yang melingkar anggun dan harmonis mencerminkan komitmen ketulusan. Keindahan sejati bukanlah hal yang dibuat-buat, melainkan lahir dari keselarasan dan kesetiaan.",
+      "Cincin Saturnus yang melingkar anggun dan harmonis mencerminkan komitmen ketulusan. Keindahan sejati lahir dari keselarasan, kesetiaan, dan saling menghargai.",
+    challengeTitle: "MISI SEKTOR 7: Resonansi Kristal Es Celah Cassini",
     q: "Nilai apakah yang paling utama dalam menjaga keharmonisan perjalanan kita?",
     a1: "Keteraturan gravitasi kosmik",
     a2: "Kejujuran, saling menghargai, dan ketulusan hati yang konsisten",
     correct: 2,
-    msg: "Kunci orbit terverifikasi: Ketulusan dan rasa saling menghargai adalah pondasi terindah.",
+    msg: "Resonansi cincin terkalibrasi! Koordinat Hyperdrive ke Sektor 8 (Uranus) telah terbuka.",
     icon: "👑",
   },
   Uranus: {
@@ -204,14 +212,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     temp: "-224 °C",
     orbitTime: "84 Tahun Bumi",
     scienceFact:
-      "Uranus memiliki keunikan poros rotasi dengan kemiringan 97,8° sehingga tampak menggelinding pada bidang orbitnya. Keberadaan gas metana pada atmosfer atasnya menyerap spektrum merah dan menghasilkan rona biru kehijauan yang tenang.",
+      "Uranus berotasi menggelinding pada bidang orbitnya dengan kemiringan aksial 97,8°. Gas metana di atmosfer atas menyerap cahaya merah dan memancarkan rona toska yang damai.",
     reflectionNote:
-      "Keunikan Uranus mengingatkan kita bahwa setiap pribadi memiliki keistimewaan tersendiri. Kepribadianmu yang ceria, tulus, dan apa adanya selalu berhasil membawa keteduhan dalam hari-hari saya.",
+      "Keunikan Uranus mengingatkan kita bahwa setiap pribadi memiliki keistimewaan tersendiri. Kepribadianmu yang ceria, tulus, dan apa adanya selalu berhasil membawa keteduhan dalam hidupku.",
+    challengeTitle: "MISI SEKTOR 8: Penguncian Sudut Rotasi Aksial 98°",
     q: "Hal apakah yang senantiasa membawa keteduhan dan warna dalam keseharian?",
     a1: "Spektrum warna atmosfer Uranus",
     a2: "Kebaikan budi, kejernihan hati, dan tawa tulus dari Nana",
     correct: 2,
-    msg: "Data terverifikasi: Kebaikan dan ketulusanmu adalah anugerah yang sangat berharga.",
+    msg: "Sudut aksial terkunci! Koordinat Sektor Terakhir 9 (Neptunus) telah terbuka.",
     icon: "💎",
   },
   Neptunus: {
@@ -224,14 +233,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     temp: "-218 °C",
     orbitTime: "164,8 Tahun Bumi",
     scienceFact:
-      "Sebagai planet terjauh dalam sistem tata surya, Neptunus memiliki angin supersonik tercepat yang mencapai 2.100 km/jam. Planet ini ditemukan melalui perhitungan presisi matematika sebelum diamati secara langsung oleh teleskop.",
+      "Neptunus adalah planet terjauh di tata surya dengan kecepatan badai supersonik mencapai 2.100 km/jam. Ditemukan melalui rumus matematika sebelum terlihat oleh teleskop.",
     reflectionNote:
-      "Berada di batas terluar ekspedisi tata surya ini membuktikan bahwa sejauh apa pun bentangan jarak, niat tulus dan kepedulian yang mendalam akan selalu menemukan jalannya untuk saling terhubung.",
+      "Berada di batas terluar ekspedisi tata surya ini membuktikan bahwa sejauh apa pun bentangan jarak, niat tulus dan kepedulian yang mendalam akan selalu saling terhubung.",
+    challengeTitle: "MISI FINAL SEKTOR 9: Dekripsi Sinyal Batas Semesta",
     q: "Hal apakah yang mampu melintasi jarak miliaran kilometer tanpa batas?",
     a1: "Gelombang radio frekuensi tinggi",
     a2: "Ketulusan doa, rasa syukur, dan penghargaan tulus dari hati",
     correct: 2,
-    msg: "Seluruh 9 Sektor Planet Selesai Dipindai! Sinyal transmisi rahasia terenkripsi terdeteksi...",
+    msg: "SELURUH 9 SEKTOR SELESAI DIPINDAI! Sinyal transmisi rahasia terenkripsi terdeteksi...",
     icon: "🌊",
   },
 };
@@ -241,6 +251,7 @@ export default function Home() {
   const initialized = useRef(false);
 
   const [activeTab, setActiveTab] = useState<"telemetry" | "log">("telemetry");
+  const [unlockedMaxIdx, setUnlockedMaxIdx] = useState(0); // Sequential game progression (0 = Matahari only)
   const [openedPlanets, setOpenedPlanets] = useState<Record<string, boolean>>({});
   const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Matahari");
   const [showPassport, setShowPassport] = useState(false);
@@ -249,12 +260,12 @@ export default function Home() {
   const [copilotResponse, setCopilotResponse] = useState("");
   const [copilotLoading, setCopilotLoading] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
-  const [warpSpeedDisplay, setWarpSpeedDisplay] = useState("0.0 AU/s");
+  const [warpSpeedDisplay, setWarpSpeedDisplay] = useState("ORBIT STABIL");
   const [candleBlown, setCandleBlown] = useState(false);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
 
-  const playSfx = (type: "radio_beep" | "warp_boom" | "scan_sonar" | "correct" | "celebrate") => {
+  const playSfx = (type: "radio_beep" | "warp_boom" | "scan_sonar" | "correct" | "celebrate" | "locked") => {
     try {
       const AudioCtx =
         window.AudioContext ||
@@ -279,6 +290,18 @@ export default function Home() {
         gain.connect(ctx.destination);
         osc.start(now);
         osc.stop(now + 0.12);
+      } else if (type === "locked") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.setValueAtTime(120, now + 0.1);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.25);
       } else if (type === "warp_boom") {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -405,7 +428,7 @@ export default function Home() {
     controls.dampingFactor = 0.06;
     controls.enablePan = false;
     controls.minDistance = 9;
-    controls.maxDistance = 55;
+    controls.maxDistance = 60;
     controls.target.set(0, 3.5, 0);
     controls.autoRotate = !reducedMotion;
     controls.autoRotateSpeed = 0.25;
@@ -442,7 +465,7 @@ export default function Home() {
     }
     const fallbackTimeout = setTimeout(revealGate, 3000);
 
-    // STARFIELD
+    // 1. PROCEDURAL STARFIELD
     const starCount = 6500;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
@@ -484,7 +507,88 @@ export default function Home() {
     const starfieldMesh = new THREE.Points(starGeo, starMat);
     scene.add(starfieldMesh);
 
-    // WARP LINES
+    // 2. 3D ASTEROID BELT (BETWEEN MARS & JUPITER)
+    const asteroidCount = 350;
+    const asteroidGeo = new THREE.DodecahedronGeometry(0.35, 1);
+    const asteroidMat = new THREE.MeshStandardMaterial({
+      color: 0x8c827a,
+      roughness: 0.9,
+      metalness: 0.2,
+    });
+    const asteroidInstanced = new THREE.InstancedMesh(asteroidGeo, asteroidMat, asteroidCount);
+    const dummy = new THREE.Object3D();
+
+    for (let i = 0; i < asteroidCount; i++) {
+      const angle = (i / asteroidCount) * Math.PI * 2 + Math.random() * 0.05;
+      const radius = 59 + (Math.random() - 0.5) * 7.5; // Orbit between Mars (52) & Jupiter (68)
+      dummy.position.set(
+        Math.cos(angle) * radius,
+        3.5 + (Math.random() - 0.5) * 3,
+        Math.sin(angle) * radius
+      );
+      dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+      const scale = 0.4 + Math.random() * 0.8;
+      dummy.scale.set(scale, scale, scale);
+      dummy.updateMatrix();
+      asteroidInstanced.setMatrixAt(i, dummy.matrix);
+    }
+    asteroidInstanced.instanceMatrix.needsUpdate = true;
+    scene.add(asteroidInstanced);
+
+    // 3. GLOWING ORBITAL PATH LINES IN 3D
+    const basePositions: Record<PlanetName, [number, number, number]> = {
+      Matahari: [0, 3.5, 0],
+      Merkurius: [18, 3.5, 0],
+      Venus: [28, 3.5, 0],
+      Bumi: [40, 3.5, 0],
+      Mars: [52, 3.5, 0],
+      Yupiter: [68, 3.5, 0],
+      Saturnus: [86, 3.5, 0],
+      Uranus: [104, 3.5, 0],
+      Neptunus: [122, 3.5, 0],
+    };
+
+    ORDER.slice(1).forEach((name) => {
+      const r = basePositions[name][0];
+      const segments = 128;
+      const orbitPoints: THREE.Vector3[] = [];
+      for (let i = 0; i <= segments; i++) {
+        const theta = (i / segments) * Math.PI * 2;
+        orbitPoints.push(new THREE.Vector3(Math.cos(theta) * r, 3.5, Math.sin(theta) * r));
+      }
+      const orbGeo = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+      const orbMat = new THREE.LineBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.18,
+      });
+      const orbLine = new THREE.Line(orbGeo, orbMat);
+      scene.add(orbLine);
+    });
+
+    // 4. 3D VOYAGER / EXPLORATION SATELLITE PROBE
+    const probeGroup = new THREE.Group();
+    const probeBody = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.3, 0.3, 0.8, 8),
+      new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.8, roughness: 0.3 })
+    );
+    const panelGeo = new THREE.BoxGeometry(1.6, 0.05, 0.5);
+    const panelMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, metalness: 0.9, roughness: 0.2 });
+    const solarPanel = new THREE.Mesh(panelGeo, panelMat);
+    const dish = new THREE.Mesh(
+      new THREE.ConeGeometry(0.5, 0.3, 16, 1, true),
+      new THREE.MeshStandardMaterial({ color: 0xf8fafc, side: THREE.DoubleSide })
+    );
+    dish.position.set(0, 0.6, 0);
+    dish.rotation.x = Math.PI;
+
+    probeGroup.add(probeBody);
+    probeGroup.add(solarPanel);
+    probeGroup.add(dish);
+    probeGroup.position.set(43, 4.5, 5);
+    scene.add(probeGroup);
+
+    // 5. WARP LINES
     const warpCount = 600;
     const warpGeo = new THREE.BufferGeometry();
     const warpPositions = new Float32Array(warpCount * 6);
@@ -511,7 +615,7 @@ export default function Home() {
     const warpLines = new THREE.LineSegments(warpGeo, warpMat);
     scene.add(warpLines);
 
-    // SCANNER RING
+    // 6. SCANNER RING
     const scanRingGeo = new THREE.TorusGeometry(5.5, 0.05, 16, 64);
     const scanRingMat = new THREE.MeshBasicMaterial({
       color: 0x38bdf8,
@@ -523,7 +627,7 @@ export default function Home() {
     const scanRingMesh = new THREE.Mesh(scanRingGeo, scanRingMat);
     scene.add(scanRingMesh);
 
-    // FIREWORKS
+    // 7. FIREWORKS
     const fireworkCount = 600;
     const fireworkGeo = new THREE.BufferGeometry();
     const fireworkPos = new Float32Array(fireworkCount * 3);
@@ -573,7 +677,7 @@ export default function Home() {
       posAttr.needsUpdate = true;
     }
 
-    // SATURN RING TEXTURE
+    // 8. SATURN RING
     const createSaturnRingTexture = () => {
       const size = 1024;
       const canvas = document.createElement("canvas");
@@ -615,19 +719,8 @@ export default function Home() {
       return tex;
     };
 
-    // 3D BODIES
+    // 9. 3D PLANETS
     const group3D: Record<string, THREE.Group> = {};
-    const basePositions: Record<PlanetName, [number, number, number]> = {
-      Matahari: [0, 3.5, 0],
-      Merkurius: [18, 3.5, 0],
-      Venus: [28, 3.5, 0],
-      Bumi: [40, 3.5, 0],
-      Mars: [52, 3.5, 0],
-      Yupiter: [68, 3.5, 0],
-      Saturnus: [86, 3.5, 0],
-      Uranus: [104, 3.5, 0],
-      Neptunus: [122, 3.5, 0],
-    };
 
     ORDER.forEach((name) => {
       const d = DATA[name];
@@ -716,8 +809,16 @@ export default function Home() {
     let activeKey: PlanetName = "Matahari";
     let isTransitioning = false;
     const openedState: Record<string, boolean> = {};
+    let unlockedProgress = 0; // index max yang sudah terbuka
 
     function warpToPlanet(name: PlanetName) {
+      const targetIdx = ORDER.indexOf(name);
+      if (targetIdx > unlockedProgress) {
+        playSfx("locked");
+        alert(`SEKTOR TERKUNCI 🔒: Harap selesaikan pemindaian dan kalibrasi misi di Sektor ${ORDER[unlockedProgress]} terlebih dahulu untuk membuka koordinat Hyperdrive!`);
+        return;
+      }
+
       if (isTransitioning) return;
       activeKey = name;
       isTransitioning = true;
@@ -797,15 +898,23 @@ export default function Home() {
 
     function handleScanAnswer(choice: number) {
       const d = DATA[activeKey];
+      const currentIdx = ORDER.indexOf(activeKey);
+
       if (quizResult) {
         quizResult.style.display = "block";
         if (choice === d.correct) {
-          quizResult.textContent = `✨ ${d.msg} (Stempel Observasi ${activeKey} Berhasil Disimpan!)`;
+          quizResult.textContent = `✨ ${d.msg}`;
           playSfx("correct");
           openedState[activeKey] = true;
           setOpenedPlanets({ ...openedState });
 
-          // THE GRAND SURPRISE REVEAL (Unlocked only after exploring all 9 planets)
+          // Unlock next sector in sequence
+          if (currentIdx === unlockedProgress && unlockedProgress < ORDER.length - 1) {
+            unlockedProgress = currentIdx + 1;
+            setUnlockedMaxIdx(unlockedProgress);
+          }
+
+          // THE GRAND SURPRISE REVEAL (Unlocked when final sector is completed)
           if (Object.keys(openedState).length === ORDER.length) {
             setTimeout(() => {
               quizModal?.classList.remove("show");
@@ -827,13 +936,15 @@ export default function Home() {
     document.getElementById("deep-scan-btn")?.addEventListener("click", executeDeepScan);
     document.getElementById("prev-thruster-btn")?.addEventListener("click", () => {
       const idx = ORDER.indexOf(activeKey);
-      const nextIdx = (idx - 1 + ORDER.length) % ORDER.length;
-      warpToPlanet(ORDER[nextIdx]);
+      if (idx > 0) {
+        warpToPlanet(ORDER[idx - 1]);
+      }
     });
     document.getElementById("next-thruster-btn")?.addEventListener("click", () => {
       const idx = ORDER.indexOf(activeKey);
-      const nextIdx = (idx + 1) % ORDER.length;
-      warpToPlanet(ORDER[nextIdx]);
+      if (idx < ORDER.length - 1) {
+        warpToPlanet(ORDER[idx + 1]);
+      }
     });
 
     document.getElementById("gate-btn")?.addEventListener("click", () => {
@@ -864,6 +975,13 @@ export default function Home() {
       const t = clock.getElapsedTime();
 
       starfieldMesh.rotation.y = t * 0.003;
+      asteroidInstanced.rotation.y = t * 0.015;
+
+      // Orbit satellite probe
+      probeGroup.position.x = Math.cos(t * 0.4) * 44;
+      probeGroup.position.z = Math.sin(t * 0.4) * 44;
+      probeGroup.position.y = 3.5 + Math.sin(t * 1.2) * 1.5;
+      probeGroup.rotation.y = -t * 0.4;
 
       if (isTransitioning) {
         warpLines.position.z += 8;
@@ -923,6 +1041,7 @@ export default function Home() {
   }, []);
 
   const currentPlanetData = DATA[activePlanetName];
+  const currentIdx = ORDER.indexOf(activePlanetName);
   const isCurrentOpened = !!openedPlanets[activePlanetName];
 
   return (
@@ -965,18 +1084,30 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ORBIT TRACKER NODES */}
+      {/* ORBIT TRACKER NODES (SEQUENTIAL GAME UNLOCK) */}
       <div className="orbit-tracker-bar">
-        {ORDER.map((name) => (
-          <button
-            key={name}
-            className={`orbit-node ${openedPlanets[name] ? "stamped" : ""} ${
-              name === activePlanetName ? "active" : ""
-            }`}
-            onClick={() => setActivePlanetName(name)}
-            title={`${name} (${DATA[name].type})`}
-          />
-        ))}
+        {ORDER.map((name, idx) => {
+          const isLocked = idx > unlockedMaxIdx;
+          const isCurrent = name === activePlanetName;
+          const isStamped = !!openedPlanets[name];
+          return (
+            <button
+              key={name}
+              className={`orbit-node ${isStamped ? "stamped" : ""} ${
+                isCurrent ? "active" : ""
+              } ${isLocked ? "locked" : ""}`}
+              onClick={() => {
+                if (isLocked) {
+                  playSfx("locked");
+                  alert(`Sektor ${name} masih terkunci 🔒. Selesaikan misi di sektor sebelumnya terlebih dahulu!`);
+                } else {
+                  setActivePlanetName(name);
+                }
+              }}
+              title={isLocked ? `Sektor ${name} (Terkunci 🔒)` : `${name} (${DATA[name].type})`}
+            />
+          );
+        })}
       </div>
 
       {/* TARGET RETICLE */}
@@ -990,10 +1121,18 @@ export default function Home() {
         </div>
       </div>
 
-      {/* WARP SPEEDOMETER */}
+      {/* WARP SPEED & ENERGY GAUGE */}
       <div className="warp-gauge">
-        <span className="warp-status">STATUS ORBIT:</span>
-        <span className="warp-speed">{warpSpeedDisplay}</span>
+        <span style={{ color: "var(--hud-cyan)", fontWeight: 700 }}>HYPERDRIVE CORE:</span>
+        <div className="energy-bar-wrap">
+          <div
+            className="energy-bar-fill"
+            style={{ width: `${(Object.keys(openedPlanets).length / ORDER.length) * 100}%` }}
+          ></div>
+        </div>
+        <span style={{ color: "var(--hud-gold)", fontSize: "9.5px", marginTop: "2px" }}>
+          {warpSpeedDisplay}
+        </span>
       </div>
 
       {/* LOADER */}
@@ -1006,7 +1145,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* INITIAL GATE SCREEN (SURPRISE KEPT SECRET: PURE ASTRONOMY DISCOVERY BRIEFING) */}
+      {/* INITIAL GATE SCREEN */}
       <div id="gate">
         <div className="gate-inner">
           <div className="gate-badge">🪐 OBSERVATORIUM TATA SURYA // KHUSUS UNTUK NANA 🚀</div>
@@ -1016,11 +1155,11 @@ export default function Home() {
             <em>Menjelajahi Tata Surya</em>
           </h1>
           <p className="gate-sub">
-            Selamat datang di simulator observasi antariksa. Kamu dapat menavigasi dan menjelajahi sembilan objek tata surya, mengamati fenomena fisika astronomi nyata, dan mengumpulkan catatan ilmiah dari setiap sektor orbit.
+            Selamat datang di simulator observasi antariksa. Kamu ditugaskan menyelesaikan 9 misi pemindaian sains di tata surya secara berurutan untuk membuka akses penuh ke batas terluar semesta.
           </p>
 
           <button className="gate-btn" id="gate-btn">
-            MULAI PENJELAJAHAN ANTARIKSA 🚀
+            MULAI MISI SEKARANG 🚀
           </button>
           <div className="gate-hint">🎧 Disarankan menyalakan audio untuk pengalaman observasi yang lebih imersif</div>
         </div>
@@ -1085,7 +1224,11 @@ export default function Home() {
         </div>
 
         <div className="flight-controls-row">
-          <button className="thruster-btn" id="prev-thruster-btn" title="Navigasi ke Planet Sebelumnya">
+          <button
+            className={`thruster-btn ${currentIdx === 0 ? "disabled" : ""}`}
+            id="prev-thruster-btn"
+            title="Navigasi ke Planet Sebelumnya"
+          >
             ‹
           </button>
           <button
@@ -1094,9 +1237,13 @@ export default function Home() {
           >
             {isCurrentOpened
               ? `✓ DATA ${activePlanetName} TERVERIFIKASI • BACA LAGI`
-              : `📡 JALANKAN PEMINDAIAN DATA ${activePlanetName}`}
+              : `📡 SELESAIKAN MISI PEMINDAIAN ${activePlanetName}`}
           </button>
-          <button className="thruster-btn" id="next-thruster-btn" title="Navigasi ke Planet Berikutnya">
+          <button
+            className={`thruster-btn ${currentIdx >= unlockedMaxIdx ? "disabled" : ""}`}
+            id="next-thruster-btn"
+            title={currentIdx >= unlockedMaxIdx ? "Sektor berikutnya terkunci 🔒" : "Navigasi ke Planet Berikutnya"}
+          >
             ›
           </button>
         </div>
@@ -1166,10 +1313,10 @@ export default function Home() {
         </div>
       </div>
 
-      {/* QUIZ / SCANNER RESULT MODAL */}
+      {/* QUIZ / SCANNER CHALLENGE MODAL */}
       <div id="quiz-modal">
         <div className="scanner-box">
-          <div className="scanner-eyebrow">📡 PEMINDAIAN DATA SEKTOR // KALIBRASI OBSERVASI</div>
+          <div className="scanner-eyebrow">{currentPlanetData.challengeTitle}</div>
           <div className="scanner-prompt" id="q-text">
             Menganalisis parameter...
           </div>
@@ -1196,20 +1343,22 @@ export default function Home() {
               📔 LOG CATATAN PENJELAJAHAN
             </h2>
             <p style={{ fontSize: "11px", color: "#94a3b8" }}>
-              PENJELAJAH: NANA — 9 STEMPEL OBSERVASI SEKTOR TATA SURYA
+              PENJELAJAH: NANA — PROGRES MISI: {Object.keys(openedPlanets).length} / 9 SEKTOR TERSELESAIKAN
             </p>
           </div>
 
           <div className="stamp-grid">
-            {ORDER.map((name) => {
+            {ORDER.map((name, idx) => {
               const isStamped = !!openedPlanets[name];
+              const isLocked = idx > unlockedMaxIdx;
               const pInfo = DATA[name];
               return (
                 <div
                   key={name}
                   className={`stamp-slot ${isStamped ? "stamped" : ""}`}
+                  style={{ opacity: isLocked ? 0.35 : 1 }}
                 >
-                  <span className="stamp-icon">{isStamped ? "⭐" : pInfo.icon}</span>
+                  <span className="stamp-icon">{isStamped ? "⭐" : isLocked ? "🔒" : pInfo.icon}</span>
                   <span className="stamp-name">{name}</span>
                 </div>
               );
@@ -1227,7 +1376,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* GRAND SURPRISE FINALE (REVEALED ONLY AT THE VERY END) */}
+      {/* GRAND SURPRISE FINALE */}
       <div id="finale">
         <div className="finale-inner">
           <div className="finale-eyebrow">✨ TRANSMISI RAHASIA TERBUKA • SPESIAL 10 SEPTEMBER 🎂</div>
