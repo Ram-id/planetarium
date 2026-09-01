@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Semesta Nana — Planetarium Digital",
-  description: "Sebuah perjalanan tata surya romantis untuk Nana",
+  title: "Ekspedisi Semesta Nana — Special Birthday Edition 10 September 🎂✨",
+  description: "Sebuah perjalanan eksplorasi antariksa, ilmu astronomi, dan perayaan ulang tahun penuh cinta untuk Nana",
 };
 
 export default function RootLayout({
