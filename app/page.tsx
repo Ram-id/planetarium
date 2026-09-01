@@ -52,17 +52,17 @@ const ORDER: PlanetName[] = [
 
 const DATA: Record<PlanetName, PlanetInfo> = {
   Matahari: {
-    size: 5.5,
+    size: 5.2,
     tex: "sun.jpg",
     color: 0xf4c979,
-    emissive: 0xffa500,
-    type: "Bintang Induk (G2V)",
-    diameter: "1.392.700 km (109x Bumi)",
-    distance: "Pusat Tata Surya (0 km)",
-    temp: "~5.500 °C (Inti: 15 Juta °C)",
-    orbitTime: "230 Juta Tahun (Orbit Galaksi)",
+    emissive: 0xffaa22,
+    type: "Bintang Induk",
+    diameter: "1.392.700 km",
+    distance: "Pusat Tata Surya",
+    temp: "~5.500 °C",
+    orbitTime: "230 Juta Thn",
     scienceFact:
-      "Matahari adalah bola plasma raksasa yang menyumbang 99,86% massa seluruh tata surya! Fusi nuklir di intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan cahaya yang butuh 8 menit 20 detik sampai ke Bumi.",
+      "Matahari menyumbang 99,86% massa seluruh tata surya! Fusi nuklir di intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan cahaya yang sampai ke Bumi dalam 8 menit 20 detik.",
     loveNote:
       "Seperti Matahari yang menjadi gravitasi dan penerang tata surya, kehadiranmu adalah pusat kehangatan dan kebahagiaan dalam hidupku, my sunshine Nana.",
     q: "Berapa lama cahaya dari pusat kehangatan ini butuh untuk sampai menerangi duniaku?",
@@ -76,15 +76,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     size: 1.6,
     tex: "mercury.jpg",
     color: 0x9a938c,
-    type: "Planet Terestrial Terkecil",
+    type: "Planet Terestrial",
     diameter: "4.879 km",
-    distance: "57,9 Juta km dari Matahari",
-    temp: "-180 °C (Malam) s/d 430 °C (Siang)",
-    orbitTime: "88 Hari Bumi (Revolusi Tercepat)",
+    distance: "57,9 Juta km",
+    temp: "-180 °C s/d 430 °C",
+    orbitTime: "88 Hari",
     scienceFact:
-      "Merkurius melesat di orbitnya dengan kecepatan 47 km/detik! Tanpa atmosfer tebal untuk menahan panas, suhu di permukaannya mengalami fluktuasi paling ekstrem di seluruh tata surya.",
+      "Merkurius melesat di orbitnya secepat 47 km/detik! Tanpa atmosfer tebal untuk menahan panas, suhu di permukaannya mengalami fluktuasi paling ekstrem di tata surya.",
     loveNote:
-      "Di planet yang revolusinya tercepat ini, aku belajar bahwa waktu terasa melesat begitu kilat saat bersamamu. Setiap detik yang kita lalui adalah hadiah terbaik.",
+      "Di planet yang revolusinya tercepat ini, aku belajar bahwa waktu terasa melesat begitu kilat saat bersamamu. Setiap detik bersamamu adalah hadiah terbaik.",
     q: "Kenapa waktu selalu terasa berputar secepat orbit Merkurius?",
     a1: "Karena kecepatan kosmik semesta",
     a2: "Karena kalau sama Nana, 24 jam nggak pernah cukup",
@@ -96,15 +96,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     size: 2.2,
     tex: "venus.jpg",
     color: 0xd8b98a,
-    type: "Bintang Kejora / Kembaran Bumi",
+    type: "Bintang Kejora",
     diameter: "12.104 km",
-    distance: "108,2 Juta km dari Matahari",
-    temp: "465 °C (Planet Terpanas)",
-    orbitTime: "225 Hari (1 Hari = 243 Hari Bumi)",
+    distance: "108,2 Juta km",
+    temp: "465 °C",
+    orbitTime: "225 Hari",
     scienceFact:
-      "Venus adalah objek paling terang di langit malam setelah Bulan. Uniknya, Venus berotasi mundur (dari timur ke barat) dan sangat lambat, sehingga satu hari di Venus lebih lama dari satu tahunnya!",
+      "Venus adalah objek paling terang di langit malam setelah Bulan. Uniknya, Venus berotasi mundur dari timur ke barat sehingga 1 hari di Venus lebih lama dari 1 tahunnya!",
     loveNote:
-      "Venus dijuluki planet paling berkilau di angkasa, tapi bagiku, binar mata dan senyuman tulus Nana adalah pemandangan terindah yang mengalahkan kilau jutaan bintang.",
+      "Venus dijuluki planet paling berkilau di angkasa, tapi bagiku, binar mata dan senyuman tulus Nana adalah pemandangan terindah di alam semesta.",
     q: "Apa objek paling berkilau dan mempesona di semesta ini?",
     a1: "Planet Venus di langit senja",
     a2: "Senyuman manis Nana",
@@ -117,13 +117,13 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     tex: "earth.jpg",
     color: 0x3f6fae,
     moon: true,
-    type: "Oasis Kehidupan (Habitable Zone)",
+    type: "Oasis Kehidupan",
     diameter: "12.742 km",
-    distance: "149,6 Juta km (1 AU)",
-    temp: "15 °C (Rata-rata)",
-    orbitTime: "365,25 Hari (1 Tahun)",
+    distance: "149,6 Juta km",
+    temp: "15 °C",
+    orbitTime: "365,25 Hari",
     scienceFact:
-      "Bumi adalah satu-satunya tempat di alam semesta yang diketahui menampung kehidupan. Bersama Bulan yang setia menstabilkan poros rotasinya, Bumi memiliki air cair dan atmosfer pelindung yang sempurna.",
+      "Bumi adalah satu-satunya oasis kehidupan yang dikenal. Bulan yang setia menstabilkan poros rotasinya menciptakan iklim yang harmonis untuk miliaran makhluk hidup.",
     loveNote:
       "Dari 8 miliar manusia di planet biru yang indah ini, bersyukur tak terhingga takdir mempertemukan dan menyatukan aku dengan seseorang seistimewa kamu, Nana.",
     q: "Di antara miliaran kemungkinan di planet biru ini, apa takdir terindah bagiku?",
@@ -137,15 +137,15 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     size: 1.8,
     tex: "mars.jpg",
     color: 0xb1543a,
-    type: "Planet Merah (Eksplorasi)",
+    type: "Planet Merah",
     diameter: "6.779 km",
-    distance: "227,9 Juta km dari Matahari",
-    temp: "-60 °C (Rata-rata)",
-    orbitTime: "687 Hari Bumi (1,88 Tahun)",
+    distance: "227,9 Juta km",
+    temp: "-60 °C",
+    orbitTime: "687 Hari",
     scienceFact:
-      "Mars memiliki gunung berapi tertinggi di tata surya, Olympus Mons (21,9 km, hampir 3x tinggi Everest!) dan ngarai raksasa Valles Marineris. Warna merahnya berasal dari karat besi di permukaannya.",
+      "Mars memiliki gunung berapi tertinggi di tata surya, Olympus Mons (21,9 km, hampir 3x Everest!). Warna merahnya berasal dari kandungan oksida besi di permukaannya.",
     loveNote:
-      "Warna merah Mars melambangkan api semangat dan keteguhan hati. Di usia barumu nanti, aku akan selalu berdiri di sampingmu, mendukung setiap impian dan cita-citamu.",
+      "Warna merah Mars melambangkan api semangat dan keteguhan hati. Di usia barumu nanti, aku akan selalu berdiri di sampingmu, mendukung seluruh cita-citamu.",
     q: "Setinggi apa tekad dan doa yang kupanjatkan untuk kebahagiaan Nana di usia baru?",
     a1: "Setinggi puncak gunung Olympus Mons",
     a2: "Melampaui tingginya seluruh puncak di jagat raya",
@@ -154,16 +154,16 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     icon: "🔴",
   },
   Yupiter: {
-    size: 4.4,
+    size: 4.3,
     tex: "jupiter.jpg",
     color: 0xcaa87a,
-    type: "Raksasa Gas & Pelindung Bumi",
-    diameter: "139.820 km (11x Bumi)",
-    distance: "778,5 Juta km dari Matahari",
+    type: "Raksasa Gas",
+    diameter: "139.820 km",
+    distance: "778,5 Juta km",
     temp: "-110 °C",
-    orbitTime: "11,86 Tahun Bumi (Rotasi: 9,9 Jam)",
+    orbitTime: "11,86 Tahun",
     scienceFact:
-      "Jupiter memiliki volume lebih besar dari gabungan semua planet lain! Gravitasi raksasanya bertindak bagai 'penyedot debu kosmik' yang melindungi planet-planet dalam dari tabrakan komet berbahaya.",
+      "Jupiter memiliki massa 2,5 kali gabungan seluruh planet lainnya! Gravitasinya yang luar biasa bertindak bagai perisai pelindung Bumi dari tabrakan komet berbahaya.",
     loveNote:
       "Sebagaimana Jupiter yang setia menjadi pelindung, aku ingin selalu menjadi tempat aman bagimu untuk bersandar, bercerita, dan merasa dihargai seutuhnya.",
     q: "Sebesar apa rasa sayang dan syukurku memiliki kamu di hidupku?",
@@ -174,17 +174,17 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     icon: "🪐",
   },
   Saturnus: {
-    size: 3.8,
+    size: 3.6,
     tex: "saturn.jpg",
     color: 0xd9c39a,
     ring: true,
-    type: "Permata Bermahkota Cincin",
+    type: "Permata Bermahkota",
     diameter: "116.460 km",
-    distance: "1,4 Miliar km dari Matahari",
+    distance: "1,4 Miliar km",
     temp: "-140 °C",
-    orbitTime: "29,45 Tahun Bumi",
+    orbitTime: "29,45 Tahun",
     scienceFact:
-      "Cincin spektakuler Saturnus membentang hingga 282.000 km namun tebalnya rata-rata hanya 10 meter! Terbuat dari miliaran partikel es murni dan batuan yang memantulkan sinar matahari dengan memukau.",
+      "Cincin spektakuler Saturnus membentang hingga 282.000 km dengan ketebalan hanya ~10 meter! Terbuat dari miliaran kristal es murni yang memantulkan cahaya matahari dengan memukau.",
     loveNote:
       "Cincin Saturnus yang melingkar abadi melambangkan komitmen dan ketulusan. Semoga di ulang tahun 10 September nanti, cinta dan kebersamaan kita selalu terjaga indah.",
     q: "Cincin Saturnus melingkar abadi, apa janji yang ingin kujaga untuk Nana?",
@@ -195,16 +195,16 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     icon: "👑",
   },
   Uranus: {
-    size: 3.0,
+    size: 2.9,
     tex: "uranus.jpg",
     color: 0x9fd0d6,
-    type: "Raksasa Es Berotasi Miring",
+    type: "Raksasa Es",
     diameter: "50.724 km",
-    distance: "2,87 Miliar km dari Matahari",
-    temp: "-224 °C (Atmosfer Terdingin)",
-    orbitTime: "84 Tahun Bumi",
+    distance: "2,87 Miliar km",
+    temp: "-224 °C",
+    orbitTime: "84 Tahun",
     scienceFact:
-      "Uranus adalah satu-satunya planet yang berotasi miring 98 derajat bagai roda menggelinding! Warna toska indahnya dihasilkan oleh gas metana di atmosfer atas yang menyerap cahaya merah.",
+      "Uranus adalah satu-satunya planet yang berotasi menggelinding menyamping dengan kemiringan poros 98°! Gas metana di atmosfernya menyerap cahaya merah dan menghasilkan rona toska yang menenangkan.",
     loveNote:
       "Keunikan Uranus mengingatkanku pada kepribadianmu yang ceria, tulus, dan penuh warna. Kamu selalu berhasil membuat hari-hari biasa terasa begitu istimewa dan berwarna.",
     q: "Apa yang membuat hari-hari biasa terasa begitu berwarna dan ceria?",
@@ -215,16 +215,16 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     icon: "💎",
   },
   Neptunus: {
-    size: 2.9,
+    size: 2.8,
     tex: "neptune.jpg",
     color: 0x3d5ce0,
-    type: "Penjaga Gerbang Biru Terluar",
+    type: "Gerbang Biru Terluar",
     diameter: "49.244 km",
-    distance: "4,5 Miliar km (30 AU)",
+    distance: "4,5 Miliar km",
     temp: "-218 °C",
-    orbitTime: "164,8 Tahun Bumi",
+    orbitTime: "164,8 Tahun",
     scienceFact:
-      "Neptunus adalah planet terjauh yang memiliki badai angin tercepat di tata surya — mencapai 2.100 km/jam! Ditemukan melalui prediksi matematika sebelum dilihat langsung lewat teleskop.",
+      "Neptunus adalah planet terjauh yang memiliki badai angin tercepat di tata surya — melesat hingga 2.100 km/jam! Ditemukan melalui rumus matematika sebelum terlihat teleskop.",
     loveNote:
       "Meski berada di ujung terjauh tata surya, gravitasinya tetap terikat erat. Begitu pula kita — sejauh apa pun jarak atau kesibukan, hatiku selalu tertaut padamu.",
     q: "Apa yang melampaui batas jarak 4,5 miliar kilometer di tata surya ini?",
@@ -244,21 +244,24 @@ export default function Home() {
   const [openedPlanets, setOpenedPlanets] = useState<Record<string, boolean>>({});
   const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Matahari");
   const [showPassport, setShowPassport] = useState(false);
+  const [showOracle, setShowOracle] = useState(false);
+  const [oracleInput, setOracleInput] = useState("");
+  const [oracleResponse, setOracleResponse] = useState("");
+  const [oracleLoading, setOracleLoading] = useState(false);
   const [candleBlown, setCandleBlown] = useState(false);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   const audioCtxRef = useRef<AudioContext | null>(null);
-
   const playTone = (type: "twinkle" | "correct" | "celebrate" | "blow") => {
     try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (!audioCtxRef.current) {
         audioCtxRef.current = new AudioCtx();
       }
       const ctx = audioCtxRef.current;
-      if (ctx.state === "suspended") {
-        ctx.resume();
-      }
+      if (ctx.state === "suspended") ctx.resume();
 
       const now = ctx.currentTime;
       if (type === "twinkle") {
@@ -267,7 +270,7 @@ export default function Home() {
         osc.type = "sine";
         osc.frequency.setValueAtTime(587.33, now);
         osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
-        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.setValueAtTime(0.12, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -279,7 +282,7 @@ export default function Home() {
           const gain = ctx.createGain();
           osc.type = "triangle";
           osc.frequency.setValueAtTime(freq, now + i * 0.08);
-          gain.gain.setValueAtTime(0.18, now + i * 0.08);
+          gain.gain.setValueAtTime(0.15, now + i * 0.08);
           gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.4);
           osc.connect(gain);
           gain.connect(ctx.destination);
@@ -292,7 +295,7 @@ export default function Home() {
           const gain = ctx.createGain();
           osc.type = "sine";
           osc.frequency.setValueAtTime(freq, now + i * 0.09);
-          gain.gain.setValueAtTime(0.2, now + i * 0.09);
+          gain.gain.setValueAtTime(0.18, now + i * 0.09);
           gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.8);
           osc.connect(gain);
           gain.connect(ctx.destination);
@@ -322,6 +325,37 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  const askCosmicOracle = async (customPrompt?: string) => {
+    const query = customPrompt || oracleInput;
+    if (!query) return;
+    setOracleLoading(true);
+    setOracleResponse("");
+    playTone("twinkle");
+
+    try {
+      const res = await fetch("/api/oracle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: query,
+          planet: activePlanetName,
+          topic: activeTab === "science" ? "Fakta Sains & Keajaiban Semesta" : "Cinta & Doa Ulang Tahun",
+        }),
+      });
+      const data = await res.json();
+      if (data.reply) {
+        setOracleResponse(data.reply);
+        playTone("correct");
+      } else {
+        setOracleResponse(data.error || "Bintang-bintang sedang memancarkan frekuensinya. Coba lagi sebentar lagi.");
+      }
+    } catch {
+      setOracleResponse("Semesta berbisik lembut bahwa kamu adalah hal paling berharga di dunia ini.");
+    } finally {
+      setOracleLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (initialized.current || !canvasRef.current) return;
     initialized.current = true;
@@ -345,30 +379,36 @@ export default function Home() {
     audioBtn?.addEventListener("click", () => setAudio(!isPlaying));
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 3500);
-    camera.position.set(0, 5, 160);
+    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 4000);
+    camera.position.set(0, 4, 150);
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
       antialias: true,
       alpha: true,
+      powerPreference: "high-performance",
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
     controls.enablePan = false;
-    controls.minDistance = 12;
+    controls.minDistance = 10;
     controls.maxDistance = 65;
-    controls.target.set(0, 5, 0);
+    controls.target.set(0, 4, 0);
     controls.autoRotate = !reducedMotion;
-    controls.autoRotateSpeed = 0.4;
+    controls.autoRotateSpeed = 0.35;
 
-    const ambient = new THREE.AmbientLight(0xffffff, 1.3);
+    const ambient = new THREE.AmbientLight(0xffffff, 1.4);
     scene.add(ambient);
-    const keyLight = new THREE.DirectionalLight(0xffeedd, 2.0);
-    keyLight.position.set(10, 12, 10);
+    const sunLight = new THREE.PointLight(0xffeedd, 3.5, 500, 1.2);
+    sunLight.position.set(0, 4, 0);
+    scene.add(sunLight);
+
+    const keyLight = new THREE.DirectionalLight(0xfff5e6, 2.2);
+    keyLight.position.set(20, 30, 20);
     scene.add(keyLight);
 
     const loaderEl = document.getElementById("loader");
@@ -396,17 +436,138 @@ export default function Home() {
     }
     const fallbackTimeout = setTimeout(revealGate, 3500);
 
-    const bgGeo = new THREE.SphereGeometry(1600, 64, 64);
-    const bgMat = new THREE.MeshBasicMaterial({ side: THREE.BackSide });
-    texLoader.load("/textures/milky-way.jpg", (tex) => {
-      bgMat.map = tex;
-      bgMat.needsUpdate = true;
-    });
-    const bgSphere = new THREE.Mesh(bgGeo, bgMat);
-    scene.add(bgSphere);
+    const createStarfield = () => {
+      const starCount = 6000;
+      const starGeo = new THREE.BufferGeometry();
+      const positions = new Float32Array(starCount * 3);
+      const colors = new Float32Array(starCount * 3);
+      const sizes = new Float32Array(starCount);
 
-    // STARDUST FIREWORKS SYSTEM (FOR BIRTHDAY CELEBRATION)
-    const fireworkCount = 500;
+      const colorPalette = [
+        new THREE.Color(0xa5c4ff),
+        new THREE.Color(0xf8f9fa),
+        new THREE.Color(0xfff4d6),
+        new THREE.Color(0xffd29d),
+        new THREE.Color(0xffb8c6),
+        new THREE.Color(0x99f6ff),
+      ];
+
+      for (let i = 0; i < starCount; i++) {
+        const r = 400 + Math.random() * 1200;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(Math.random() * 2 - 1);
+
+        positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+        positions[i * 3 + 1] = r * Math.cos(phi);
+        positions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+
+        const chosenColor = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        colors[i * 3] = chosenColor.r;
+        colors[i * 3 + 1] = chosenColor.g;
+        colors[i * 3 + 2] = chosenColor.b;
+
+        sizes[i] = 1.0 + Math.random() * 2.5;
+      }
+
+      starGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      starGeo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+      starGeo.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 64;
+      canvas.height = 64;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        grad.addColorStop(0, "rgba(255, 255, 255, 1)");
+        grad.addColorStop(0.25, "rgba(255, 255, 255, 0.8)");
+        grad.addColorStop(0.6, "rgba(255, 255, 255, 0.2)");
+        grad.addColorStop(1, "rgba(255, 255, 255, 0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 64, 64);
+      }
+      const starTex = new THREE.CanvasTexture(canvas);
+
+      const starMat = new THREE.PointsMaterial({
+        size: 1.8,
+        vertexColors: true,
+        map: starTex,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true,
+      });
+
+      return new THREE.Points(starGeo, starMat);
+    };
+
+    const starfieldMesh = createStarfield();
+    scene.add(starfieldMesh);
+
+    const nebulaCount = 20;
+    const nebulaGroup = new THREE.Group();
+    for (let i = 0; i < nebulaCount; i++) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 256;
+      canvas.height = 256;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const grad = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+        const hue = i % 2 === 0 ? "280, 70%, 60%" : "200, 80%, 55%";
+        grad.addColorStop(0, `hsla(${hue}, 0.18)`);
+        grad.addColorStop(0.5, `hsla(${hue}, 0.06)`);
+        grad.addColorStop(1, "transparent");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 256, 256);
+      }
+      const nebTex = new THREE.CanvasTexture(canvas);
+      const nebMat = new THREE.SpriteMaterial({
+        map: nebTex,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        opacity: 0.7,
+      });
+      const sprite = new THREE.Sprite(nebMat);
+      const dist = 300 + Math.random() * 400;
+      const angle = (i / nebulaCount) * Math.PI * 2;
+      sprite.position.set(
+        Math.cos(angle) * dist,
+        (Math.random() - 0.5) * 200,
+        Math.sin(angle) * dist
+      );
+      sprite.scale.set(180 + Math.random() * 120, 180 + Math.random() * 120, 1);
+      nebulaGroup.add(sprite);
+    }
+    scene.add(nebulaGroup);
+
+    const meteorCount = 8;
+    const meteors: { mesh: THREE.Line; speed: number; reset: () => void }[] = [];
+    for (let i = 0; i < meteorCount; i++) {
+      const mGeo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(-18, -8, -18),
+      ]);
+      const mMat = new THREE.LineBasicMaterial({
+        color: 0xffeedd,
+        transparent: true,
+        opacity: 0,
+      });
+      const line = new THREE.Line(mGeo, mMat);
+      const reset = () => {
+        line.position.set(
+          (Math.random() - 0.5) * 500,
+          100 + Math.random() * 200,
+          (Math.random() - 0.5) * 500
+        );
+        mMat.opacity = 0.5 + Math.random() * 0.5;
+      };
+      reset();
+      scene.add(line);
+      meteors.push({ mesh: line, speed: 1.8 + Math.random() * 1.8, reset });
+    }
+
+    const fireworkCount = 600;
     const fireworkGeo = new THREE.BufferGeometry();
     const fireworkPos = new Float32Array(fireworkCount * 3);
     const fireworkVels: THREE.Vector3[] = [];
@@ -418,7 +579,7 @@ export default function Home() {
       fireworkPos[i * 3 + 2] = 0;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
-      const speed = 0.2 + Math.random() * 0.8;
+      const speed = 0.3 + Math.random() * 0.9;
       fireworkVels.push(
         new THREE.Vector3(
           Math.sin(phi) * Math.cos(theta) * speed,
@@ -426,7 +587,7 @@ export default function Home() {
           Math.cos(phi) * speed
         )
       );
-      const c = new THREE.Color().setHSL(Math.random(), 0.9, 0.65);
+      const c = new THREE.Color().setHSL(Math.random(), 0.95, 0.7);
       fireworkColors[i * 3] = c.r;
       fireworkColors[i * 3 + 1] = c.g;
       fireworkColors[i * 3 + 2] = c.b;
@@ -434,14 +595,14 @@ export default function Home() {
     fireworkGeo.setAttribute("position", new THREE.BufferAttribute(fireworkPos, 3));
     fireworkGeo.setAttribute("color", new THREE.BufferAttribute(fireworkColors, 3));
     const fireworkMat = new THREE.PointsMaterial({
-      size: 1.2,
+      size: 1.4,
       vertexColors: true,
       transparent: true,
       opacity: 0,
       blending: THREE.AdditiveBlending,
     });
     const fireworkPoints = new THREE.Points(fireworkGeo, fireworkMat);
-    fireworkPoints.position.set(0, 5, 0);
+    fireworkPoints.position.set(0, 4, 0);
     scene.add(fireworkPoints);
 
     let fireworksActive = false;
@@ -455,45 +616,58 @@ export default function Home() {
       posAttr.needsUpdate = true;
     }
 
-    // SHOOTING STARS / METEORS
-    const meteorCount = 6;
-    const meteors: { mesh: THREE.Line; speed: number; reset: () => void }[] = [];
-    for (let i = 0; i < meteorCount; i++) {
-      const mGeo = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(-15, -6, -15),
-      ]);
-      const mMat = new THREE.LineBasicMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0,
-      });
-      const line = new THREE.Line(mGeo, mMat);
-      const reset = () => {
-        line.position.set(
-          (Math.random() - 0.5) * 400,
-          100 + Math.random() * 150,
-          (Math.random() - 0.5) * 400
-        );
-        mMat.opacity = 0.4 + Math.random() * 0.5;
-      };
-      reset();
-      scene.add(line);
-      meteors.push({ mesh: line, speed: 1.5 + Math.random() * 1.5, reset });
-    }
+    const createSaturnRingTexture = () => {
+      const size = 1024;
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return new THREE.Texture();
 
-    // 3D PLANETS CREATION
+      const cx = size / 2;
+      const cy = size / 2;
+      const rInner = size * 0.34;
+      const rOuter = size * 0.49;
+
+      const grad = ctx.createRadialGradient(cx, cy, rInner, cx, cy, rOuter);
+      grad.addColorStop(0.0, "rgba(224, 199, 150, 0.0)");
+      grad.addColorStop(0.04, "rgba(180, 160, 120, 0.5)");
+      grad.addColorStop(0.22, "rgba(215, 190, 145, 0.85)");
+      grad.addColorStop(0.55, "rgba(235, 210, 165, 0.95)");
+      grad.addColorStop(0.58, "rgba(20, 20, 20, 0.05)");
+      grad.addColorStop(0.64, "rgba(20, 20, 20, 0.05)");
+      grad.addColorStop(0.68, "rgba(200, 175, 135, 0.75)");
+      grad.addColorStop(0.92, "rgba(210, 185, 140, 0.65)");
+      grad.addColorStop(0.96, "rgba(180, 155, 115, 0.2)");
+      grad.addColorStop(1.0, "rgba(180, 155, 115, 0.0)");
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, rOuter, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath();
+      ctx.arc(cx, cy, rInner, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.needsUpdate = true;
+      return tex;
+    };
+
     const group3D: Record<string, THREE.Group> = {};
     const basePositions: Record<PlanetName, [number, number, number]> = {
-      Matahari: [0, 5, 0],
-      Merkurius: [18, 5, 0],
-      Venus: [28, 5, 0],
-      Bumi: [40, 5, 0],
-      Mars: [52, 5, 0],
-      Yupiter: [68, 5, 0],
-      Saturnus: [86, 5, 0],
-      Uranus: [104, 5, 0],
-      Neptunus: [122, 5, 0],
+      Matahari: [0, 4, 0],
+      Merkurius: [18, 4, 0],
+      Venus: [28, 4, 0],
+      Bumi: [40, 4, 0],
+      Mars: [52, 4, 0],
+      Yupiter: [68, 4, 0],
+      Saturnus: [86, 4, 0],
+      Uranus: [104, 4, 0],
+      Neptunus: [122, 4, 0],
     };
 
     ORDER.forEach((name) => {
@@ -502,7 +676,7 @@ export default function Home() {
       const pos = basePositions[name];
       grp.position.set(pos[0], pos[1], pos[2]);
 
-      const sphereGeo = new THREE.SphereGeometry(d.size, 48, 48);
+      const sphereGeo = new THREE.SphereGeometry(d.size, 64, 64);
       let sphereMat: THREE.Material;
 
       if (name === "Matahari") {
@@ -511,10 +685,33 @@ export default function Home() {
           (sphereMat as THREE.MeshBasicMaterial).map = tex;
           sphereMat.needsUpdate = true;
         });
+
+        const canvasGlow = document.createElement("canvas");
+        canvasGlow.width = 128;
+        canvasGlow.height = 128;
+        const gCtx = canvasGlow.getContext("2d");
+        if (gCtx) {
+          const grad = gCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
+          grad.addColorStop(0, "rgba(255, 200, 100, 0.9)");
+          grad.addColorStop(0.35, "rgba(255, 140, 40, 0.4)");
+          grad.addColorStop(1, "rgba(255, 100, 0, 0)");
+          gCtx.fillStyle = grad;
+          gCtx.fillRect(0, 0, 128, 128);
+        }
+        const glowTex = new THREE.CanvasTexture(canvasGlow);
+        const glowSprite = new THREE.Sprite(
+          new THREE.SpriteMaterial({
+            map: glowTex,
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+          })
+        );
+        glowSprite.scale.set(d.size * 3.2, d.size * 3.2, 1);
+        grp.add(glowSprite);
       } else {
         sphereMat = new THREE.MeshStandardMaterial({
           color: d.color,
-          roughness: 0.7,
+          roughness: 0.65,
           metalness: 0.1,
         });
         texLoader.load(`/textures/${d.tex}`, (tex) => {
@@ -526,32 +723,27 @@ export default function Home() {
       const sphere = new THREE.Mesh(sphereGeo, sphereMat);
       grp.add(sphere);
 
-      // Moon for Earth
       if (d.moon) {
         const moonGeo = new THREE.SphereGeometry(d.size * 0.27, 32, 32);
-        const moonMat = new THREE.MeshStandardMaterial({ color: 0xb0b0b0, roughness: 0.8 });
+        const moonMat = new THREE.MeshStandardMaterial({ color: 0xc8c8c8, roughness: 0.85 });
         texLoader.load("/textures/moon.jpg", (tex) => {
           moonMat.map = tex;
           moonMat.needsUpdate = true;
         });
         const moon = new THREE.Mesh(moonGeo, moonMat);
-        moon.position.set(d.size + 2.6, 0, 0);
+        moon.position.set(d.size + 2.8, 0, 0);
         moon.userData = { isMoon: true };
         grp.add(moon);
       }
 
-      // Saturn Rings
       if (d.ring) {
-        const ringGeo = new THREE.RingGeometry(d.size * 1.35, d.size * 2.3, 64);
-        const ringMat = new THREE.MeshStandardMaterial({
+        const ringGeo = new THREE.PlaneGeometry(d.size * 5.2, d.size * 5.2);
+        const ringMat = new THREE.MeshBasicMaterial({
+          map: createSaturnRingTexture(),
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.9,
-          roughness: 0.5,
-        });
-        texLoader.load("/textures/saturn-ring.png", (tex) => {
-          ringMat.map = tex;
-          ringMat.needsUpdate = true;
+          opacity: 0.92,
+          depthWrite: false,
         });
         const ringMesh = new THREE.Mesh(ringGeo, ringMat);
         ringMesh.rotation.x = Math.PI / 2.3;
@@ -562,45 +754,9 @@ export default function Home() {
       group3D[name] = grp;
     });
 
-    // STATE & NAVIGATION
     let activeKey: PlanetName = "Matahari";
     let isTransitioning = false;
     const openedState: Record<string, boolean> = {};
-
-    function updateProgressUI() {
-      const dotsContainer = document.getElementById("progress-track");
-      if (dotsContainer) {
-        dotsContainer.innerHTML = "";
-        ORDER.forEach((name, i) => {
-          const dot = document.createElement("button");
-          dot.className =
-            "prog-dot" +
-            (openedState[name] ? " opened" : "") +
-            (name === activeKey ? " current" : "");
-          dot.title = `${name} (${DATA[name].type})`;
-          dot.onclick = () => selectPlanet(ORDER[i]);
-          dotsContainer.appendChild(dot);
-        });
-      }
-
-      const caption = document.getElementById("journey-caption");
-      const count = Object.keys(openedState).length;
-      if (caption) caption.textContent = `${count} / ${ORDER.length} stempel bintang terkumpul ⭐`;
-
-      const openMsgBtn = document.getElementById("open-msg-btn");
-      if (openMsgBtn) {
-        if (openedState[activeKey]) {
-          openMsgBtn.innerHTML = `✅ Stempel ${activeKey} Terbuka`;
-          openMsgBtn.classList.add("opened");
-        } else {
-          openMsgBtn.innerHTML = `💌 Buka Pesan & Kuis ${activeKey}`;
-          openMsgBtn.classList.remove("opened");
-        }
-      }
-
-      setOpenedPlanets({ ...openedState });
-      setActivePlanetName(activeKey);
-    }
 
     function selectPlanet(name: PlanetName) {
       if (isTransitioning) return;
@@ -611,23 +767,19 @@ export default function Home() {
       const pData = DATA[name];
       const targetPos = grp.position;
 
-      const pNameEl = document.getElementById("planet-name");
-      const pIdxEl = document.getElementById("planet-index");
-      if (pNameEl) pNameEl.textContent = `${pData.icon} ${name}`;
-      if (pIdxEl) pIdxEl.textContent = `${ORDER.indexOf(name) + 1} / ${ORDER.length} • ${pData.type}`;
-
       isTransitioning = true;
-      const camOffset = pData.size * 4 + 10;
+      const camOffset = pData.size * 3.8 + 9;
+
       gsap.to(controls.target, {
         x: targetPos.x,
-        y: targetPos.y,
+        y: targetPos.y + 0.5,
         z: targetPos.z,
         duration: 1.4,
         ease: "power2.inOut",
       });
       gsap.to(camera.position, {
         x: targetPos.x,
-        y: targetPos.y + 2,
+        y: targetPos.y + 2.2,
         z: targetPos.z + camOffset,
         duration: 1.4,
         ease: "power2.inOut",
@@ -636,10 +788,9 @@ export default function Home() {
         },
       });
 
-      updateProgressUI();
+      setActivePlanetName(name);
     }
 
-    // INTERACTIVE QUIZ & MODAL
     const quizModal = document.getElementById("quiz-modal");
     const qText = document.getElementById("q-text");
     const ans1 = document.getElementById("ans-1");
@@ -674,7 +825,7 @@ export default function Home() {
           quizResult.textContent = `✨ ${d.msg} (Stempel Bintang ${activeKey} Berhasil Dikoleksi!)`;
           playTone("correct");
           openedState[activeKey] = true;
-          updateProgressUI();
+          setOpenedPlanets({ ...openedState });
 
           if (Object.keys(openedState).length === ORDER.length) {
             setTimeout(() => {
@@ -694,13 +845,13 @@ export default function Home() {
       quizModal?.classList.remove("show");
     });
 
-    document.getElementById("open-msg-btn")?.addEventListener("click", openQuiz);
-    document.getElementById("prev-btn")?.addEventListener("click", () => {
+    document.getElementById("open-quiz-trigger")?.addEventListener("click", openQuiz);
+    document.getElementById("prev-planet-btn")?.addEventListener("click", () => {
       const idx = ORDER.indexOf(activeKey);
       const nextIdx = (idx - 1 + ORDER.length) % ORDER.length;
       selectPlanet(ORDER[nextIdx]);
     });
-    document.getElementById("next-btn")?.addEventListener("click", () => {
+    document.getElementById("next-planet-btn")?.addEventListener("click", () => {
       const idx = ORDER.indexOf(activeKey);
       const nextIdx = (idx + 1) % ORDER.length;
       selectPlanet(ORDER[nextIdx]);
@@ -717,7 +868,6 @@ export default function Home() {
       selectPlanet("Matahari");
     });
 
-    // CANDLE BLOW INTERACTION
     const candleBox = document.getElementById("candle-trigger");
     const flameEl = document.getElementById("flame-el");
     candleBox?.addEventListener("click", () => {
@@ -727,56 +877,23 @@ export default function Home() {
       trigger3DFireworks();
     });
 
-    // 2D ORBIT MAP SVG
-    const orbitMap = document.getElementById("orbit-map");
-    if (orbitMap) {
-      orbitMap.innerHTML = "";
-      const w = 340;
-      const step = w / (ORDER.length + 1);
-      ORDER.forEach((name, i) => {
-        const cx = step * (i + 1);
-        const cy = 40;
-        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        g.setAttribute("class", "orbit-dot");
-        g.onclick = () => selectPlanet(name);
-
-        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        circle.setAttribute("cx", cx.toString());
-        circle.setAttribute("cy", cy.toString());
-        circle.setAttribute("r", "3.5");
-        circle.setAttribute("class", "core");
-
-        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        text.setAttribute("x", cx.toString());
-        text.setAttribute("y", (cy + 22).toString());
-        text.setAttribute("class", "orbit-label");
-        text.textContent = name.substring(0, 3);
-
-        g.appendChild(circle);
-        g.appendChild(text);
-        orbitMap.appendChild(g);
-      });
-    }
-
-    // ANIMATION LOOP
     let animFrameId: number;
-    let clock = new THREE.Clock();
+    const clock = new THREE.Clock();
 
     function animate() {
       animFrameId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      // Meteors update
+      starfieldMesh.rotation.y = t * 0.005;
+      nebulaGroup.rotation.y = -t * 0.003;
+
       meteors.forEach((m) => {
-        m.mesh.position.x += m.speed * 1.4;
-        m.mesh.position.y -= m.speed * 0.6;
-        m.mesh.position.z += m.speed * 1.4;
-        if (m.mesh.position.y < -100) {
-          m.reset();
-        }
+        m.mesh.position.x += m.speed * 1.5;
+        m.mesh.position.y -= m.speed * 0.7;
+        m.mesh.position.z += m.speed * 1.5;
+        if (m.mesh.position.y < -120) m.reset();
       });
 
-      // Stardust fireworks expansion
       if (fireworksActive) {
         const posAttr = fireworkGeo.attributes.position as THREE.BufferAttribute;
         for (let i = 0; i < fireworkCount; i++) {
@@ -790,12 +907,9 @@ export default function Home() {
         }
         posAttr.needsUpdate = true;
         fireworkMat.opacity *= 0.985;
-        if (fireworkMat.opacity < 0.05) {
-          fireworksActive = false;
-        }
+        if (fireworkMat.opacity < 0.05) fireworksActive = false;
       }
 
-      // Rotate planets & orbit moon
       if (activeKey) {
         const grp = group3D[activeKey];
         if (grp) {
@@ -823,7 +937,6 @@ export default function Home() {
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
     window.addEventListener("resize", handleResize);
-    selectPlanet("Matahari");
 
     return () => {
       clearTimeout(fallbackTimeout);
@@ -834,6 +947,7 @@ export default function Home() {
   }, []);
 
   const currentPlanetData = DATA[activePlanetName];
+  const isCurrentOpened = !!openedPlanets[activePlanetName];
 
   return (
     <>
@@ -843,23 +957,50 @@ export default function Home() {
       <div id="grain"></div>
       <div id="vignette"></div>
 
-      {/* TOP CONTROLS */}
-      <div className="top-controls">
-        <button
-          className="icon-btn"
-          onClick={() => setShowPassport(true)}
-          title="Buka Paspor Penjelajah Kosmik Nana"
-        >
-          📔
-        </button>
-        <button id="audio-btn" className="icon-btn" title="Musik Latar">
-          🔇
-        </button>
+      {/* TOP NAVIGATION BAR */}
+      <div className="top-nav">
+        <div className="top-brand">
+          <div className="brand-badge">🪐 Starlight Observatory for Nana 🎂</div>
+        </div>
+
+        <div className="top-actions">
+          <button
+            className="glow-btn oracle-btn"
+            onClick={() => setShowOracle(true)}
+            title="Tanya AI Bintang (Cosmic Oracle)"
+          >
+            ✨ Tanya Bintang
+          </button>
+          <button
+            className="glow-btn"
+            onClick={() => setShowPassport(true)}
+            title="Buka Paspor Penjelajah Kosmik Nana"
+          >
+            ⭐ Paspor: {Object.keys(openedPlanets).length}/9
+          </button>
+          <button id="audio-btn" className="icon-circle-btn" title="Musik Latar">
+            🔇
+          </button>
+        </div>
+      </div>
+
+      {/* TOP MINI PROGRESS DOTS */}
+      <div className="planet-dots-bar">
+        {ORDER.map((name) => (
+          <button
+            key={name}
+            className={`prog-dot ${openedPlanets[name] ? "opened" : ""} ${
+              name === activePlanetName ? "current" : ""
+            }`}
+            onClick={() => setActivePlanetName(name)}
+            title={`${name} (${DATA[name].type})`}
+          />
+        ))}
       </div>
 
       {/* LOADER */}
       <div id="loader">
-        <div className="loader-title">Menyusun Semesta Ulang Tahun</div>
+        <div className="loader-title">Menyusun Semesta Bintang</div>
         <div className="loader-bar">
           <div className="loader-fill" id="loader-fill"></div>
         </div>
@@ -868,7 +1009,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* GATE INTRO SCREEN */}
+      {/* GATE SCREEN */}
       <div id="gate">
         <div className="gate-inner">
           <div className="gate-badge">🪐 Ekspedisi Semesta Nana — Special Birthday Edition 🎂</div>
@@ -878,11 +1019,10 @@ export default function Home() {
             <em>Satu Cerita Cinta Kita</em>
           </h1>
           <p className="gate-sub">
-            Sebuah perjalanan kosmik menjelajahi tata surya, mengumpulkan ilmu astronomi, dan
+            Sebuah perjalanan kosmik sinematik menjelajahi tata surya, mengumpulkan ilmu astronomi, dan
             merayakan hari ulang tahun istimewa untuk <strong>my beloved Nana, my sunshine, my sweetheart</strong>.
           </p>
 
-          {/* COUNTDOWN TIMER WIDGET */}
           <div className="countdown-box">
             <div className="countdown-label">⏳ Menuju Hari Ulang Tahun Spesial 10 September</div>
             <div className="countdown-grid">
@@ -914,92 +1054,141 @@ export default function Home() {
 
       <canvas id="webgl-canvas" ref={canvasRef}></canvas>
 
-      {/* TOP HUD */}
-      <div id="hud">
-        <div className="hud-top-bar">
-          <div className="designation">Ekspedisi Semesta Nana</div>
-          <button
-            className="passport-pill-btn"
-            onClick={() => setShowPassport(true)}
-          >
-            ⭐ Paspor: {Object.keys(openedPlanets).length}/9
-          </button>
-        </div>
+      {/* FLOATING OBSERVATORY BOTTOM DOCK */}
+      <div id="observatory-dock">
+        <div className="planet-card">
+          <div className="planet-header">
+            <div className="planet-title-wrap">
+              <span className="planet-name-text">
+                {currentPlanetData.icon} {activePlanetName}
+              </span>
+              <span className="planet-type-pill">{currentPlanetData.type}</span>
+            </div>
 
-        <div id="progress-track"></div>
-        <div id="journey-caption">0 / 9 stempel bintang terkumpul</div>
-
-        {/* DUAL TAB INFO BAR */}
-        <div id="info-bar">
-          <div className="info-header">
-            <h1 id="planet-name">{currentPlanetData.icon} {activePlanetName}</h1>
-            <span id="planet-index">1 / 9 • {currentPlanetData.type}</span>
-          </div>
-
-          <div className="tab-row">
-            <button
-              className={`tab-btn ${activeTab === "science" ? "active" : ""}`}
-              onClick={() => setActiveTab("science")}
-            >
-              🔭 Fakta Sains Astronomi
-            </button>
-            <button
-              className={`tab-btn ${activeTab === "love" ? "active" : ""}`}
-              onClick={() => setActiveTab("love")}
-            >
-              💌 Pesan Kasih & Doa
-            </button>
+            <div className="tab-toggle-row">
+              <button
+                className={`tab-toggle-btn ${activeTab === "science" ? "active" : ""}`}
+                onClick={() => setActiveTab("science")}
+              >
+                🔭 Sains
+              </button>
+              <button
+                className={`tab-toggle-btn ${activeTab === "love" ? "active" : ""}`}
+                onClick={() => setActiveTab("love")}
+              >
+                💌 Kasih
+              </button>
+            </div>
           </div>
 
           {activeTab === "science" ? (
             <div>
-              <div className="science-grid">
-                <div className="spec-badge">
-                  <div className="spec-label">Diameter</div>
-                  <div className="spec-val">{currentPlanetData.diameter}</div>
+              <div className="planet-metrics-grid">
+                <div className="metric-card">
+                  <div className="metric-label">Diameter</div>
+                  <div className="metric-val">{currentPlanetData.diameter}</div>
                 </div>
-                <div className="spec-badge">
-                  <div className="spec-label">Jarak Matahari</div>
-                  <div className="spec-val">{currentPlanetData.distance}</div>
+                <div className="metric-card">
+                  <div className="metric-label">Jarak</div>
+                  <div className="metric-val">{currentPlanetData.distance}</div>
                 </div>
-                <div className="spec-badge">
-                  <div className="spec-label">Suhu Rata-rata</div>
-                  <div className="spec-val">{currentPlanetData.temp}</div>
+                <div className="metric-card">
+                  <div className="metric-label">Suhu</div>
+                  <div className="metric-val">{currentPlanetData.temp}</div>
                 </div>
-                <div className="spec-badge">
-                  <div className="spec-label">Periode Orbit</div>
-                  <div className="spec-val">{currentPlanetData.orbitTime}</div>
+                <div className="metric-card">
+                  <div className="metric-label">Orbit</div>
+                  <div className="metric-val">{currentPlanetData.orbitTime}</div>
                 </div>
               </div>
-              <p className="tab-content">{currentPlanetData.scienceFact}</p>
+              <p className="planet-description">{currentPlanetData.scienceFact}</p>
             </div>
           ) : (
             <div>
-              <p className="tab-content love-note">{currentPlanetData.loveNote}</p>
+              <p className="planet-description love-theme">{currentPlanetData.loveNote}</p>
             </div>
           )}
         </div>
-      </div>
 
-      {/* BOTTOM PANEL & NAVIGATION */}
-      <div id="panel">
-        <div id="nav-row">
-          <button className="nav-icon-btn" id="prev-btn" aria-label="Planet sebelumnya">
+        <div className="dock-nav-row">
+          <button className="dock-arrow-btn" id="prev-planet-btn" aria-label="Sebelumnya">
             ‹
           </button>
-          <button id="open-msg-btn" aria-label="Buka pesan planet ini">
-            💌 Buka Pesan & Kuis
+          <button
+            className={`dock-action-btn ${isCurrentOpened ? "completed" : ""}`}
+            id="open-quiz-trigger"
+          >
+            {isCurrentOpened
+              ? `✅ Stempel ${activePlanetName} Terbuka • Buka Lagi`
+              : `💌 Buka Pesan & Kuis ${activePlanetName}`}
           </button>
-          <button className="nav-icon-btn" id="next-btn" aria-label="Planet selanjutnya">
+          <button className="dock-arrow-btn" id="next-planet-btn" aria-label="Selanjutnya">
             ›
           </button>
         </div>
-        <div id="orbit-wrap">
-          <svg
-            id="orbit-map"
-            viewBox="0 0 340 80"
-            preserveAspectRatio="xMidYMid meet"
-          ></svg>
+      </div>
+
+      {/* AI COSMIC ORACLE MODAL */}
+      <div id="oracle-modal" className={showOracle ? "show" : ""}>
+        <div className="oracle-card">
+          <div className="oracle-header">
+            <h2 className="oracle-title">✨ AI Cosmic Oracle untuk Nana</h2>
+            <p className="oracle-sub">Tanyakan apa saja kepada semesta bintang bertenaga kecerdasan kosmik</p>
+          </div>
+
+          <div className="quick-prompts-row">
+            <button
+              className="quick-prompt-chip"
+              onClick={() => askCosmicOracle("Apa pesan khusus bintang untuk Nana di ulang tahun 10 September nanti?")}
+            >
+              🎂 Pesan Ulang Tahun 10 September
+            </button>
+            <button
+              className="quick-prompt-chip"
+              onClick={() => askCosmicOracle(`Ceritakan makna kehadiran Nana bagi duniaku melalui analogi planet ${activePlanetName}.`)}
+            >
+              🪐 Makna Nana & Planet {activePlanetName}
+            </button>
+            <button
+              className="quick-prompt-chip"
+              onClick={() => askCosmicOracle("Tuliskan doa kosmik paling indah untuk masa depan kita berdua.")}
+            >
+              ✨ Doa Kosmik Masa Depan
+            </button>
+          </div>
+
+          <div className="oracle-input-box">
+            <input
+              type="text"
+              className="oracle-input"
+              placeholder="Ketik pertanyaanmu kepada semesta bintang..."
+              value={oracleInput}
+              onChange={(e) => setOracleInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && askCosmicOracle()}
+            />
+            <button
+              className="oracle-send-btn"
+              onClick={() => askCosmicOracle()}
+              disabled={oracleLoading}
+            >
+              {oracleLoading ? "..." : "Kirim ✨"}
+            </button>
+          </div>
+
+          {oracleResponse && (
+            <div className="oracle-response-box">
+              {oracleResponse}
+            </div>
+          )}
+
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <button
+              className="close-btn-generic"
+              onClick={() => setShowOracle(false)}
+            >
+              Tutup Oracle
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1019,7 +1208,9 @@ export default function Home() {
             </button>
           </div>
           <div id="quiz-result"></div>
-          <button id="close-quiz">Lanjutkan Penjelajahan</button>
+          <button className="close-btn-generic" id="close-quiz">
+            Lanjutkan Penjelajahan
+          </button>
         </div>
       </div>
 
@@ -1049,7 +1240,7 @@ export default function Home() {
 
           <div style={{ textAlign: "center" }}>
             <button
-              id="close-quiz"
+              className="close-btn-generic"
               onClick={() => setShowPassport(false)}
             >
               Tutup Paspor
@@ -1068,7 +1259,6 @@ export default function Home() {
             <span>My Beloved Nana!</span>
           </h2>
 
-          {/* INTERACTIVE CANDLE & CAKE */}
           <div className="cake-wrapper">
             <div id="candle-trigger" className="candle-container" title="Klik untuk Make a Wish!">
               <div id="flame-el" className={`flame ${candleBlown ? "blown" : ""}`}></div>
@@ -1081,7 +1271,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* BIRTHDAY LOVE LETTER */}
           <div className="birthday-letter-box">
             <div className="letter-heading">
               Kepada: My Beloved Nana, My Sunshine, My Sweetheart 💌
@@ -1107,7 +1296,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* CERTIFICATE OF UNIVERSE */}
           <div className="certificate-badge">
             🏆 <strong>Piagam Kehormatan Kosmik:</strong> Diberikan kepada <strong>NANA</strong> atas keberhasilan
             menuntaskan Ekspedisi 9 Planet dan dinobatkan sebagai <em>Pemilik Hatiku Selamanya</em>.
