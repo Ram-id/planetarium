@@ -4,16 +4,15 @@
   --background: #010308;
   --foreground: #f8fafc;
   --hud-cyan: #38bdf8;
-  --hud-cyan-glow: rgba(56, 189, 248, 0.45);
+  --hud-cyan-glow: rgba(56, 189, 248, 0.4);
   --hud-gold: #f6cd7c;
-  --hud-gold-glow: rgba(246, 205, 124, 0.45);
+  --hud-gold-glow: rgba(246, 205, 124, 0.4);
   --hud-rose: #f472b6;
-  --hud-rose-glow: rgba(244, 114, 182, 0.45);
+  --hud-rose-glow: rgba(244, 114, 182, 0.35);
   --hud-green: #4ade80;
-  --hud-green-glow: rgba(74, 222, 128, 0.4);
-  --glass-cockpit: rgba(6, 11, 25, 0.82);
-  --border-cyan: rgba(56, 189, 248, 0.3);
-  --border-gold: rgba(246, 205, 124, 0.3);
+  --glass-cockpit: rgba(6, 11, 25, 0.85);
+  --border-cyan: rgba(56, 189, 248, 0.28);
+  --border-gold: rgba(246, 205, 124, 0.28);
 }
 
 * {
@@ -30,7 +29,7 @@ html, body {
   overflow: hidden;
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 #webgl-canvas {
@@ -43,14 +42,13 @@ html, body {
   outline: none;
 }
 
-/* ASTRONAUT HELMET VISOR HUD OVERLAYS */
 #visor-overlay {
   position: fixed;
   inset: 0;
   z-index: 20;
   pointer-events: none;
-  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85), inset 0 0 40px rgba(56, 189, 248, 0.15);
-  background: radial-gradient(circle at center, transparent 60%, rgba(1, 4, 12, 0.75) 100%);
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85), inset 0 0 40px rgba(56, 189, 248, 0.12);
+  background: radial-gradient(circle at center, transparent 65%, rgba(1, 4, 12, 0.75) 100%);
 }
 
 #visor-glare {
@@ -61,14 +59,14 @@ html, body {
   height: 120%;
   pointer-events: none;
   z-index: 21;
-  opacity: 0.18;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, transparent 40%, rgba(56, 189, 248, 0.2) 70%, transparent 100%);
+  opacity: 0.15;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 40%, rgba(56, 189, 248, 0.15) 70%, transparent 100%);
 }
 
-/* TOP ASTRONAUT TELEMETRY BAR */
+/* TOP STATUS BAR */
 .flight-header {
   position: fixed;
-  top: 14px;
+  top: 16px;
   left: 20px;
   right: 20px;
   z-index: 50;
@@ -90,7 +88,7 @@ html, body {
   border: 1px solid var(--border-cyan);
   color: var(--hud-cyan);
   padding: 6px 14px;
-  border-radius: 6px;
+  border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -129,10 +127,9 @@ html, body {
   border: 1px solid var(--border-cyan);
   color: #ffffff;
   padding: 7px 14px;
-  border-radius: 6px;
+  border-radius: 999px;
   font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -140,27 +137,21 @@ html, body {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.25s ease;
 }
 
 .hud-btn:hover {
   transform: translateY(-2px);
   border-color: var(--hud-cyan);
-  box-shadow: 0 0 18px var(--hud-cyan-glow);
+  box-shadow: 0 0 16px var(--hud-cyan-glow);
 }
 
 .hud-btn.copilot-btn {
-  border-color: var(--hud-rose);
-  background: linear-gradient(135deg, rgba(244, 114, 182, 0.25), rgba(168, 85, 247, 0.25));
-  box-shadow: 0 0 16px var(--hud-rose-glow);
-  color: #ffffff;
+  border-color: var(--hud-cyan);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
 }
 
-.hud-btn.copilot-btn:hover {
-  box-shadow: 0 0 24px var(--hud-rose-glow);
-}
-
-/* TOP ORBIT TRACKER */
+/* ORBIT TRACKER */
 .orbit-tracker-bar {
   position: fixed;
   top: 66px;
@@ -169,24 +160,24 @@ html, body {
   z-index: 40;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: rgba(6, 11, 25, 0.7);
   border: 1px solid rgba(56, 189, 248, 0.2);
-  padding: 5px 14px;
+  padding: 6px 14px;
   border-radius: 999px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
 .orbit-node {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.4);
   cursor: pointer;
   padding: 0;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.3s ease;
 }
 
 .orbit-node.stamped {
@@ -196,13 +187,13 @@ html, body {
 }
 
 .orbit-node.active {
-  transform: scale(1.5);
+  transform: scale(1.4);
   border-color: var(--hud-cyan);
   background: var(--hud-cyan);
-  box-shadow: 0 0 12px var(--hud-cyan-glow);
+  box-shadow: 0 0 10px var(--hud-cyan-glow);
 }
 
-/* TARGET LOCK RETICLE (CENTRAL CROSSHAIR) */
+/* TARGET RETICLE */
 .target-reticle-wrap {
   position: fixed;
   top: 42%;
@@ -213,11 +204,11 @@ html, body {
   pointer-events: none;
   z-index: 15;
   border-radius: 50%;
-  border: 1px dashed rgba(56, 189, 248, 0.2);
+  border: 1px dashed rgba(56, 189, 248, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.5s ease;
+  transition: all 0.4s ease;
 }
 
 .target-reticle-wrap.scanning {
@@ -252,13 +243,12 @@ html, body {
   letter-spacing: 2px;
   color: var(--hud-cyan);
   text-transform: uppercase;
-  background: rgba(6, 11, 25, 0.8);
-  padding: 2px 8px;
+  background: rgba(6, 11, 25, 0.85);
+  padding: 3px 10px;
   border-radius: 4px;
   border: 1px solid var(--border-cyan);
 }
 
-/* WARP DRIVE SPEEDOMETER HUD (TOP RIGHT) */
 .warp-gauge {
   position: fixed;
   top: 70px;
@@ -288,15 +278,15 @@ html, body {
   font-weight: 700;
 }
 
-/* FLOATING ASTRONAUT FLIGHT DECK (BOTTOM DOCK) */
+/* FLIGHT DECK (BOTTOM DOCK) */
 #flight-deck {
   position: fixed;
-  bottom: 18px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 45;
   width: 94%;
-  max-width: 600px;
+  max-width: 580px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -305,22 +295,12 @@ html, body {
 .cockpit-console {
   background: var(--glass-cockpit);
   border: 1px solid var(--border-cyan);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 16px 20px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.15);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.12);
   position: relative;
-}
-
-.cockpit-console::before {
-  content: "FLIGHT TELEMETRY // SYSTEM 10.09";
-  position: absolute;
-  top: 6px;
-  right: 18px;
-  font-size: 8.5px;
-  letter-spacing: 1.5px;
-  color: rgba(56, 189, 248, 0.5);
 }
 
 .planet-header-row {
@@ -340,17 +320,17 @@ html, body {
   font-size: 1.3rem;
   font-weight: 700;
   color: #ffffff;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .target-type-pill {
-  font-size: 10px;
+  font-size: 10.5px;
   color: var(--hud-gold);
   border: 1px solid var(--border-gold);
   background: rgba(246, 205, 124, 0.1);
   padding: 2px 8px;
-  border-radius: 4px;
-  letter-spacing: 1px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
 }
 
 .tab-selector {
@@ -358,8 +338,8 @@ html, body {
   gap: 4px;
   background: rgba(0, 0, 0, 0.35);
   padding: 3px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .tab-btn {
@@ -368,8 +348,8 @@ html, body {
   color: #94a3b8;
   font-size: 11px;
   font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 4px;
+  padding: 4px 12px;
+  border-radius: 999px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -389,9 +369,9 @@ html, body {
 }
 
 .telemetry-box {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(56, 189, 248, 0.15);
-  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(56, 189, 248, 0.12);
+  border-radius: 8px;
   padding: 6px 8px;
   text-align: center;
 }
@@ -413,20 +393,19 @@ html, body {
 }
 
 .flight-desc {
-  font-size: 12px;
-  line-height: 1.55;
+  font-size: 12.5px;
+  line-height: 1.6;
   color: #cbd5e1;
-  min-height: 38px;
+  min-height: 40px;
 }
 
 .flight-desc.love-log {
-  color: #fce7f3;
-  border-left: 2px solid var(--hud-rose);
+  color: #f1f5f9;
+  border-left: 2px solid var(--hud-cyan);
   padding-left: 10px;
-  font-style: italic;
+  font-style: normal;
 }
 
-/* FLIGHT CONTROLS ROW */
 .flight-controls-row {
   display: flex;
   align-items: center;
@@ -436,7 +415,7 @@ html, body {
 .thruster-btn {
   width: 44px;
   height: 44px;
-  border-radius: 8px;
+  border-radius: 50%;
   background: var(--glass-cockpit);
   border: 1px solid var(--border-cyan);
   color: #ffffff;
@@ -453,19 +432,18 @@ html, body {
 .thruster-btn:hover {
   transform: scale(1.06);
   border-color: var(--hud-cyan);
-  box-shadow: 0 0 14px var(--hud-cyan-glow);
 }
 
 .scan-action-btn {
   flex: 1;
   height: 44px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(246, 205, 124, 0.25));
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(246, 205, 124, 0.2));
   border: 1px solid var(--hud-cyan);
   color: #ffffff;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   cursor: pointer;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -479,7 +457,7 @@ html, body {
 
 .scan-action-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 0 28px var(--hud-cyan-glow);
+  box-shadow: 0 0 26px var(--hud-cyan-glow);
 }
 
 .scan-action-btn.scanned {
@@ -488,7 +466,7 @@ html, body {
   color: #86efac;
 }
 
-/* AI CO-PILOT TERMINAL MODAL */
+/* AI CO-PILOT TERMINAL */
 #copilot-modal {
   position: fixed;
   inset: 0;
@@ -511,13 +489,13 @@ html, body {
 }
 
 .copilot-terminal {
-  background: linear-gradient(145deg, #091224, #040814);
-  border: 1.5px solid var(--hud-rose);
-  border-radius: 18px;
+  background: linear-gradient(145deg, #0a1329, #040814);
+  border: 1.5px solid var(--border-cyan);
+  border-radius: 20px;
   padding: 24px 22px;
   max-width: 520px;
   width: 100%;
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8), 0 0 35px var(--hud-rose-glow);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--hud-cyan-glow);
   max-height: 85vh;
   overflow-y: auto;
   display: flex;
@@ -529,15 +507,15 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(244, 114, 182, 0.25);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
   padding-bottom: 10px;
 }
 
 .terminal-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--hud-rose);
-  letter-spacing: 1px;
+  color: var(--hud-cyan);
+  letter-spacing: 0.5px;
 }
 
 .terminal-id {
@@ -554,18 +532,18 @@ html, body {
 
 .copilot-chip {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(244, 114, 182, 0.3);
-  border-radius: 6px;
-  padding: 5px 10px;
-  font-size: 10.5px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 11px;
   color: #f1f5f9;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .copilot-chip:hover {
-  border-color: var(--hud-rose);
-  background: rgba(244, 114, 182, 0.2);
+  border-color: var(--hud-cyan);
+  background: rgba(56, 189, 248, 0.15);
 }
 
 .terminal-input-box {
@@ -577,23 +555,23 @@ html, body {
   flex: 1;
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px 12px;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 12.5px;
   outline: none;
   font-family: inherit;
 }
 
 .terminal-input:focus {
-  border-color: var(--hud-rose);
+  border-color: var(--hud-cyan);
 }
 
 .terminal-send-btn {
-  padding: 0 16px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #f472b6, #a855f7);
-  color: #ffffff;
+  padding: 0 18px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  color: #030712;
   font-size: 12px;
   font-weight: 700;
   border: none;
@@ -602,17 +580,17 @@ html, body {
 
 .copilot-response-feed {
   background: rgba(0, 0, 0, 0.45);
-  border: 1px dashed rgba(244, 114, 182, 0.3);
-  border-radius: 10px;
+  border: 1px dashed rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
   padding: 14px;
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.7;
-  color: #fce7f3;
-  max-height: 200px;
+  color: #e2e8f0;
+  max-height: 220px;
   overflow-y: auto;
 }
 
-/* QUIZ / SCANNER RESULT MODAL */
+/* QUIZ / SCANNER MODAL */
 #quiz-modal {
   position: fixed;
   inset: 0;
@@ -636,8 +614,8 @@ html, body {
 
 .scanner-box {
   background: #081126;
-  border: 1.5px solid var(--hud-cyan);
-  border-radius: 18px;
+  border: 1px solid var(--hud-cyan);
+  border-radius: 20px;
   padding: 24px 20px;
   max-width: 450px;
   width: 100%;
@@ -665,7 +643,7 @@ html, body {
 .quiz-option-btn {
   width: 100%;
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(56, 189, 248, 0.25);
   color: #ffffff;
@@ -688,21 +666,20 @@ html, body {
   line-height: 1.65;
   padding: 14px;
   background: rgba(246, 205, 124, 0.08);
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px dashed rgba(246, 205, 124, 0.35);
   margin-bottom: 16px;
 }
 
 .generic-close-btn {
-  padding: 9px 24px;
-  border-radius: 6px;
+  padding: 9px 26px;
+  border-radius: 999px;
   background: var(--hud-cyan);
   color: #030712;
   font-size: 12px;
   font-weight: 700;
   border: none;
   cursor: pointer;
-  letter-spacing: 1px;
 }
 
 /* PASSPORT MODAL */
@@ -729,8 +706,8 @@ html, body {
 
 .passport-card {
   background: linear-gradient(145deg, #091224, #040814);
-  border: 1.5px solid var(--hud-gold);
-  border-radius: 18px;
+  border: 1px solid var(--hud-gold);
+  border-radius: 20px;
   padding: 24px 20px;
   max-width: 460px;
   width: 100%;
@@ -749,7 +726,7 @@ html, body {
 .stamp-slot {
   background: rgba(255, 255, 255, 0.03);
   border: 1px dashed rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 8px 4px;
   text-align: center;
   display: flex;
@@ -780,12 +757,12 @@ html, body {
   color: #ffffff;
 }
 
-/* GRAND FINALE ASTRONAUT EVA BIRTHDAY CELEBRATION */
+/* GRAND SURPRISE FINALE (REVEALED ONLY AT THE VERY END) */
 #finale {
   position: fixed;
   inset: 0;
   z-index: 95;
-  background: rgba(1, 4, 12, 0.94);
+  background: rgba(1, 4, 12, 0.95);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   display: flex;
@@ -793,7 +770,7 @@ html, body {
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
   padding: 20px;
   overflow-y: auto;
 }
@@ -823,7 +800,7 @@ html, body {
 }
 
 .finale-title {
-  font-size: 2.1rem;
+  font-size: 2.2rem;
   font-family: Georgia, serif;
   color: #ffffff;
   margin-bottom: 12px;
@@ -855,7 +832,7 @@ html, body {
 }
 
 .candle-container:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .flame {
@@ -891,14 +868,14 @@ html, body {
 .wish-instruction {
   font-size: 12px;
   color: var(--hud-gold);
-  font-weight: 700;
+  font-weight: 600;
   margin-top: 10px;
 }
 
 .birthday-letter-box {
   background: rgba(6, 11, 25, 0.9);
   border: 1px solid var(--hud-gold);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 20px 18px;
   margin-bottom: 18px;
   max-height: 240px;
@@ -908,14 +885,15 @@ html, body {
 }
 
 .letter-heading {
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 700;
   color: var(--hud-gold);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  font-family: Georgia, serif;
 }
 
 .letter-body {
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.75;
   color: #e2e8f0;
 }
@@ -929,6 +907,7 @@ html, body {
   color: var(--hud-rose);
   text-align: right;
   margin-top: 12px;
+  font-family: Georgia, serif;
 }
 
 .certificate-badge {
@@ -944,7 +923,7 @@ html, body {
 
 .finale-btn {
   padding: 12px 36px;
-  border-radius: 6px;
+  border-radius: 999px;
   background: linear-gradient(135deg, #f6cd7c, #d4af37);
   color: #06080e;
   font-size: 13.5px;
@@ -952,10 +931,9 @@ html, body {
   border: none;
   cursor: pointer;
   box-shadow: 0 0 25px rgba(246, 205, 124, 0.4);
-  letter-spacing: 1px;
 }
 
-/* GATE / INTRO SCREEN */
+/* INITIAL GATE SCREEN (SURPRISE KEPT SECRET: PURE ASTRONOMY DISCOVERY BRIEFING) */
 #gate {
   position: fixed;
   inset: 0;
@@ -990,15 +968,15 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 14px;
-  border-radius: 4px;
+  padding: 5px 16px;
+  border-radius: 999px;
   background: rgba(56, 189, 248, 0.12);
   border: 1px solid var(--border-cyan);
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--hud-cyan);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   font-weight: 700;
 }
 
@@ -1021,65 +999,26 @@ html, body {
 .gate-sub {
   font-size: 13.5px;
   color: #cbd5e1;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.countdown-box {
-  background: rgba(6, 11, 25, 0.8);
-  border: 1px solid var(--border-cyan);
-  border-radius: 12px;
-  padding: 14px 18px;
-  margin-bottom: 22px;
-  width: 100%;
-}
-
-.countdown-label {
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--hud-cyan);
-  margin-bottom: 8px;
-  font-weight: 700;
-}
-
-.countdown-grid {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-.countdown-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 48px;
-}
-
-.countdown-num {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--hud-gold);
-}
-
-.countdown-unit {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #94a3b8;
+  line-height: 1.65;
+  margin-bottom: 24px;
 }
 
 .gate-btn {
-  padding: 14px 38px;
+  padding: 14px 40px;
   font-size: 14px;
   font-weight: 700;
-  border-radius: 6px;
+  border-radius: 999px;
   background: linear-gradient(135deg, #38bdf8, #f6cd7c);
   color: #030712;
   border: none;
   cursor: pointer;
   box-shadow: 0 0 28px rgba(56, 189, 248, 0.45);
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
+  transition: transform 0.2s ease;
+}
+
+.gate-btn:hover {
+  transform: translateY(-2px);
 }
 
 .gate-hint {

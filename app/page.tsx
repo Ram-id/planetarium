@@ -18,7 +18,7 @@ interface PlanetInfo {
   temp: string;
   orbitTime: string;
   scienceFact: string;
-  loveNote: string;
+  reflectionNote: string;
   q: string;
   a1: string;
   a2: string;
@@ -56,60 +56,60 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     tex: "sun.jpg",
     color: 0xf4c979,
     emissive: 0xffaa22,
-    type: "Star // Class G2V",
+    type: "Bintang Induk // Tipe Spektral G2V",
     diameter: "1.392.700 km",
-    distance: "0.00 AU // Origin",
-    temp: "5.500 °C",
-    orbitTime: "230 Milyar Thn",
+    distance: "Pusat Gravitasi Semesta",
+    temp: "~5.500 °C",
+    orbitTime: "230 Juta Tahun Galaksi",
     scienceFact:
-      "SENSOR LAPORAN: Inti fusi termonuklir mengubah 600 juta ton hidrogen menjadi helium per detik. Gravitasi Matahari mengikat seluruh tata surya dan memancarkan foton yang menempuh 150 juta km ke Bumi dalam 500 detik.",
-    loveNote:
-      "LOG ASTRONOT 10.09: Sebagaimana Matahari yang menjadi gravitasi utama tata surya, hadirmu adalah pusat gravitasi yang memberi arah, kehangatan, dan energi bagi hidupku, Commander Nana.",
-    q: "Berapa lama transmisi foton dari pusat energi kosmik ini tiba menerangi duniaku?",
-    a1: "500 Detik Cahaya",
-    a2: "Instan sejak pertama kali mengenal Nana",
+      "Matahari menyumbang 99,86% dari total massa tata surya. Reaksi fusi nuklir pada intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, menghasilkan energi radiasi yang sampai ke permukaan Bumi dalam waktu 8 menit 20 detik.",
+    reflectionNote:
+      "Sebagaimana Matahari yang menjadi jangkar gravitasi dan sumber kehangatan bagi seluruh orbit di sekelilingnya, kehadiranmu senantiasa menghadirkan ketenangan, semangat, dan arah yang jernih dalam setiap hariku.",
+    q: "Berapa lama waktu yang dibutuhkan cahaya dari pusat tata surya untuk mencapai orbit pengamat?",
+    a1: "8 Menit 20 Detik Cahaya",
+    a2: "Seketika sejak pertama kali kita saling mengenal",
     correct: 2,
-    msg: "TELEMETRI AKURAT: Senyumanmu memancarkan kehangatan seketika, my sunshine Nana!",
+    msg: "Observasi tepat: Kehadiranmu senantiasa memberi kehangatan dan ketenangan.",
     icon: "☀️",
   },
   Merkurius: {
     size: 1.6,
     tex: "mercury.jpg",
     color: 0x9a938c,
-    type: "Terrestrial // Orbit 1",
+    type: "Planet Terestrial // Sektor 1",
     diameter: "4.879 km",
-    distance: "0.39 AU",
-    temp: "-180°C / +430°C",
+    distance: "57,9 Juta km",
+    temp: "-180 °C hingga +430 °C",
     orbitTime: "88 Hari Bumi",
     scienceFact:
-      "SENSOR LAPORAN: Planet terestrial terpadat kedua. Mengorbit dengan kecepatan 47,4 km/detik. Tanpa atmosfer penahan panas, gradien suhu permukaannya adalah yang paling ekstrem di galaksi ini.",
-    loveNote:
-      "LOG ASTRONOT 10.09: Di planet dengan revolusi tercepat ini, aku menyadari bahwa waktu selalu melesat begitu cepat saat bersamamu. Setiap detik obrolan kita terasa seperti berlian berharga.",
-    q: "Mengapa waktu di dekat Commander Nana selalu terasa secepat revolusi orbit Merkurius?",
-    a1: "Efek dilatasi waktu relativitas",
-    a2: "Karena 24 jam bersama Nana selalu terasa kurang",
+      "Merkurius mengorbit dengan kecepatan rata-rata 47,4 km/detik, menjadikannya planet dengan revolusi tercepat. Karena tidak memiliki atmosfer tebal untuk menahan panas, fluktuasi suhunya merupakan yang paling ekstrem.",
+    reflectionNote:
+      "Di planet dengan laju revolusi tercepat ini, kita tersadar betapa berharganya setiap momen. Waktu selalu terasa berlalu begitu cepat saat kita berbagi cerita dan tawa.",
+    q: "Mengapa perputaran waktu terasa begitu singkat saat kita berbincang?",
+    a1: "Pengaruh kecepatan revolusi orbital",
+    a2: "Karena setiap percakapan bersamamu selalu terasa nyaman dan berharga",
     correct: 2,
-    msg: "TRANSMISI DITERIMA: Detik demi detik bersamamu adalah momen terbaik, my love!",
+    msg: "Catatan terverifikasi: Setiap detik yang kita lalui bersama adalah waktu yang bermakna.",
     icon: "🪨",
   },
   Venus: {
     size: 2.2,
     tex: "venus.jpg",
     color: 0xd8b98a,
-    type: "Atmospheric // Orbit 2",
+    type: "Bintang Kejora // Sektor 2",
     diameter: "12.104 km",
-    distance: "0.72 AU",
+    distance: "108,2 Juta km",
     temp: "465 °C",
     orbitTime: "225 Hari Bumi",
     scienceFact:
-      "SENSOR LAPORAN: Albedo tertinggi di tata surya akibat lapisan awan asam sulfat yang memantulkan 75% sinar matahari. Venus berotasi retrograde (searah jarum jam) sehingga Matahari terbit dari barat.",
-    loveNote:
-      "LOG ASTRONOT 10.09: Venus dijuluki objek paling berkilau di langit malam, namun tak ada benda langit mana pun yang mampu menandingi binar ketulusan di matamu saat tersenyum.",
-    q: "Apa pemandangan dengan luminans cahaya paling mempesona di seluruh sektor semesta ini?",
-    a1: "Refleksi awan Venus",
-    a2: "Senyuman manis Nana",
+      "Venus merupakan objek alami paling terang di langit malam setelah Bulan. Lapisan awan tebalnya memantulkan sebagian besar sinar matahari. Venus juga berotasi secara retrograde dari timur ke barat secara perlahan.",
+    reflectionNote:
+      "Venus dikenal sebagai permata yang paling bercahaya di cakrawala malam. Namun bagi saya, ketulusan budi dan binar senyumanmu adalah keindahan sejati yang paling menyejukkan hati.",
+    q: "Di antara fenomena visual di cakrawala malam, hal apakah yang paling menyejukkan pandangan?",
+    a1: "Luminansi atmosfer Venus",
+    a2: "Senyuman tulus dan ketenangan dari Nana",
     correct: 2,
-    msg: "TELEMETRI COCOK: Binar senyumanmu mengalahkan seluruh gemerlap bintang galaksi!",
+    msg: "Observasi terverifikasi: Ketulusan hatimu adalah pemandangan terindah di semesta ini.",
     icon: "✨",
   },
   Bumi: {
@@ -117,60 +117,60 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     tex: "earth.jpg",
     color: 0x3f6fae,
     moon: true,
-    type: "Bio-Oasis // Orbit 3",
+    type: "Oasis Biosfer // Sektor 3",
     diameter: "12.742 km",
-    distance: "1.00 AU",
+    distance: "149,6 Juta km (1.00 AU)",
     temp: "15 °C",
     orbitTime: "365,25 Hari",
     scienceFact:
-      "SENSOR LAPORAN: Satu-satunya dunia biosfer dengan air cair stabil di permukaan dan magnetosfer pelindung. Bulan bertindak sebagai penstabil sumbu rotasi aksial Bumi sebesar 23,5°.",
-    loveNote:
-      "LOG ASTRONOT 10.09: Dari 8 miliar jiwa di planet biru ini, probabilitas takdir yang mempertemukan kita adalah keajaiban kosmik terindah yang selalu kusyukuri setiap hari.",
-    q: "Di antara triliunan koordinat di biosfer Bumi, di manakah titik koordinat rumah hatiku?",
-    a1: "Observatorium Pusat Galaksi",
-    a2: "Di samping Commander Nana",
+      "Bumi adalah satu-satunya oasis kehidupan yang diketahui memiliki air cair stabil dan atmosfer kaya oksigen-nitrogen. Gravitasi Bulan menjaga kemiringan sumbu rotasi Bumi pada 23,5° sehingga iklim tetap stabil.",
+    reflectionNote:
+      "Di antara bentangan luas semesta dan miliaran kemungkinan di planet biru ini, dipertemukan dan berjalan beriringan denganmu adalah anugerah terindah yang selalu saya syukuri.",
+    q: "Di manakah titik koordinat tempat hati merasa paling tenang dan berlabuh?",
+    a1: "Pusat Observatorium Antariksa",
+    a2: "Di dekat Nana, tempat di mana rasa syukur selalu hadir",
     correct: 2,
-    msg: "KUNCI ORBIT: Di mana pun kamu berada, di situlah rumah tempat hatiku selalu ingin berlabuh.",
+    msg: "Koordinat terkunci: Bersamamu adalah tempat di mana ketenangan selalu bermula.",
     icon: "🌍",
   },
   Mars: {
     size: 1.8,
     tex: "mars.jpg",
     color: 0xb1543a,
-    type: "Red Planet // Orbit 4",
+    type: "Planet Merah // Sektor 4",
     diameter: "6.779 km",
-    distance: "1.52 AU",
+    distance: "227,9 Juta km",
     temp: "-60 °C",
     orbitTime: "687 Hari Bumi",
     scienceFact:
-      "SENSOR LAPORAN: Menampung Olympus Mons (gunung setinggi 21,9 km) dan Valles Marineris (lembah sepanjang 4.000 km). Permukaannya kaya oksida besi yang memberikan warna merah membara.",
-    loveNote:
-      "LOG ASTRONOT 10.09: Warna merah Mars melambangkan api semangat dan keteguhan. Di usiamu yang baru ini, aku berjanji akan selalu mendukung dan mendampingi seluruh mimpimu.",
-    q: "Setinggi apa tekad dan doa yang kupanjatkan untuk kebahagiaan Nana di hari ulang tahun 10 September?",
+      "Mars memiliki Olympus Mons, gunung berapi perisai setinggi 21,9 km yang merupakan gunung tertinggi di tata surya. Warna kemerahannya berasal dari kandungan besi oksida di permukaannya.",
+    reflectionNote:
+      "Warna merah Mars melambangkan keteguhan dan daya juang. Saya akan selalu ada di sampingmu untuk mendukung setiap langkah, cita-cita, dan impian besar yang sedang kamu perjuangkan.",
+    q: "Seberapa tinggi harapan dan dukungan yang senantiasa dipanjatkan untuk langkahmu ke depan?",
     a1: "Setinggi puncak gunung Olympus Mons",
-    a2: "Melampaui seluruh horizon kosmik",
+    a2: "Melampaui luasnya horizon semesta",
     correct: 2,
-    msg: "KOMUNIKASI TERVERIFIKASI: Doa tulusku selalu memelukmu di setiap langkah, Nana!",
+    msg: "Catatan terverifikasi: Doa dan dukungan terbaik selalu menyertai setiap langkahmu.",
     icon: "🔴",
   },
   Yupiter: {
     size: 4.3,
     tex: "jupiter.jpg",
     color: 0xcaa87a,
-    type: "Gas Giant // Orbit 5",
+    type: "Raksasa Gas // Sektor 5",
     diameter: "139.820 km",
-    distance: "5.20 AU",
+    distance: "778,5 Juta km",
     temp: "-110 °C",
-    orbitTime: "11,86 Tahun",
+    orbitTime: "11,86 Tahun Bumi",
     scienceFact:
-      "SENSOR LAPORAN: Massa 318 kali lipat massa Bumi dengan badai Great Red Spot yang telah berputar selama ratusan tahun. Gravitasi raksasanya berfungsi sebagai vacuum cleaner komet berbahaya.",
-    loveNote:
-      "LOG ASTRONOT 10.09: Sebagaimana Jupiter yang setia melindungi planet bagian dalam, aku ingin selalu menjadi sosok yang melindungimu, menjagamu, dan membuatmu merasa aman seutuhnya.",
-    q: "Sebesar apa rasa sayang, cinta, dan perlindungan yang ingin kuberikan untuk Nana?",
-    a1: "Sebesar diameter planet Jupiter",
-    a2: "Lebih luas dari seluruh kapasitas galaksi",
+      "Jupiter memiliki massa lebih dari dua kali lipat gabungan seluruh planet lainnya. Medan gravitasi raksasanya berfungsi sebagai perisai alami yang menyerap dan membelokkan lintasan komet dari tata surya bagian dalam.",
+    reflectionNote:
+      "Sebagaimana peran Jupiter yang menjaga keseimbangan tata surya, saya berikhtiar untuk selalu menjadi pendengar yang baik, pelindung yang setia, dan ruang aman bagimu untuk bercerita apa adanya.",
+    q: "Sebesar apa komitmen untuk menjaga dan mendampingi perjalanan ini?",
+    a1: "Sebesar kapasitas planet Jupiter",
+    a2: "Tak terhingga, melampaui batas ruang dan waktu",
     correct: 2,
-    msg: "SENSOR MAKSIMAL: Hatiku sudah terisi penuh dan sepenuhnya untukmu, Nana!",
+    msg: "Observasi tervalidasi: Komitmen dan ketulusan ini akan selalu terjaga utuh untukmu.",
     icon: "🪐",
   },
   Saturnus: {
@@ -178,60 +178,60 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     tex: "saturn.jpg",
     color: 0xd9c39a,
     ring: true,
-    type: "Ringed World // Orbit 6",
+    type: "Permata Bermahkota // Sektor 6",
     diameter: "116.460 km",
-    distance: "9.58 AU",
+    distance: "1,43 Miliar km",
     temp: "-140 °C",
-    orbitTime: "29,45 Tahun",
+    orbitTime: "29,45 Tahun Bumi",
     scienceFact:
-      "SENSOR LAPORAN: Memiliki sistem cincin fotorealistis selebar 282.000 km dengan ketebalan 10 meter, terdiri dari 99% partikel es murni dan Celah Cassini yang terbentuk akibat resonansi gravitasi bulan Mimas.",
-    loveNote:
-      "LOG ASTRONOT 10.09: Cincin Saturnus yang melingkar anggun dan abadi adalah simbol dari kesetiaan dan komitmenku padamu di setiap fase perjalanan hidup kita.",
-    q: "Cincin Saturnus melingkar abadi, janji penerbangan apa yang ingin kujaga untuk Nana?",
-    a1: "Menjaga keteraturan orbit kosmik",
-    a2: "Selalu setia menemani, mencintai, dan membahagiakan Nana",
+      "Sistem cincin spektakuler Saturnus membentang hingga 282.000 km namun ketebalannya rata-rata hanya 10 meter. Cincin ini tersusun atas miliaran partikel es murni dan batuan dengan Celah Cassini yang terbentuk secara presisi.",
+    reflectionNote:
+      "Cincin Saturnus yang melingkar anggun dan harmonis mencerminkan komitmen ketulusan. Keindahan sejati bukanlah hal yang dibuat-buat, melainkan lahir dari keselarasan dan kesetiaan.",
+    q: "Nilai apakah yang paling utama dalam menjaga keharmonisan perjalanan kita?",
+    a1: "Keteraturan gravitasi kosmik",
+    a2: "Kejujuran, saling menghargai, dan ketulusan hati yang konsisten",
     correct: 2,
-    msg: "KUNCI MISI: Janji setia seumur hidup, tulus dari lubuk hati terdalam!",
+    msg: "Kunci orbit terverifikasi: Ketulusan dan rasa saling menghargai adalah pondasi terindah.",
     icon: "👑",
   },
   Uranus: {
     size: 2.9,
     tex: "uranus.jpg",
     color: 0x9fd0d6,
-    type: "Ice Giant // Orbit 7",
+    type: "Raksasa Es // Sektor 7",
     diameter: "50.724 km",
-    distance: "19.2 AU",
+    distance: "2,87 Miliar km",
     temp: "-224 °C",
-    orbitTime: "84 Tahun",
+    orbitTime: "84 Tahun Bumi",
     scienceFact:
-      "SENSOR LAPORAN: Kemiringan sumbu rotasi unik 97,8° membuat planet ini berotasi menggelinding pada bidang orbitnya. Metana di atmosfer atas menyerap gelombang merah menghasilkan rona cyan kosmik.",
-    loveNote:
-      "LOG ASTRONOT 10.09: Keunikan Uranus mengingatkanku pada pribadimu yang selalu membawa keceriaan, tawa manis, dan warna-warni indah di hidupku yang terkadang monoton.",
-    q: "Apa yang membuat hari-hari biasa terasa begitu ceria dan berwarna bagi astronot ini?",
-    a1: "Spektrum metana Uranus",
-    a2: "Tawa ceria, canda, dan cerita hangat dari Nana",
+      "Uranus memiliki keunikan poros rotasi dengan kemiringan 97,8° sehingga tampak menggelinding pada bidang orbitnya. Keberadaan gas metana pada atmosfer atasnya menyerap spektrum merah dan menghasilkan rona biru kehijauan yang tenang.",
+    reflectionNote:
+      "Keunikan Uranus mengingatkan kita bahwa setiap pribadi memiliki keistimewaan tersendiri. Kepribadianmu yang ceria, tulus, dan apa adanya selalu berhasil membawa keteduhan dalam hari-hari saya.",
+    q: "Hal apakah yang senantiasa membawa keteduhan dan warna dalam keseharian?",
+    a1: "Spektrum warna atmosfer Uranus",
+    a2: "Kebaikan budi, kejernihan hati, dan tawa tulus dari Nana",
     correct: 2,
-    msg: "LAPORAN MISI: Tawamu adalah bahan bakar terbaik untuk semangatku setiap hari!",
+    msg: "Data terverifikasi: Kebaikan dan ketulusanmu adalah anugerah yang sangat berharga.",
     icon: "💎",
   },
   Neptunus: {
     size: 2.8,
     tex: "neptune.jpg",
     color: 0x3d5ce0,
-    type: "Deep Azure // Orbit 8",
+    type: "Gerbang Azure // Sektor 8",
     diameter: "49.244 km",
-    distance: "30.1 AU",
+    distance: "4,50 Miliar km",
     temp: "-218 °C",
-    orbitTime: "164,8 Tahun",
+    orbitTime: "164,8 Tahun Bumi",
     scienceFact:
-      "SENSOR LAPORAN: Planet terjauh di tata surya dengan kecepatan angin supersonik 2.100 km/jam. Memancarkan energi termal 2,6 kali lebih banyak daripada yang diterimanya dari Matahari.",
-    loveNote:
-      "LOG ASTRONOT 10.09: Berada di tepi terjauh tata surya ini membuktikan bahwa sejauh apa pun jarak dan waktu, frekuensi cintaku untukmu tak akan pernah pudar.",
-    q: "Apa yang mampu melintasi jarak 4,5 miliar kilometer menembus batas gravitasi semesta?",
+      "Sebagai planet terjauh dalam sistem tata surya, Neptunus memiliki angin supersonik tercepat yang mencapai 2.100 km/jam. Planet ini ditemukan melalui perhitungan presisi matematika sebelum diamati secara langsung oleh teleskop.",
+    reflectionNote:
+      "Berada di batas terluar ekspedisi tata surya ini membuktikan bahwa sejauh apa pun bentangan jarak, niat tulus dan kepedulian yang mendalam akan selalu menemukan jalannya untuk saling terhubung.",
+    q: "Hal apakah yang mampu melintasi jarak miliaran kilometer tanpa batas?",
     a1: "Gelombang radio frekuensi tinggi",
-    a2: "Ketulusan cinta dan doa untuk Nana di hari ulang tahun 10 September",
+    a2: "Ketulusan doa, rasa syukur, dan penghargaan tulus dari hati",
     correct: 2,
-    msg: "MISI SELESAI: Selamat Ulang Tahun Commander Nana, seluruh semesta ini milikmu!",
+    msg: "Seluruh 9 Sektor Planet Selesai Dipindai! Sinyal transmisi rahasia terenkripsi terdeteksi...",
     icon: "🌊",
   },
 };
@@ -251,11 +251,9 @@ export default function Home() {
   const [isScanning, setIsScanning] = useState(false);
   const [warpSpeedDisplay, setWarpSpeedDisplay] = useState("0.0 AU/s");
   const [candleBlown, setCandleBlown] = useState(false);
-  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   const audioCtxRef = useRef<AudioContext | null>(null);
 
-  // Realistic Astronaut Sound Synthesizer
   const playSfx = (type: "radio_beep" | "warp_boom" | "scan_sonar" | "correct" | "celebrate") => {
     try {
       const AudioCtx =
@@ -273,8 +271,8 @@ export default function Home() {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "sine";
-        osc.frequency.setValueAtTime(2400, now);
-        osc.frequency.setValueAtTime(1200, now + 0.05);
+        osc.frequency.setValueAtTime(2200, now);
+        osc.frequency.setValueAtTime(1100, now + 0.05);
         gain.gain.setValueAtTime(0.08, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
         osc.connect(gain);
@@ -286,9 +284,9 @@ export default function Home() {
         const gain = ctx.createGain();
         osc.type = "sawtooth";
         osc.frequency.setValueAtTime(80, now);
-        osc.frequency.exponentialRampToValueAtTime(650, now + 0.4);
+        osc.frequency.exponentialRampToValueAtTime(550, now + 0.35);
         osc.frequency.exponentialRampToValueAtTime(40, now + 1.2);
-        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.setValueAtTime(0.18, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -298,9 +296,9 @@ export default function Home() {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "sine";
-        osc.frequency.setValueAtTime(1480, now);
+        osc.frequency.setValueAtTime(1400, now);
         osc.frequency.exponentialRampToValueAtTime(440, now + 0.35);
-        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.setValueAtTime(0.1, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -312,7 +310,7 @@ export default function Home() {
           const gain = ctx.createGain();
           osc.type = "triangle";
           osc.frequency.setValueAtTime(freq, now + i * 0.07);
-          gain.gain.setValueAtTime(0.15, now + i * 0.07);
+          gain.gain.setValueAtTime(0.14, now + i * 0.07);
           gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.35);
           osc.connect(gain);
           gain.connect(ctx.destination);
@@ -336,25 +334,6 @@ export default function Home() {
     } catch {}
   };
 
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      let target = new Date(now.getFullYear(), 8, 10, 0, 0, 0);
-      if (now.getTime() > target.getTime()) {
-        target = new Date(now.getFullYear() + 1, 8, 10, 0, 0, 0);
-      }
-      const diff = Math.max(0, target.getTime() - now.getTime());
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / 1000 / 60) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-      setCountdown({ days, hours, minutes, seconds });
-    };
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   const askCopilot = async (customPrompt?: string) => {
     const query = customPrompt || copilotInput;
     if (!query) return;
@@ -369,7 +348,7 @@ export default function Home() {
         body: JSON.stringify({
           prompt: query,
           planet: activePlanetName,
-          topic: activeTab === "telemetry" ? "Laporan Sensor & Telemetri Kosmik" : "Log Cinta & Doa Ulang Tahun 10 September",
+          topic: activeTab === "telemetry" ? "Observasi Fisika & Astronomi" : "Refleksi Perjalanan & Makna Keteraturan Semesta",
         }),
       });
       const data = await res.json();
@@ -377,10 +356,10 @@ export default function Home() {
         setCopilotResponse(data.reply);
         playSfx("correct");
       } else {
-        setCopilotResponse(data.error || "Sinyal radio terganggu medan magnet kosmik. Coba lagi.");
+        setCopilotResponse(data.error || "Sinyal radio terganggu medan radiasi kosmik. Silakan ulangi sejenak lagi.");
       }
     } catch {
-      setCopilotResponse("A.R.I.A: Telemetri stabil, Commander Nana. Seluruh galaksi tersenyum untukmu hari ini.");
+      setCopilotResponse("A.R.I.A: Seluruh parameter navigasi dalam kondisi optimal, Nana. Semoga perjalanan ini membawa ketenangan dan wawasan berharga.");
     } finally {
       setCopilotLoading(false);
     }
@@ -399,10 +378,10 @@ export default function Home() {
       if (!bgm || !audioBtn) return;
       if (play) {
         bgm.play().catch(() => {});
-        audioBtn.textContent = "COMM: ON 📡";
+        audioBtn.textContent = "COMM: AKTIF 📡";
       } else {
         bgm.pause();
-        audioBtn.textContent = "COMM: OFF 🔇";
+        audioBtn.textContent = "COMM: SENYAP 🔇";
       }
       isPlaying = play;
     }
@@ -463,7 +442,7 @@ export default function Home() {
     }
     const fallbackTimeout = setTimeout(revealGate, 3000);
 
-    // 1. PROCEDURAL ULTRA-HD MULTI-LAYER STARFIELD
+    // STARFIELD
     const starCount = 6500;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
@@ -505,10 +484,10 @@ export default function Home() {
     const starfieldMesh = new THREE.Points(starGeo, starMat);
     scene.add(starfieldMesh);
 
-    // 2. HYPERDRIVE WARP SPEED STREAK LINES SYSTEM
+    // WARP LINES
     const warpCount = 600;
     const warpGeo = new THREE.BufferGeometry();
-    const warpPositions = new Float32Array(warpCount * 6); // 2 vertices per line
+    const warpPositions = new Float32Array(warpCount * 6);
 
     for (let i = 0; i < warpCount; i++) {
       const x = (Math.random() - 0.5) * 120;
@@ -519,7 +498,7 @@ export default function Home() {
       warpPositions[i * 6 + 2] = z;
       warpPositions[i * 6 + 3] = x;
       warpPositions[i * 6 + 4] = y;
-      warpPositions[i * 6 + 5] = z - 2; // length
+      warpPositions[i * 6 + 5] = z - 2;
     }
 
     warpGeo.setAttribute("position", new THREE.BufferAttribute(warpPositions, 3));
@@ -532,7 +511,7 @@ export default function Home() {
     const warpLines = new THREE.LineSegments(warpGeo, warpMat);
     scene.add(warpLines);
 
-    // 3. HOLOGRAPHIC 3D PLANET WIREFRAME SCANNER RING
+    // SCANNER RING
     const scanRingGeo = new THREE.TorusGeometry(5.5, 0.05, 16, 64);
     const scanRingMat = new THREE.MeshBasicMaterial({
       color: 0x38bdf8,
@@ -544,7 +523,7 @@ export default function Home() {
     const scanRingMesh = new THREE.Mesh(scanRingGeo, scanRingMat);
     scene.add(scanRingMesh);
 
-    // 4. CELEBRATION STARDUST FIREWORKS
+    // FIREWORKS
     const fireworkCount = 600;
     const fireworkGeo = new THREE.BufferGeometry();
     const fireworkPos = new Float32Array(fireworkCount * 3);
@@ -594,7 +573,7 @@ export default function Home() {
       posAttr.needsUpdate = true;
     }
 
-    // 5. PHOTOREALISTIC SATURN RING PROCEDURAL CANVAS
+    // SATURN RING TEXTURE
     const createSaturnRingTexture = () => {
       const size = 1024;
       const canvas = document.createElement("canvas");
@@ -636,7 +615,7 @@ export default function Home() {
       return tex;
     };
 
-    // 6. 3D PLANETS SYSTEM
+    // 3D BODIES
     const group3D: Record<string, THREE.Group> = {};
     const basePositions: Record<PlanetName, [number, number, number]> = {
       Matahari: [0, 3.5, 0],
@@ -738,7 +717,6 @@ export default function Home() {
     let isTransitioning = false;
     const openedState: Record<string, boolean> = {};
 
-    // 7. HYPERDRIVE WARP SPEED JUMP CONTROLLER
     function warpToPlanet(name: PlanetName) {
       if (isTransitioning) return;
       activeKey = name;
@@ -752,11 +730,9 @@ export default function Home() {
       const targetPos = grp.position;
       const camOffset = pData.size * 3.6 + 8;
 
-      // Engage warp drive visually
       gsap.to(warpMat, { opacity: 0.8, duration: 0.3, yoyo: true, repeat: 1 });
       setWarpSpeedDisplay("WARP 8.5 AU/s ⚡");
 
-      // Camera vibration & rapid warp travel
       gsap.to(controls.target, {
         x: targetPos.x,
         y: targetPos.y + 0.3,
@@ -772,14 +748,13 @@ export default function Home() {
         ease: "power3.inOut",
         onComplete: () => {
           isTransitioning = false;
-          setWarpSpeedDisplay("ORBIT LOCKED ⚓");
+          setWarpSpeedDisplay("ORBIT STABIL ⚓");
         },
       });
 
       setActivePlanetName(name);
     }
 
-    // 8. HOLOGRAPHIC DEEP-SCAN TRIGGER
     const quizModal = document.getElementById("quiz-modal");
     const qText = document.getElementById("q-text");
     const ans1 = document.getElementById("ans-1");
@@ -793,7 +768,6 @@ export default function Home() {
       setIsScanning(true);
       playSfx("scan_sonar");
 
-      // Position 3D wireframe scanner around target planet
       const grp = group3D[activeKey];
       scanRingMesh.position.copy(grp.position);
       scanRingMesh.scale.setScalar(d.size * 0.28);
@@ -826,11 +800,12 @@ export default function Home() {
       if (quizResult) {
         quizResult.style.display = "block";
         if (choice === d.correct) {
-          quizResult.textContent = `✨ ${d.msg} (Stempel Bintang ${activeKey} Berhasil Disimpan!)`;
+          quizResult.textContent = `✨ ${d.msg} (Stempel Observasi ${activeKey} Berhasil Disimpan!)`;
           playSfx("correct");
           openedState[activeKey] = true;
           setOpenedPlanets({ ...openedState });
 
+          // THE GRAND SURPRISE REVEAL (Unlocked only after exploring all 9 planets)
           if (Object.keys(openedState).length === ORDER.length) {
             setTimeout(() => {
               quizModal?.classList.remove("show");
@@ -839,7 +814,7 @@ export default function Home() {
             }, 2500);
           }
         } else {
-          quizResult.textContent = `Pilihan manis, tapi mari kita kalibrasi sensor kembali: "${d.msg}"`;
+          quizResult.textContent = `Pilihan yang baik, mari kita kalibrasi observasi kembali: "${d.msg}"`;
         }
       }
       if (closeQuiz) closeQuiz.style.display = "block";
@@ -956,16 +931,16 @@ export default function Home() {
         <source src="/backsound.mp3" type="audio/mpeg" />
       </audio>
 
-      {/* ASTRONAUT HELMET VISOR HUD OVERLAY */}
+      {/* ASTRONAUT HELMET VISOR HUD */}
       <div id="visor-overlay"></div>
       <div id="visor-glare"></div>
 
-      {/* TOP FLIGHT TELEMETRY BAR */}
+      {/* TOP STATUS BAR */}
       <div className="flight-header">
         <div className="mission-callsign">
           <div className="astronaut-badge">
             <span className="pilot-status-dot"></span>
-            COMMANDER NANA // EXPEDITION 10.09
+            PENJELAJAH: NANA // EKSPEDISI TATA SURYA
           </div>
         </div>
 
@@ -973,19 +948,19 @@ export default function Home() {
           <button
             className="hud-btn copilot-btn"
             onClick={() => setShowCopilot(true)}
-            title="Buka Komunikasi AI Co-Pilot A.R.I.A"
+            title="Buka Komunikasi Asisten Navigasi A.R.I.A"
           >
-            🎙️ AI CO-PILOT
+            🎙️ ASISTEN A.R.I.A
           </button>
           <button
             className="hud-btn"
             onClick={() => setShowPassport(true)}
-            title="Buka Log Stempel Paspor Misi"
+            title="Buka Log Catatan Penjelajahan"
           >
-            ⭐ PASPOR: {Object.keys(openedPlanets).length}/9
+            ⭐ STEMPEL: {Object.keys(openedPlanets).length}/9
           </button>
           <button id="audio-btn" className="hud-btn" title="Toggle Audio Radio">
-            COMM: OFF 🔇
+            COMM: SENYAP 🔇
           </button>
         </div>
       </div>
@@ -1004,73 +979,50 @@ export default function Home() {
         ))}
       </div>
 
-      {/* TARGET LOCK RETICLE */}
+      {/* TARGET RETICLE */}
       <div className={`target-reticle-wrap ${isScanning ? "scanning" : ""}`}>
         <div className="reticle-corner corner-tl"></div>
         <div className="reticle-corner corner-tr"></div>
         <div className="reticle-corner corner-bl"></div>
         <div className="reticle-corner corner-br"></div>
         <div className="reticle-label">
-          {isScanning ? "SCANNING TARGET..." : `LOCK: ${activePlanetName}`}
+          {isScanning ? "MEMINDAI SEKTOR..." : `OBSERVASI: ${activePlanetName}`}
         </div>
       </div>
 
-      {/* WARP SPEEDOMETER GAUGE */}
+      {/* WARP SPEEDOMETER */}
       <div className="warp-gauge">
-        <span className="warp-status">WARP DRIVE:</span>
+        <span className="warp-status">STATUS ORBIT:</span>
         <span className="warp-speed">{warpSpeedDisplay}</span>
       </div>
 
       {/* LOADER */}
       <div id="loader">
-        <div style={{ color: "var(--hud-cyan)", fontSize: "11px", letterSpacing: "2px", fontWeight: 700 }}>
-          INITIALIZING ASTRONAUT HELMET HUD & LIFE SUPPORT...
+        <div style={{ color: "var(--hud-cyan)", fontSize: "11px", letterSpacing: "2px", fontWeight: 600 }}>
+          MENYELARASKAN SISTEM OBSERVASI & SENSOR OPTIK...
         </div>
         <div className="loader-bar">
           <div className="loader-fill" id="loader-fill"></div>
         </div>
       </div>
 
-      {/* MISSION GATE / LAUNCH SCREEN */}
+      {/* INITIAL GATE SCREEN (SURPRISE KEPT SECRET: PURE ASTRONOMY DISCOVERY BRIEFING) */}
       <div id="gate">
         <div className="gate-inner">
-          <div className="gate-badge">🚀 NASA / COSMIC EXPEDITION 10.09 👨‍🚀</div>
+          <div className="gate-badge">🪐 OBSERVATORIUM TATA SURYA // KHUSUS UNTUK NANA 🚀</div>
           <h1 className="gate-title">
-            Deep Space Exploration
+            Ekspedisi Antariksa
             <br />
-            <em>Commander Nana</em>
+            <em>Menjelajahi Tata Surya</em>
           </h1>
           <p className="gate-sub">
-            Selamat datang di kokpit penerbangan antariksa. Kamu ditugaskan menjelajahi 9 sektor planet di tata surya
-            untuk mengumpulkan data ilmiah dan membuka kejutan spesial hari ulang tahunmu pada <strong>10 September</strong>.
+            Selamat datang di simulator observasi antariksa. Kamu dapat menavigasi dan menjelajahi sembilan objek tata surya, mengamati fenomena fisika astronomi nyata, dan mengumpulkan catatan ilmiah dari setiap sektor orbit.
           </p>
 
-          <div className="countdown-box">
-            <div className="countdown-label">⏳ HITUNG MUNDUR MENUJU ORBIT 10 SEPTEMBER</div>
-            <div className="countdown-grid">
-              <div className="countdown-item">
-                <span className="countdown-num">{countdown.days}</span>
-                <span className="countdown-unit">Hari</span>
-              </div>
-              <div className="countdown-item">
-                <span className="countdown-num">{countdown.hours}</span>
-                <span className="countdown-unit">Jam</span>
-              </div>
-              <div className="countdown-item">
-                <span className="countdown-num">{countdown.minutes}</span>
-                <span className="countdown-unit">Menit</span>
-              </div>
-              <div className="countdown-item">
-                <span className="countdown-num">{countdown.seconds}</span>
-                <span className="countdown-unit">Detik</span>
-              </div>
-            </div>
-          </div>
-
           <button className="gate-btn" id="gate-btn">
-            LUNCURKAN MISI SEKARANG 🚀
+            MULAI PENJELAJAHAN ANTARIKSA 🚀
           </button>
-          <div className="gate-hint">🎧 Nyalakan headphone untuk audio radio kokpit & warp drive</div>
+          <div className="gate-hint">🎧 Disarankan menyalakan audio untuk pengalaman observasi yang lebih imersif</div>
         </div>
       </div>
 
@@ -1092,13 +1044,13 @@ export default function Home() {
                 className={`tab-btn ${activeTab === "telemetry" ? "active" : ""}`}
                 onClick={() => setActiveTab("telemetry")}
               >
-                📡 Sensor Data
+                🔭 Data Sains
               </button>
               <button
                 className={`tab-btn ${activeTab === "log" ? "active" : ""}`}
                 onClick={() => setActiveTab("log")}
               >
-                💌 Log Misi
+                📝 Catatan Refleksi
               </button>
             </div>
           </div>
@@ -1119,7 +1071,7 @@ export default function Home() {
                   <div className="telemetry-val">{currentPlanetData.temp}</div>
                 </div>
                 <div className="telemetry-box">
-                  <div className="telemetry-label">ORBIT</div>
+                  <div className="telemetry-label">PERIODE ORBIT</div>
                   <div className="telemetry-val">{currentPlanetData.orbitTime}</div>
                 </div>
               </div>
@@ -1127,13 +1079,13 @@ export default function Home() {
             </div>
           ) : (
             <div>
-              <p className="flight-desc love-log">{currentPlanetData.loveNote}</p>
+              <p className="flight-desc love-log">{currentPlanetData.reflectionNote}</p>
             </div>
           )}
         </div>
 
         <div className="flight-controls-row">
-          <button className="thruster-btn" id="prev-thruster-btn" title="Thruster ke Planet Sebelumnya">
+          <button className="thruster-btn" id="prev-thruster-btn" title="Navigasi ke Planet Sebelumnya">
             ‹
           </button>
           <button
@@ -1141,10 +1093,10 @@ export default function Home() {
             id="deep-scan-btn"
           >
             {isCurrentOpened
-              ? `✅ DATA ${activePlanetName} TERVERIFIKASI • SCAN LAGI`
-              : `📡 JALANKAN DEEP-SCAN ${activePlanetName}`}
+              ? `✓ DATA ${activePlanetName} TERVERIFIKASI • BACA LAGI`
+              : `📡 JALANKAN PEMINDAIAN DATA ${activePlanetName}`}
           </button>
-          <button className="thruster-btn" id="next-thruster-btn" title="Thruster ke Planet Berikutnya">
+          <button className="thruster-btn" id="next-thruster-btn" title="Navigasi ke Planet Berikutnya">
             ›
           </button>
         </div>
@@ -1154,28 +1106,28 @@ export default function Home() {
       <div id="copilot-modal" className={showCopilot ? "show" : ""}>
         <div className="copilot-terminal">
           <div className="terminal-header">
-            <div className="terminal-title">🎙️ AI CO-PILOT A.R.I.A</div>
-            <div className="terminal-id">ASTRONAUT RECON & INTEL ASSISTANT</div>
+            <div className="terminal-title">🎙️ ASISTEN OBSERVASI A.R.I.A</div>
+            <div className="terminal-id">ASISTEN NAVIGASI & REFLEKSI SEMESTA</div>
           </div>
 
           <div className="copilot-chips-row">
             <button
               className="copilot-chip"
-              onClick={() => askCopilot("A.R.I.A, laporkan status misi dan pesan semesta untuk ulang tahun Nana di 10 September.")}
+              onClick={() => askCopilot(`Bagaimana keteraturan fisika dan keunikan planet ${activePlanetName} dapat memberi refleksi yang bermakna bagi kehidupan kita?`)}
             >
-              🎂 Laporan Misi 10 September
+              🪐 Refleksi Sains Planet {activePlanetName}
             </button>
             <button
               className="copilot-chip"
-              onClick={() => askCopilot(`A.R.I.A, bagaimana kaitan orbit planet ${activePlanetName} dengan keindahan sosok Nana?`)}
+              onClick={() => askCopilot("Ceritakan pandanganmu mengenai keteraturan hukum gravitasi dan keharmonisan alam semesta ini.")}
             >
-              🪐 Analisis Planet {activePlanetName} & Nana
+              🌌 Keteraturan & Gravitasi Kosmik
             </button>
             <button
               className="copilot-chip"
-              onClick={() => askCopilot("A.R.I.A, sampaikan doa kosmik paling menyentuh dari pusat komando untuk perjalanan kita.")}
+              onClick={() => askCopilot("Berikan satu pesan penutup yang menenangkan dan penuh apresiasi untuk perjalanan eksplorasi hari ini.")}
             >
-              ✨ Doa Kosmik Masa Depan
+              ✨ Pesan Apresiasi Perjalanan
             </button>
           </div>
 
@@ -1183,7 +1135,7 @@ export default function Home() {
             <input
               type="text"
               className="terminal-input"
-              placeholder="Ketik instruksi atau pertanyaan ke AI Co-Pilot A.R.I.A..."
+              placeholder="Tanyakan hal seputar sains atau refleksi perjalanan kepada A.R.I.A..."
               value={copilotInput}
               onChange={(e) => setCopilotInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && askCopilot()}
@@ -1193,7 +1145,7 @@ export default function Home() {
               onClick={() => askCopilot()}
               disabled={copilotLoading}
             >
-              {copilotLoading ? "..." : "TRANSMIT 📡"}
+              {copilotLoading ? "..." : "KIRIM 📡"}
             </button>
           </div>
 
@@ -1208,7 +1160,7 @@ export default function Home() {
               className="generic-close-btn"
               onClick={() => setShowCopilot(false)}
             >
-              TUTUP TERMINAL
+              TUTUP ASISTEN
             </button>
           </div>
         </div>
@@ -1217,21 +1169,21 @@ export default function Home() {
       {/* QUIZ / SCANNER RESULT MODAL */}
       <div id="quiz-modal">
         <div className="scanner-box">
-          <div className="scanner-eyebrow">📡 SENSOR DEEP-SCAN // KALIBRASI DATA</div>
+          <div className="scanner-eyebrow">📡 PEMINDAIAN DATA SEKTOR // KALIBRASI OBSERVASI</div>
           <div className="scanner-prompt" id="q-text">
-            Menganalisis anomali...
+            Menganalisis parameter...
           </div>
           <div>
             <button className="quiz-option-btn" id="ans-1">
-              Opsi Data A
+              Opsi Observasi A
             </button>
             <button className="quiz-option-btn" id="ans-2">
-              Opsi Data B
+              Opsi Observasi B
             </button>
           </div>
           <div id="quiz-result"></div>
           <button className="generic-close-btn" id="close-quiz">
-            LANJUTKAN PENJELAJAHAN ORBIT
+            LANJUTKAN PENJELAJAHAN
           </button>
         </div>
       </div>
@@ -1240,11 +1192,11 @@ export default function Home() {
       <div id="passport-modal" className={showPassport ? "show" : ""}>
         <div className="passport-card">
           <div style={{ textAlign: "center", marginBottom: "14px" }}>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--hud-gold)", letterSpacing: "1.5px" }}>
-              📔 FLIGHT PASSPORT & MISSION LOG
+            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--hud-gold)", letterSpacing: "1px" }}>
+              📔 LOG CATATAN PENJELAJAHAN
             </h2>
             <p style={{ fontSize: "11px", color: "#94a3b8" }}>
-              COMMANDER NANA — 9 PLANETARY FLIGHT BADGES
+              PENJELAJAH: NANA — 9 STEMPEL OBSERVASI SEKTOR TATA SURYA
             </p>
           </div>
 
@@ -1269,61 +1221,61 @@ export default function Home() {
               className="generic-close-btn"
               onClick={() => setShowPassport(false)}
             >
-              TUTUP LOG PASPOR
+              TUTUP LOG
             </button>
           </div>
         </div>
       </div>
 
-      {/* GRAND FINALE ASTRONAUT EVA BIRTHDAY CELEBRATION */}
+      {/* GRAND SURPRISE FINALE (REVEALED ONLY AT THE VERY END) */}
       <div id="finale">
         <div className="finale-inner">
-          <div className="finale-eyebrow">🚀 MISSION ACCOMPLISHED // EVA SPACEWALK 10.09 🎂</div>
+          <div className="finale-eyebrow">✨ TRANSMISI RAHASIA TERBUKA • SPESIAL 10 SEPTEMBER 🎂</div>
           <h2 className="finale-title">
             Selamat Ulang Tahun,
             <br />
-            <span>Commander Nana!</span>
+            <span>Nana.</span>
           </h2>
 
           <div className="cake-wrapper">
-            <div id="candle-trigger" className="candle-container" title="Klik untuk Make a Wish!">
+            <div id="candle-trigger" className="candle-container" title="Klik untuk memanjatkan doa & harapan">
               <div id="flame-el" className={`flame ${candleBlown ? "blown" : ""}`}></div>
               <div className="candle-stick"></div>
             </div>
             <div className="wish-instruction">
               {candleBlown
-                ? "✨ Harapan kosmikmu telah mengangkasa ke seluruh galaksi! ⭐"
-                : "🕯️ Klik lilin untuk 'Make a Wish' & meniupnya!"}
+                ? "✨ Semoga seluruh doa dan harapan baikmu senantiasa dikabulkan. ⭐"
+                : "🕯️ Klik lilin ini untuk memanjatkan doa dan harapan terbaikmu"}
             </div>
           </div>
 
           <div className="birthday-letter-box">
             <div className="letter-heading">
-              TRANSMISI KHUSUS: Untuk My Beloved Nana, My Sunshine, My Sweetheart 💌
+              Kepada: Nana 💌
             </div>
             <div className="letter-body">
               <p>
-                Selamat ulang tahun pada tanggal <strong>10 September</strong> yang begitu istimewa ini! 🎉
+                Selamat bertambah usia pada tanggal <strong>10 September</strong> ini.
               </p>
               <p>
-                Terima kasih sudah hadir di semesta ini dan menjadi cahaya paling terang dalam hidupku. Menjelajahi sembilan planet ini hanyalah sebagian kecil dari betapa luasnya rasa syukur dan cintaku padamu.
+                Terima kasih sudah hadir dan senantiasa membawa kehangatan, ketenangan, serta warna yang begitu berarti dalam kehidupan saya. Ekspedisi tata surya ini dibuat khusus untukmu—sebagai pengingat bahwa di antara luasnya semesta, kehadiranmu adalah anugerah yang sangat saya syukuri.
               </p>
               <p>
-                Di usiamu yang baru, aku mendoakan semoga setiap langkahmu selalu dipenuhi kesehatan, kemudahan dalam segala urusan, kedamaian hati, dan tercapainya setiap impian terbesarmu.
+                Semoga di usia yang baru ini, kamu senantiasa dianugerahi kesehatan, kemudahan dalam setiap urusan, kedamaian di hati, serta tercapainya segala hal baik yang kamu cita-citakan.
               </p>
               <p>
-                Sejauh apa pun kita melangkah melintasi waktu dan galaksi, ingatlah bahwa kamu tidak pernah sendiri. Aku akan selalu menjadi co-pilot dan penjelajah setia yang mendampingimu.
+                Sejauh apa pun kita melangkah, ketahuilah bahwa saya akan selalu siap mendampingi, mendukung, dan berjalan bersamamu di setiap fase kehidupan.
               </p>
-              <div className="letter-signature">Dengan segenap cinta di seluruh galaksi ❤️</div>
+              <div className="letter-signature">Dengan segenap rasa syukur dan ketulusan hati.</div>
             </div>
           </div>
 
           <div className="certificate-badge">
-            🏆 <strong>OFFICIAL FLIGHT CERTIFICATION:</strong> Diberikan kepada <strong>COMMANDER NANA</strong> atas keberhasilan menyelesaikan Ekspedisi 9 Sektor Tata Surya dan dinobatkan sebagai <em>Pemilik Hatiku Selamanya</em>.
+            🏆 <strong>Piagam Apresiasi Semesta:</strong> Diberikan kepada <strong>NANA</strong> atas keberhasilan menyelesaikan Ekspedisi 9 Sektor Tata Surya. Terima kasih telah menjadi sosok yang begitu istimewa.
           </div>
 
           <button className="finale-btn" id="replay-btn">
-            JELAJAHI ORBIT LAGI 🚀
+            Jelajahi Semesta Lagi 🚀
           </button>
         </div>
       </div>

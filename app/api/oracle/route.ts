@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
@@ -12,17 +12,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const systemPrompt = `Kamu adalah "Cosmic Oracle" (Suara Bijak & Puitis dari Semesta) dalam sebuah website hadiah ulang tahun interaktif 3D yang dibuat khusus untuk seorang perempuan istimewa bernama Nana (panggilan sayang: my beloved Nana, my sunshine, my sweetheart).
-Nana akan berulang tahun pada tanggal 10 September.
-Pacarnya mendedikasikan seluruh tata surya dan bintang-bintang di website ini untuk membahagiakan Nana, memberinya ilmu astronomi, dan merayakan hari kelahirannya.
+    const systemPrompt = `Kamu adalah "A.R.I.A" (Asisten Navigasi & Observasi Antariksa) dalam simulator penjelajahan tata surya yang dibuat khusus untuk Nana.
 
-TUGASMU:
-- Berikan respon yang SANGAT puitis, hangat, tulus, manis, dan berbobot dalam Bahasa Indonesia.
-- Hubungkan konsep alam semesta, bintang, gravitasi, planet (${planet || "Semesta"}), dan waktu dengan keindahan cinta, ketulusan, rasa syukur, dan doa terbaik untuk hari ulang tahun Nana di 10 September.
-- Buat Nana merasa sangat dihargai, dicintai, bahagia, dan tersenyum haru saat membaca pesanmu.
-- Panjang jawaban sekitar 2 - 4 paragraf pendek yang elegan, nyaman dibaca, dan penuh keajaiban kosmik. Akhiri dengan doa manis.`;
+PANDUAN BAHASA & TONE:
+- Gunakan Bahasa Indonesia baku yang anggun, santun, hangat, dan berwawasan (tidak kaku, tidak menggunakan rayuan murahan atau kata-kata lebay/cringe).
+- Hubungkan fakta fisika astronomi, hukum gravitasi, cahaya, dan skala kosmik dengan refleksi ketenangan, kedewasaan, dan makna perjalanan.
+- Jaga elemen kejutan: jangan membocorkan kejutan ulang tahun secara tiba-tiba di awal percakapan, fokuslah mendampingi eksplorasi antariksa dengan cerdas dan penuh perhatian.
+- Panjang jawaban berkisar 2-3 paragraf ringkas yang mengalir indah.`;
 
-    const userMessage = prompt || `Beri Nana sebuah pesan puitis dan doa dari bintang ${planet || "Matahari"} untuk hari ulang tahunnya pada 10 September. Topik: ${topic || "Cinta dan Masa Depan"}`;
+    const userMessage = prompt || `Berikan catatan observasi dan refleksi mendalam mengenai planet ${planet || "Matahari"}. Topik: ${topic || "Keteraturan Semesta"}`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -36,8 +34,8 @@ TUGASMU:
           { role: "system", content: systemPrompt },
           { role: "user", content: userMessage },
         ],
-        temperature: 0.85,
-        max_tokens: 600,
+        temperature: 0.75,
+        max_tokens: 500,
       }),
     });
 
@@ -50,7 +48,7 @@ TUGASMU:
     }
 
     const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content || "Semesta selalu berbisik lembut bahwa kamu adalah hal terindah di dalamnya.";
+    const reply = data.choices?.[0]?.message?.content || "Di antara miliaran bintang, setiap keteraturan memiliki makna tersendiri.";
 
     return NextResponse.json({ reply });
   } catch (error: unknown) {

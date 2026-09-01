@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ekspedisi Semesta Nana — Special Birthday Edition 10 September 🎂✨",
-  description: "Sebuah perjalanan eksplorasi antariksa, ilmu astronomi, dan perayaan ulang tahun penuh cinta untuk Nana",
+  title: "Ekspedisi Tata Surya // Observatorium Antariksa Nana 🪐✨",
+  description: "Platform simulator dan observatorium interaktif penjelajahan semesta tata surya untuk Nana",
 };
 
 export default function RootLayout({
