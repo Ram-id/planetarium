@@ -232,6 +232,7 @@ export default function Home() {
   // Stellarium Toggles
   const [showConstellations, setShowConstellations] = useState<boolean>(true);
   const [showGrid, setShowGrid] = useState<boolean>(false);
+  const [showMilkyWayDome, setShowMilkyWayDome] = useState<boolean>(true);
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
   const [selectedCelestial, setSelectedCelestial] = useState<CelestialObject | null>(null);
 
@@ -249,6 +250,7 @@ export default function Home() {
   const timeMultiplierRef = useRef<number>(1);
   const constellationGroupRef = useRef<THREE.Group | null>(null);
   const gridGroupRef = useRef<THREE.Group | null>(null);
+  const skyDomeMeshRef = useRef<THREE.Mesh | null>(null);
 
   useEffect(() => {
     timeMultiplierRef.current = timeMultiplier;
@@ -261,6 +263,10 @@ export default function Home() {
   useEffect(() => {
     if (gridGroupRef.current) gridGroupRef.current.visible = showGrid;
   }, [showGrid]);
+
+  useEffect(() => {
+    if (skyDomeMeshRef.current) skyDomeMeshRef.current.visible = showMilkyWayDome;
+  }, [showMilkyWayDome]);
 
   const playSfx = (type: "whoosh" | "click" | "satellite" | "target") => {
     try {
@@ -420,7 +426,7 @@ export default function Home() {
     }
     const fallbackTimeout = setTimeout(revealGate, 3000);
 
-    // HELPER: CREATE SMOOTH CIRCULAR STAR TEXTURE (Eliminates all square boxes!)
+    // HELPER: CREATE SMOOTH CIRCULAR STAR TEXTURE
     const createCircularStarTexture = (colorStr: string = "#ffffff", glowStr: string = "rgba(56, 189, 248, 0.6)") => {
       const c = document.createElement("canvas");
       c.width = 64;
@@ -442,8 +448,23 @@ export default function Home() {
     const starSpriteTex = createCircularStarTexture("#ffffff", "rgba(255, 255, 255, 0.7)");
     const nodeStarSpriteTex = createCircularStarTexture("#fef08a", "rgba(250, 204, 21, 0.8)");
 
-    // 1. PROCEDURAL STARFIELD (SMOOTH CIRCULAR GLOW STARS)
-    const starCount = 8500;
+    // 1. UNSPLASH 360° SKY DOME PANORAMA (Photorealistic Milky Way & Deep Space Cosmos)
+    const skyGeo = new THREE.SphereGeometry(2200, 64, 64);
+    const skyMat = new THREE.MeshBasicMaterial({
+      side: THREE.BackSide,
+      transparent: true,
+      opacity: 0.65,
+    });
+    texLoader.load("/textures/milkyway_skydome.jpg", (tex) => {
+      skyMat.map = tex;
+      skyMat.needsUpdate = true;
+    });
+    const skyDomeMesh = new THREE.Mesh(skyGeo, skyMat);
+    scene.add(skyDomeMesh);
+    skyDomeMeshRef.current = skyDomeMesh;
+
+    // 2. PROCEDURAL PINPOINT STAR PARTICLES
+    const starCount = 6500;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
@@ -457,7 +478,7 @@ export default function Home() {
     ];
 
     for (let i = 0; i < starCount; i++) {
-      const r = 500 + Math.random() * 1800;
+      const r = 600 + Math.random() * 1400;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
 
@@ -475,22 +496,22 @@ export default function Home() {
     starGeo.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
 
     const starMat = new THREE.PointsMaterial({
-      size: 2.2,
+      size: 2.0,
       map: starSpriteTex,
       vertexColors: true,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.8,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
     const starfieldMesh = new THREE.Points(starGeo, starMat);
     scene.add(starfieldMesh);
 
-    // 2. STELLARIUM CELESTIAL GRID (Subtle Lines)
+    // 3. STELLARIUM CELESTIAL GRID (Subtle Lines)
     const gridGroup = new THREE.Group();
     for (let lat = -60; lat <= 60; lat += 30) {
-      const r = 480 * Math.cos((lat * Math.PI) / 180);
-      const y = 480 * Math.sin((lat * Math.PI) / 180);
+      const r = 520 * Math.cos((lat * Math.PI) / 180);
+      const y = 520 * Math.sin((lat * Math.PI) / 180);
       const ringGeo = new THREE.BufferGeometry();
       const points: THREE.Vector3[] = [];
       for (let a = 0; a <= 64; a++) {
@@ -512,9 +533,9 @@ export default function Home() {
         const theta = (lat * Math.PI) / 180;
         points.push(
           new THREE.Vector3(
-            480 * Math.cos(theta) * Math.cos(rad),
-            480 * Math.sin(theta),
-            480 * Math.cos(theta) * Math.sin(rad)
+            520 * Math.cos(theta) * Math.cos(rad),
+            520 * Math.sin(theta),
+            520 * Math.cos(theta) * Math.sin(rad)
           )
         );
       }
@@ -530,15 +551,15 @@ export default function Home() {
     scene.add(gridGroup);
     gridGroupRef.current = gridGroup;
 
-    // 3. STELLARIUM 3D CONSTELLATIONS LAYER (DELICATE GLOWING LINES & ROUND NODES)
+    // 4. STELLARIUM 3D CONSTELLATIONS LAYER (DELICATE GLOWING LINES & ROUND NODES)
     const constGroup = new THREE.Group();
     CONSTELLATIONS.forEach((c) => {
       const linePoints: THREE.Vector3[] = [];
       c.lines.forEach(([i1, i2]) => {
         const s1 = c.stars[i1];
         const s2 = c.stars[i2];
-        linePoints.push(new THREE.Vector3(s1[0] * 1.5, s1[1] * 1.5, s1[2] * 1.5));
-        linePoints.push(new THREE.Vector3(s2[0] * 1.5, s2[1] * 1.5, s2[2] * 1.5));
+        linePoints.push(new THREE.Vector3(s1[0] * 1.6, s1[1] * 1.6, s1[2] * 1.6));
+        linePoints.push(new THREE.Vector3(s2[0] * 1.6, s2[1] * 1.6, s2[2] * 1.6));
       });
 
       const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
@@ -554,13 +575,13 @@ export default function Home() {
       const starNodeGeo = new THREE.BufferGeometry();
       const nodePositions = new Float32Array(c.stars.length * 3);
       c.stars.forEach((s, idx) => {
-        nodePositions[idx * 3] = s[0] * 1.5;
-        nodePositions[idx * 3 + 1] = s[1] * 1.5;
-        nodePositions[idx * 3 + 2] = s[2] * 1.5;
+        nodePositions[idx * 3] = s[0] * 1.6;
+        nodePositions[idx * 3 + 1] = s[1] * 1.6;
+        nodePositions[idx * 3 + 2] = s[2] * 1.6;
       });
       starNodeGeo.setAttribute("position", new THREE.BufferAttribute(nodePositions, 3));
       const starNodeMat = new THREE.PointsMaterial({
-        size: 5.5,
+        size: 5.0,
         map: nodeStarSpriteTex,
         color: 0xfef08a,
         transparent: true,
@@ -574,7 +595,7 @@ export default function Home() {
     scene.add(constGroup);
     constellationGroupRef.current = constGroup;
 
-    // 4. STELLARIUM DEEP-SKY OBJECTS
+    // 5. STELLARIUM DEEP-SKY OBJECTS
     DEEP_SKY_OBJECTS.forEach((dso) => {
       const dsoGeo = new THREE.SphereGeometry(5.0, 16, 16);
       const dsoMat = new THREE.MeshBasicMaterial({
@@ -585,11 +606,11 @@ export default function Home() {
         blending: THREE.AdditiveBlending,
       });
       const dsoMesh = new THREE.Mesh(dsoGeo, dsoMat);
-      dsoMesh.position.set(dso.pos[0] * 1.5, dso.pos[1] * 1.5, dso.pos[2] * 1.5);
+      dsoMesh.position.set(dso.pos[0] * 1.6, dso.pos[1] * 1.6, dso.pos[2] * 1.6);
       constGroup.add(dsoMesh);
     });
 
-    // 5. SATURN RING TEXTURE
+    // 6. SATURN RING TEXTURE
     const createSaturnRingTexture = () => {
       const size = 1024;
       const canvas = document.createElement("canvas");
@@ -631,7 +652,7 @@ export default function Home() {
       return tex;
     };
 
-    // 6. 3D PLANETS SYSTEM (Widely spaced coordinates)
+    // 7. 3D PLANETS SYSTEM (Widely spaced coordinates)
     const group3D: Record<string, THREE.Group> = {};
     const basePositions: Record<PlanetName, [number, number, number]> = {
       Matahari: [0, -4.2, 0],
@@ -729,7 +750,7 @@ export default function Home() {
       group3D[name] = grp;
     });
 
-    // 7. ACTIVE SATELLITE ORBITERS
+    // 8. ACTIVE SATELLITE ORBITERS
     const activeSatellites: THREE.Group[] = [];
     const launchSatellite = () => {
       const currentGrp = group3D[activeKey];
@@ -836,9 +857,9 @@ export default function Home() {
       playSfx("target");
       setSelectedCelestial(obj);
       gsap.to(controls.target, {
-        x: obj.pos[0] * 1.5,
-        y: obj.pos[1] * 1.5,
-        z: obj.pos[2] * 1.5,
+        x: obj.pos[0] * 1.6,
+        y: obj.pos[1] * 1.6,
+        z: obj.pos[2] * 1.6,
         duration: 1.4,
         ease: "power3.inOut",
       });
@@ -863,6 +884,9 @@ export default function Home() {
       starfieldMesh.rotation.y = t * 0.002;
       constGroup.rotation.y = t * 0.001;
       gridGroup.rotation.y = t * 0.001;
+      if (skyDomeMeshRef.current) {
+        skyDomeMeshRef.current.rotation.y = t * 0.0006;
+      }
 
       activeSatellites.forEach((sat) => {
         const u = sat.userData;
@@ -1072,6 +1096,17 @@ export default function Home() {
           title="Toggle Garis Rasi Bintang"
         >
           ✨ Constellations
+        </button>
+
+        <button
+          className={`dock-btn ${showMilkyWayDome ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setShowMilkyWayDome(!showMilkyWayDome);
+          }}
+          title="Toggle Panorama Galaksi Bimasakti"
+        >
+          🌌 Milky Way
         </button>
 
         <button
