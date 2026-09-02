@@ -12,6 +12,7 @@ interface PlanetInfo {
   img?: string;
   color: number;
   emissive?: number;
+  emissiveIntensity?: number;
   moon?: boolean;
   ring?: boolean;
   indexStr: string;
@@ -51,10 +52,11 @@ const ORDER: PlanetName[] = [
 
 const DATA: Record<PlanetName, PlanetInfo> = {
   Matahari: {
-    size: 9.0,
+    size: 6.8,
     tex: "sun.jpg",
-    color: 0xf4c979,
+    color: 0xffdd88,
     emissive: 0xffaa22,
+    emissiveIntensity: 1.2,
     indexStr: "STAR // 00",
     type: "Bintang Induk Tata Surya",
     diameter: "1.392.700 km",
@@ -70,7 +72,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
       "Sebagaimana Matahari yang menjadi jangkar bagi seluruh semesta, hadirmu senantiasa memberi kehangatan, semangat, dan arah yang jernih di setiap hariku.",
   },
   Merkurius: {
-    size: 5.2,
+    size: 5.6,
     tex: "mercury.jpg",
     color: 0x9a938c,
     indexStr: "PLANET // 01",
@@ -88,7 +90,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
       "Di planet dengan laju waktu tercepat ini, aku tersadar betapa berharganya setiap momen. Waktu selalu berlalu begitu cepat saat kita berbagi cerita dan tawa.",
   },
   Venus: {
-    size: 6.8,
+    size: 6.2,
     tex: "venus.jpg",
     color: 0xd8b98a,
     indexStr: "PLANET // 02",
@@ -106,7 +108,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
       "Venus dijuluki sebagai objek paling berkilau di langit malam. Namun bagiku, senyuman tulus dan binar ceriamu adalah pemandangan paling indah di semesta ini.",
   },
   Bumi: {
-    size: 7.2,
+    size: 6.4,
     tex: "earth.jpg",
     img: "earth_spaceedu.png",
     color: 0x3f6fae,
@@ -126,7 +128,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
       "Di antara miliaran kemungkinan di planet biru yang indah ini, dipertemukan dan berjalan beriringan denganmu adalah keajaiban terindah yang selalu kusyukuri.",
   },
   Mars: {
-    size: 5.6,
+    size: 5.8,
     tex: "mars.jpg",
     color: 0xb1543a,
     indexStr: "PLANET // 04",
@@ -144,7 +146,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
       "Warna merah Mars melambangkan keteguhan dan daya juang. Aku akan selalu ada di sampingmu untuk mendukung setiap mimpi dan langkah baik yang kamu perjuangkan.",
   },
   Yupiter: {
-    size: 10.5,
+    size: 7.2,
     tex: "jupiter.jpg",
     color: 0xcaa87a,
     indexStr: "PLANET // 05",
@@ -162,7 +164,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
       "Sebagaimana Jupiter yang setia melindungi orbit sekelilingnya, aku ingin selalu menjadi sosok yang menjaga, mendengarkan, dan membuatmu merasa aman seutuhnya.",
   },
   Saturnus: {
-    size: 9.0,
+    size: 6.6,
     tex: "saturn.jpg",
     color: 0xd9c39a,
     ring: true,
@@ -181,7 +183,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
       "Cincin Saturnus yang melingkar anggun adalah simbol keselarasan dan keharmonisan. Bersamamu, hal-hal sederhana selalu terasa begitu indah dan bermakna.",
   },
   Uranus: {
-    size: 7.8,
+    size: 6.4,
     tex: "uranus.jpg",
     color: 0x9fd0d6,
     indexStr: "PLANET // 07",
@@ -199,7 +201,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
       "Keunikan Uranus mengingatkanku pada pribadimu yang selalu membawa keceriaan, tawa manis, dan warna-warni menyenangkan dalam hidupku.",
   },
   Neptunus: {
-    size: 7.5,
+    size: 6.3,
     tex: "neptune.jpg",
     color: 0x3d5ce0,
     indexStr: "PLANET // 08",
@@ -223,16 +225,12 @@ export default function Home() {
   const initialized = useRef(false);
 
   const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Bumi");
-  const [viewMode, setViewMode] = useState<"orbit" | "dome">("orbit");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"science" | "lab" | "constellations" | "love">("science");
   const [userWeight, setUserWeight] = useState<number>(45);
   const [userAge, setUserAge] = useState<number>(20);
   
-  // Stellarium Toggles
   const [showConstellations, setShowConstellations] = useState<boolean>(true);
-  const [showGrid, setShowGrid] = useState<boolean>(false);
-  const [showMilkyWayDome, setShowMilkyWayDome] = useState<boolean>(true);
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
   const [selectedCelestial, setSelectedCelestial] = useState<CelestialObject | null>(null);
 
@@ -243,14 +241,10 @@ export default function Home() {
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
-  const switchViewModeRef = useRef<(mode: "orbit" | "dome") => void>(() => {});
-  const focusCelestialRef = useRef<(obj: CelestialObject) => void>(() => {});
   const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
 
   const timeMultiplierRef = useRef<number>(1);
   const constellationGroupRef = useRef<THREE.Group | null>(null);
-  const gridGroupRef = useRef<THREE.Group | null>(null);
-  const skyDomeMeshRef = useRef<THREE.Mesh | null>(null);
 
   useEffect(() => {
     timeMultiplierRef.current = timeMultiplier;
@@ -259,14 +253,6 @@ export default function Home() {
   useEffect(() => {
     if (constellationGroupRef.current) constellationGroupRef.current.visible = showConstellations;
   }, [showConstellations]);
-
-  useEffect(() => {
-    if (gridGroupRef.current) gridGroupRef.current.visible = showGrid;
-  }, [showGrid]);
-
-  useEffect(() => {
-    if (skyDomeMeshRef.current) skyDomeMeshRef.current.visible = showMilkyWayDome;
-  }, [showMilkyWayDome]);
 
   const playSfx = (type: "whoosh" | "click" | "satellite" | "target") => {
     try {
@@ -303,18 +289,6 @@ export default function Home() {
         gain.connect(ctx.destination);
         osc.start(now);
         osc.stop(now + 0.08);
-      } else if (type === "target") {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "triangle";
-        osc.frequency.setValueAtTime(1200, now);
-        osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
-        gain.gain.setValueAtTime(0.08, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.15);
       } else if (type === "satellite") {
         [659.25, 830.61, 1046.5].forEach((freq, i) => {
           const osc = ctx.createOscillator();
@@ -367,12 +341,10 @@ export default function Home() {
     initialized.current = true;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 4500);
+    const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 4500);
 
-    // Initial camera position for Bumi (Giant Cinematic Bottom Arc)
-    const initialPos = [180, -4.2, 0];
-    const initialSize = DATA["Bumi"].size;
-    camera.position.set(initialPos[0], initialPos[1] + initialSize * 0.45, initialPos[2] + initialSize * 1.62);
+    // Initial camera position for Bumi (Giant Cinematic Bottom Arc filling the lower 60% viewport)
+    camera.position.set(0, 1.8, 12.8);
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
@@ -387,21 +359,22 @@ export default function Home() {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.enablePan = false;
-    controls.minDistance = 3;
-    controls.maxDistance = 550;
-    controls.target.set(initialPos[0], initialPos[1] - initialSize * 0.65, initialPos[2]);
+    controls.minDistance = 6;
+    controls.maxDistance = 25;
+    controls.target.set(0, -4.5, 0);
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.2;
+    controls.autoRotateSpeed = 0.25;
 
-    const ambient = new THREE.AmbientLight(0xffffff, 1.8);
+    const ambient = new THREE.AmbientLight(0xffffff, 1.6);
     scene.add(ambient);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 3.4);
-    keyLight.position.set(180, 25, 30);
+    // Key Light from above to create the bright sunlit crescent horizon (matching Pinterest)
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.8);
+    keyLight.position.set(0, 18, 16);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 2.2);
-    rimLight.position.set(180, -10, -20);
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 2.5);
+    rimLight.position.set(0, -8, -15);
     scene.add(rimLight);
 
     const loaderEl = document.getElementById("loader");
@@ -426,7 +399,7 @@ export default function Home() {
     }
     const fallbackTimeout = setTimeout(revealGate, 3000);
 
-    // HELPER: CREATE SMOOTH CIRCULAR STAR TEXTURE
+    // HELPER: CREATE CLEAN CIRCULAR GLOWING STAR TEXTURE
     const createCircularStarTexture = (colorStr: string = "#ffffff", glowStr: string = "rgba(56, 189, 248, 0.6)") => {
       const c = document.createElement("canvas");
       c.width = 64;
@@ -435,8 +408,8 @@ export default function Home() {
       if (!ctx) return new THREE.Texture();
       const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
       grad.addColorStop(0, colorStr);
-      grad.addColorStop(0.2, glowStr);
-      grad.addColorStop(0.6, "rgba(56, 189, 248, 0.15)");
+      grad.addColorStop(0.25, glowStr);
+      grad.addColorStop(0.7, "rgba(56, 189, 248, 0.08)");
       grad.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 64, 64);
@@ -448,23 +421,8 @@ export default function Home() {
     const starSpriteTex = createCircularStarTexture("#ffffff", "rgba(255, 255, 255, 0.7)");
     const nodeStarSpriteTex = createCircularStarTexture("#fef08a", "rgba(250, 204, 21, 0.8)");
 
-    // 1. UNSPLASH 360° SKY DOME PANORAMA (Photorealistic Milky Way & Deep Space Cosmos)
-    const skyGeo = new THREE.SphereGeometry(2200, 64, 64);
-    const skyMat = new THREE.MeshBasicMaterial({
-      side: THREE.BackSide,
-      transparent: true,
-      opacity: 0.65,
-    });
-    texLoader.load("/textures/milkyway_skydome.jpg", (tex) => {
-      skyMat.map = tex;
-      skyMat.needsUpdate = true;
-    });
-    const skyDomeMesh = new THREE.Mesh(skyGeo, skyMat);
-    scene.add(skyDomeMesh);
-    skyDomeMeshRef.current = skyDomeMesh;
-
-    // 2. PROCEDURAL PINPOINT STAR PARTICLES
-    const starCount = 6500;
+    // 1. CRISP, CLEAN DEEP SPACE STARFIELD (Zero ugly boxes, zero muddy clouds)
+    const starCount = 4500;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
@@ -474,11 +432,10 @@ export default function Home() {
       new THREE.Color(0xffffff),
       new THREE.Color(0xfde68a),
       new THREE.Color(0xfbcfe8),
-      new THREE.Color(0x67e8f9),
     ];
 
     for (let i = 0; i < starCount; i++) {
-      const r = 600 + Math.random() * 1400;
+      const r = 250 + Math.random() * 800;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
 
@@ -496,77 +453,33 @@ export default function Home() {
     starGeo.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
 
     const starMat = new THREE.PointsMaterial({
-      size: 2.0,
+      size: 1.6,
       map: starSpriteTex,
       vertexColors: true,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.85,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
     const starfieldMesh = new THREE.Points(starGeo, starMat);
     scene.add(starfieldMesh);
 
-    // 3. STELLARIUM CELESTIAL GRID (Subtle Lines)
-    const gridGroup = new THREE.Group();
-    for (let lat = -60; lat <= 60; lat += 30) {
-      const r = 520 * Math.cos((lat * Math.PI) / 180);
-      const y = 520 * Math.sin((lat * Math.PI) / 180);
-      const ringGeo = new THREE.BufferGeometry();
-      const points: THREE.Vector3[] = [];
-      for (let a = 0; a <= 64; a++) {
-        const theta = (a / 64) * Math.PI * 2;
-        points.push(new THREE.Vector3(Math.cos(theta) * r, y, Math.sin(theta) * r));
-      }
-      ringGeo.setFromPoints(points);
-      const ringMat = new THREE.LineBasicMaterial({
-        color: 0x38bdf8,
-        transparent: true,
-        opacity: lat === 0 ? 0.18 : 0.06,
-      });
-      gridGroup.add(new THREE.Line(ringGeo, ringMat));
-    }
-    for (let lon = 0; lon < 360; lon += 45) {
-      const rad = (lon * Math.PI) / 180;
-      const points: THREE.Vector3[] = [];
-      for (let lat = -85; lat <= 85; lat += 5) {
-        const theta = (lat * Math.PI) / 180;
-        points.push(
-          new THREE.Vector3(
-            520 * Math.cos(theta) * Math.cos(rad),
-            520 * Math.sin(theta),
-            520 * Math.cos(theta) * Math.sin(rad)
-          )
-        );
-      }
-      const lonGeo = new THREE.BufferGeometry().setFromPoints(points);
-      const lonMat = new THREE.LineBasicMaterial({
-        color: 0x38bdf8,
-        transparent: true,
-        opacity: 0.06,
-      });
-      gridGroup.add(new THREE.Line(lonGeo, lonMat));
-    }
-    gridGroup.visible = false;
-    scene.add(gridGroup);
-    gridGroupRef.current = gridGroup;
-
-    // 4. STELLARIUM 3D CONSTELLATIONS LAYER (DELICATE GLOWING LINES & ROUND NODES)
+    // 2. DELICATE CONSTELLATION LINES (Deep in background)
     const constGroup = new THREE.Group();
     CONSTELLATIONS.forEach((c) => {
       const linePoints: THREE.Vector3[] = [];
       c.lines.forEach(([i1, i2]) => {
         const s1 = c.stars[i1];
         const s2 = c.stars[i2];
-        linePoints.push(new THREE.Vector3(s1[0] * 1.6, s1[1] * 1.6, s1[2] * 1.6));
-        linePoints.push(new THREE.Vector3(s2[0] * 1.6, s2[1] * 1.6, s2[2] * 1.6));
+        linePoints.push(new THREE.Vector3(s1[0] * 0.8, s1[1] * 0.8 + 60, s1[2] * 0.8 - 120));
+        linePoints.push(new THREE.Vector3(s2[0] * 0.8, s2[1] * 0.8 + 60, s2[2] * 0.8 - 120));
       });
 
       const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
       const lineMat = new THREE.LineBasicMaterial({
         color: 0x38bdf8,
         transparent: true,
-        opacity: 0.28,
+        opacity: 0.22,
         blending: THREE.AdditiveBlending,
       });
       const lines = new THREE.LineSegments(lineGeo, lineMat);
@@ -575,17 +488,17 @@ export default function Home() {
       const starNodeGeo = new THREE.BufferGeometry();
       const nodePositions = new Float32Array(c.stars.length * 3);
       c.stars.forEach((s, idx) => {
-        nodePositions[idx * 3] = s[0] * 1.6;
-        nodePositions[idx * 3 + 1] = s[1] * 1.6;
-        nodePositions[idx * 3 + 2] = s[2] * 1.6;
+        nodePositions[idx * 3] = s[0] * 0.8;
+        nodePositions[idx * 3 + 1] = s[1] * 0.8 + 60;
+        nodePositions[idx * 3 + 2] = s[2] * 0.8 - 120;
       });
       starNodeGeo.setAttribute("position", new THREE.BufferAttribute(nodePositions, 3));
       const starNodeMat = new THREE.PointsMaterial({
-        size: 5.0,
+        size: 4.2,
         map: nodeStarSpriteTex,
         color: 0xfef08a,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.85,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
@@ -595,22 +508,7 @@ export default function Home() {
     scene.add(constGroup);
     constellationGroupRef.current = constGroup;
 
-    // 5. STELLARIUM DEEP-SKY OBJECTS
-    DEEP_SKY_OBJECTS.forEach((dso) => {
-      const dsoGeo = new THREE.SphereGeometry(5.0, 16, 16);
-      const dsoMat = new THREE.MeshBasicMaterial({
-        color: dso.color,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.35,
-        blending: THREE.AdditiveBlending,
-      });
-      const dsoMesh = new THREE.Mesh(dsoGeo, dsoMat);
-      dsoMesh.position.set(dso.pos[0] * 1.6, dso.pos[1] * 1.6, dso.pos[2] * 1.6);
-      constGroup.add(dsoMesh);
-    });
-
-    // 6. SATURN RING TEXTURE
+    // 3. SATURN RING TEXTURE
     const createSaturnRingTexture = () => {
       const size = 1024;
       const canvas = document.createElement("canvas");
@@ -652,58 +550,30 @@ export default function Home() {
       return tex;
     };
 
-    // 7. 3D PLANETS SYSTEM (Widely spaced coordinates)
-    const group3D: Record<string, THREE.Group> = {};
-    const basePositions: Record<PlanetName, [number, number, number]> = {
-      Matahari: [0, -4.2, 0],
-      Merkurius: [60, -4.2, 0],
-      Venus: [120, -4.2, 0],
-      Bumi: [180, -4.2, 0],
-      Mars: [240, -4.2, 0],
-      Yupiter: [330, -4.2, 0],
-      Saturnus: [440, -4.2, 0],
-      Uranus: [550, -4.2, 0],
-      Neptunus: [650, -4.2, 0],
-    };
+    // 4. CLEAN HERO PLANET STAGE (Each Planet is rendered centered in its own stage)
+    const planetMeshes: Record<string, THREE.Group> = {};
 
     ORDER.forEach((name) => {
       const d = DATA[name];
       const grp = new THREE.Group();
-      const pos = basePositions[name];
-      grp.position.set(pos[0], pos[1], pos[2]);
+      grp.position.set(0, -4.5, 0); // Positioned low so only the top arc shows
 
       const sphereGeo = new THREE.SphereGeometry(d.size, 64, 64);
       let sphereMat: THREE.Material;
 
       if (name === "Matahari") {
-        sphereMat = new THREE.MeshBasicMaterial({ color: d.color });
+        // Clean luminous Sun without any ugly black sprite boxes
+        sphereMat = new THREE.MeshStandardMaterial({
+          color: 0xffeedd,
+          emissive: 0xffaa22,
+          emissiveIntensity: 1.5,
+          roughness: 0.2,
+        });
         texLoader.load(`/textures/${d.tex}`, (tex) => {
-          (sphereMat as THREE.MeshBasicMaterial).map = tex;
+          (sphereMat as THREE.MeshStandardMaterial).map = tex;
+          (sphereMat as THREE.MeshStandardMaterial).emissiveMap = tex;
           sphereMat.needsUpdate = true;
         });
-
-        const canvasGlow = document.createElement("canvas");
-        canvasGlow.width = 128;
-        canvasGlow.height = 128;
-        const gCtx = canvasGlow.getContext("2d");
-        if (gCtx) {
-          const grad = gCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
-          grad.addColorStop(0, "rgba(255, 200, 100, 0.9)");
-          grad.addColorStop(0.35, "rgba(255, 140, 40, 0.4)");
-          grad.addColorStop(1, "rgba(255, 100, 0, 0)");
-          gCtx.fillStyle = grad;
-          gCtx.fillRect(0, 0, 128, 128);
-        }
-        const glowTex = new THREE.CanvasTexture(canvasGlow);
-        const glowSprite = new THREE.Sprite(
-          new THREE.SpriteMaterial({
-            map: glowTex,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-          })
-        );
-        glowSprite.scale.set(d.size * 3.2, d.size * 3.2, 1);
-        grp.add(glowSprite);
       } else {
         sphereMat = new THREE.MeshStandardMaterial({
           color: d.color,
@@ -727,7 +597,7 @@ export default function Home() {
           moonMat.needsUpdate = true;
         });
         const moon = new THREE.Mesh(moonGeo, moonMat);
-        moon.position.set(d.size + 3.8, 0, 0);
+        moon.position.set(d.size + 3.8, 1.5, 0);
         moon.userData = { isMoon: true };
         grp.add(moon);
       }
@@ -746,35 +616,35 @@ export default function Home() {
         grp.add(ringMesh);
       }
 
+      grp.visible = name === "Bumi"; // ONLY Bumi is initially visible!
       scene.add(grp);
-      group3D[name] = grp;
+      planetMeshes[name] = grp;
     });
 
-    // 8. ACTIVE SATELLITE ORBITERS
+    // 5. ACTIVE SATELLITE ORBITERS
     const activeSatellites: THREE.Group[] = [];
     const launchSatellite = () => {
-      const currentGrp = group3D[activeKey];
       const pData = DATA[activeKey];
       const sat = new THREE.Group();
 
       const satBody = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.25, 0.25, 0.6, 8),
+        new THREE.CylinderGeometry(0.22, 0.22, 0.55, 8),
         new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.8, roughness: 0.2 })
       );
       const wings = new THREE.Mesh(
-        new THREE.BoxGeometry(1.4, 0.04, 0.4),
+        new THREE.BoxGeometry(1.3, 0.04, 0.35),
         new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: 0.9, roughness: 0.1 })
       );
       sat.add(satBody);
       sat.add(wings);
 
-      sat.position.copy(currentGrp.position);
+      sat.position.set(0, -4.5, 0);
       sat.userData = {
-        center: currentGrp.position,
-        radius: pData.size + 3.2 + Math.random() * 1.5,
+        center: new THREE.Vector3(0, -4.5, 0),
+        radius: pData.size + 2.8 + Math.random() * 1.2,
         speed: 1.2 + Math.random() * 0.8,
         angle: Math.random() * Math.PI * 2,
-        inclination: (Math.random() - 0.5) * 0.8,
+        inclination: (Math.random() - 0.5) * 0.6,
       };
 
       scene.add(sat);
@@ -785,93 +655,41 @@ export default function Home() {
 
     let activeKey: PlanetName = "Bumi";
 
+    // SMOOTH PLANET TRANSITION (Cross-fade between Hero Planets)
     function navigateToPlanet(name: PlanetName) {
-      activeKey = name;
+      if (name === activeKey) return;
       playSfx("whoosh");
 
-      const grp = group3D[name];
-      const pData = DATA[name];
-      const targetPos = grp.position;
-      const R = pData.size;
+      const oldGrp = planetMeshes[activeKey];
+      const newGrp = planetMeshes[name];
 
-      keyLight.position.set(targetPos.x, targetPos.y + 25, targetPos.z + 30);
-      rimLight.position.set(targetPos.x, targetPos.y - 10, targetPos.z - 20);
+      // Smoothly hide old planet, reveal new planet
+      gsap.to(oldGrp.scale, {
+        x: 0.85,
+        y: 0.85,
+        z: 0.85,
+        duration: 0.4,
+        ease: "power2.in",
+        onComplete: () => {
+          oldGrp.visible = false;
+          oldGrp.scale.set(1, 1, 1);
 
-      gsap.to(controls.target, {
-        x: targetPos.x,
-        y: targetPos.y - R * 0.65,
-        z: targetPos.z,
-        duration: 1.4,
-        ease: "power3.inOut",
+          newGrp.visible = true;
+          newGrp.scale.set(0.85, 0.85, 0.85);
+          gsap.to(newGrp.scale, {
+            x: 1,
+            y: 1,
+            z: 1,
+            duration: 0.6,
+            ease: "power3.out",
+          });
+        },
       });
-      gsap.to(camera.position, {
-        x: targetPos.x,
-        y: targetPos.y + R * 0.45,
-        z: targetPos.z + R * 1.62,
-        duration: 1.4,
-        ease: "power3.inOut",
-      });
 
+      activeKey = name;
       setActivePlanetName(name);
     }
     navigateToPlanetRef.current = navigateToPlanet;
-
-    function switchViewMode(mode: "orbit" | "dome") {
-      playSfx("whoosh");
-      if (mode === "dome") {
-        gsap.to(controls.target, { x: 0, y: 0, z: 0, duration: 1.6, ease: "power3.inOut" });
-        gsap.to(camera.position, { x: 0, y: 20, z: 60, duration: 1.6, ease: "power3.inOut" });
-        controls.minDistance = 2;
-        controls.maxDistance = 500;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.4;
-      } else {
-        const grp = group3D[activeKey];
-        const pData = DATA[activeKey];
-        const targetPos = grp.position;
-        const R = pData.size;
-        gsap.to(controls.target, {
-          x: targetPos.x,
-          y: targetPos.y - R * 0.65,
-          z: targetPos.z,
-          duration: 1.5,
-          ease: "power3.inOut",
-        });
-        gsap.to(camera.position, {
-          x: targetPos.x,
-          y: targetPos.y + R * 0.45,
-          z: targetPos.z + R * 1.62,
-          duration: 1.5,
-          ease: "power3.inOut",
-        });
-        controls.minDistance = 3;
-        controls.maxDistance = 100;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.2;
-      }
-      setViewMode(mode);
-    }
-    switchViewModeRef.current = switchViewMode;
-
-    function focusCelestial(obj: CelestialObject) {
-      playSfx("target");
-      setSelectedCelestial(obj);
-      gsap.to(controls.target, {
-        x: obj.pos[0] * 1.6,
-        y: obj.pos[1] * 1.6,
-        z: obj.pos[2] * 1.6,
-        duration: 1.4,
-        ease: "power3.inOut",
-      });
-      gsap.to(camera.position, {
-        x: obj.pos[0] * 0.7,
-        y: obj.pos[1] * 0.7 + 10,
-        z: obj.pos[2] * 0.7,
-        duration: 1.4,
-        ease: "power3.inOut",
-      });
-    }
-    focusCelestialRef.current = focusCelestial;
 
     let animFrameId: number;
     const clock = new THREE.Clock();
@@ -881,12 +699,8 @@ export default function Home() {
       const speedFactor = timeMultiplierRef.current;
       const t = clock.getElapsedTime() * speedFactor;
 
-      starfieldMesh.rotation.y = t * 0.002;
-      constGroup.rotation.y = t * 0.001;
-      gridGroup.rotation.y = t * 0.001;
-      if (skyDomeMeshRef.current) {
-        skyDomeMeshRef.current.rotation.y = t * 0.0006;
-      }
+      starfieldMesh.rotation.y = t * 0.0015;
+      constGroup.rotation.y = t * 0.0008;
 
       activeSatellites.forEach((sat) => {
         const u = sat.userData;
@@ -897,20 +711,19 @@ export default function Home() {
         sat.rotation.y = -u.angle;
       });
 
-      ORDER.forEach((name) => {
-        const grp = group3D[name];
-        if (grp) {
-          grp.children.forEach((c) => {
-            if (c.userData.isMoon) {
-              const R = DATA[name].size + 3.8;
-              c.position.x = Math.cos(t * 0.7) * R;
-              c.position.z = Math.sin(t * 0.7) * R;
-            } else if (c instanceof THREE.Mesh && c.geometry instanceof THREE.SphereGeometry) {
-              c.rotation.y += 0.003 * speedFactor;
-            }
-          });
-        }
-      });
+      // Rotate currently visible planet
+      const currentMesh = planetMeshes[activeKey];
+      if (currentMesh) {
+        currentMesh.children.forEach((c) => {
+          if (c.userData.isMoon) {
+            const R = DATA[activeKey].size + 3.8;
+            c.position.x = Math.cos(t * 0.7) * R;
+            c.position.z = Math.sin(t * 0.7) * R;
+          } else if (c instanceof THREE.Mesh && c.geometry instanceof THREE.SphereGeometry) {
+            c.rotation.y += 0.003 * speedFactor;
+          }
+        });
+      }
 
       controls.update();
       renderer.render(scene, camera);
@@ -951,20 +764,18 @@ export default function Home() {
 
   return (
     <>
-      {/* TOP NAVIGATION BAR */}
+      {/* TOP NAVIGATION BAR (Clean SpaceEdu Style) */}
       <nav className="spaceedu-nav">
         <div className="brand-logo">
           cosmonana<span>.</span>
-          <span className="brand-badge">STELLARIUM EDITION</span>
         </div>
 
         <div className="nav-links-wrap">
           <button
-            className={`nav-link-btn ${viewMode === "orbit" && !drawerOpen ? "active" : ""}`}
+            className={`nav-link-btn ${!drawerOpen ? "active" : ""}`}
             onClick={() => {
               playSfx("click");
               setDrawerOpen(false);
-              switchViewModeRef.current("orbit");
             }}
           >
             Planets
@@ -1013,16 +824,6 @@ export default function Home() {
 
         <div className="nav-right-cluster">
           <button
-            className={`view-mode-pill ${viewMode === "dome" ? "active" : ""}`}
-            onClick={() => {
-              switchViewModeRef.current(viewMode === "orbit" ? "dome" : "orbit");
-            }}
-            title="Ganti antara Mode Eksplorasi Planet & Mode Kubah Langit 360 Stellarium"
-          >
-            {viewMode === "orbit" ? "🔭 360° Sky Dome" : "🪐 Planet Orbit"}
-          </button>
-
-          <button
             className="nav-cta-btn"
             onClick={() => {
               playSfx("click");
@@ -1034,56 +835,50 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* HERO SECTION (Shown in Orbit Mode) */}
-      {viewMode === "orbit" && (
-        <div className={`hero-container ${drawerOpen ? "faded" : ""}`}>
-          <div className="hero-eyebrow">{currentPlanet.indexStr}</div>
-          <h1 className="hero-title">{activePlanetName}</h1>
-          <p className="hero-desc">{currentPlanet.heroDesc}</p>
-          <button
-            className="hero-cta-btn"
-            onClick={() => {
-              playSfx("click");
-              setDrawerOpen(true);
-            }}
-          >
-            Explore Planet
-          </button>
-        </div>
-      )}
+      {/* HERO SECTION (Giant Typography & Center CTA - Matching Pinterest SpaceEdu Photo) */}
+      <div className={`hero-container ${drawerOpen ? "faded" : ""}`}>
+        <div className="hero-eyebrow">{currentPlanet.indexStr}</div>
+        <h1 className="hero-title">{activePlanetName}</h1>
+        <p className="hero-desc">{currentPlanet.heroDesc}</p>
+        <button
+          className="hero-cta-btn"
+          onClick={() => {
+            playSfx("click");
+            setDrawerOpen(true);
+          }}
+        >
+          Explore Planet
+        </button>
+      </div>
 
-      {/* SIDE PEEK NAVIGATION (Shown in Orbit Mode) */}
-      {viewMode === "orbit" && (
-        <>
-          <button
-            className="side-peek-btn side-peek-left"
-            onClick={goToPrev}
-            title={`Pindah ke ${prevPlanetName}`}
-          >
-            <div
-              className="side-peek-preview"
-              style={{
-                backgroundImage: `url('${DATA[prevPlanetName].img ? `/images/${DATA[prevPlanetName].img}` : `/textures/${DATA[prevPlanetName].tex}`}')`,
-              }}
-            />
-            <span>{prevPlanetName}</span>
-          </button>
+      {/* SIDE PEEK NAVIGATION (Left & Right Thumbnails) */}
+      <button
+        className="side-peek-btn side-peek-left"
+        onClick={goToPrev}
+        title={`Pindah ke ${prevPlanetName}`}
+      >
+        <div
+          className="side-peek-preview"
+          style={{
+            backgroundImage: `url('${DATA[prevPlanetName].img ? `/images/${DATA[prevPlanetName].img}` : `/textures/${DATA[prevPlanetName].tex}`}')`,
+          }}
+        />
+        <span>{prevPlanetName}</span>
+      </button>
 
-          <button
-            className="side-peek-btn side-peek-right"
-            onClick={goToNext}
-            title={`Pindah ke ${nextPlanetName}`}
-          >
-            <div
-              className="side-peek-preview"
-              style={{
-                backgroundImage: `url('${DATA[nextPlanetName].img ? `/images/${DATA[nextPlanetName].img}` : `/textures/${DATA[nextPlanetName].tex}`}')`,
-              }}
-            />
-            <span>{nextPlanetName}</span>
-          </button>
-        </>
-      )}
+      <button
+        className="side-peek-btn side-peek-right"
+        onClick={goToNext}
+        title={`Pindah ke ${nextPlanetName}`}
+      >
+        <div
+          className="side-peek-preview"
+          style={{
+            backgroundImage: `url('${DATA[nextPlanetName].img ? `/images/${DATA[nextPlanetName].img}` : `/textures/${DATA[nextPlanetName].tex}`}')`,
+          }}
+        />
+        <span>{nextPlanetName}</span>
+      </button>
 
       {/* STELLARIUM DOCK (Floating Bottom Control Bar) */}
       <div className={`stellarium-dock ${drawerOpen ? "hidden-dock" : ""}`}>
@@ -1096,28 +891,6 @@ export default function Home() {
           title="Toggle Garis Rasi Bintang"
         >
           ✨ Constellations
-        </button>
-
-        <button
-          className={`dock-btn ${showMilkyWayDome ? "active" : ""}`}
-          onClick={() => {
-            playSfx("click");
-            setShowMilkyWayDome(!showMilkyWayDome);
-          }}
-          title="Toggle Panorama Galaksi Bimasakti"
-        >
-          🌌 Milky Way
-        </button>
-
-        <button
-          className={`dock-btn ${showGrid ? "active" : ""}`}
-          onClick={() => {
-            playSfx("click");
-            setShowGrid(!showGrid);
-          }}
-          title="Toggle Grid Koordinat Langit (RA/Dec)"
-        >
-          🌐 Celestial Grid
         </button>
 
         <div className="dock-divider"></div>
@@ -1159,41 +932,6 @@ export default function Home() {
           100x
         </button>
       </div>
-
-      {/* CELESTIAL RETICLE HUD (When an object is selected) */}
-      {selectedCelestial && (
-        <div className="celestial-hud-card">
-          <div className="hud-title-row">
-            <div>
-              <div className="hud-object-name">{selectedCelestial.name}</div>
-              <div className="hud-object-type">{selectedCelestial.type}</div>
-            </div>
-            <button
-              style={{ background: "none", border: "none", color: "#94a3b8", cursor: "pointer", fontSize: "16px" }}
-              onClick={() => setSelectedCelestial(null)}
-            >
-              ✕
-            </button>
-          </div>
-
-          <div className="hud-data-table">
-            <div>
-              <div className="hud-data-label">MAGNITUDO</div>
-              <div className="hud-data-val">{selectedCelestial.mag}</div>
-            </div>
-            <div>
-              <div className="hud-data-label">JARAK</div>
-              <div className="hud-data-val">{selectedCelestial.distance}</div>
-            </div>
-            <div style={{ gridColumn: "span 2" }}>
-              <div className="hud-data-label">KOORDINAT (RA / DEC)</div>
-              <div className="hud-data-val">{selectedCelestial.raDec}</div>
-            </div>
-          </div>
-
-          <div className="hud-desc">{selectedCelestial.desc}</div>
-        </div>
-      )}
 
       {/* 3D WEBGL CANVAS */}
       <canvas id="webgl-canvas" ref={canvasRef}></canvas>
@@ -1275,54 +1013,12 @@ export default function Home() {
         {activeTab === "constellations" && (
           <div>
             <p style={{ fontSize: "12.5px", color: "var(--accent-cyan)", marginBottom: "12px", fontWeight: 600 }}>
-              🔭 Klik objek untuk mengarahkan bidikan teleskop (*Ocular Reticle Target*):
+              🔭 Katalog Rasi Bintang Resmi (IAU Sky Cultures):
             </p>
 
-            <div style={{ marginBottom: "16px" }}>
-              <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 700, letterSpacing: "1px", marginBottom: "8px" }}>
-                OBJEK LANGIT DALAM (MESSIER CATALOG):
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                {DEEP_SKY_OBJECTS.map((dso) => (
-                  <div
-                    key={dso.id}
-                    className="const-item-card"
-                    onClick={() => {
-                      focusCelestialRef.current(dso);
-                      setDrawerOpen(false);
-                    }}
-                  >
-                    <div className="const-item-title">🌌 {dso.name}</div>
-                    <div style={{ fontSize: "11px", color: "#94a3b8" }}>{dso.type} • {dso.distance}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 700, letterSpacing: "1px", marginBottom: "8px" }}>
-              RASI BINTANG RESMI (IAU SKY CULTURES):
-            </div>
             <div className="constellation-list">
               {CONSTELLATIONS.map((c) => (
-                <div
-                  key={c.id}
-                  className="const-item-card"
-                  onClick={() => {
-                    const dsoLike: CelestialObject = {
-                      id: c.id,
-                      name: `${c.name} (${c.indonesian})`,
-                      type: `Rasi Bintang • ${c.english}`,
-                      mag: "Bervariasi",
-                      raDec: "Katalog Rasi IAU",
-                      distance: "Puluhan s/d Ratusan Tahun Cahaya",
-                      desc: `${c.meaning} ${c.lore}`,
-                      pos: c.center,
-                      color: 0x38bdf8,
-                    };
-                    focusCelestialRef.current(dsoLike);
-                    setDrawerOpen(false);
-                  }}
-                >
+                <div key={c.id} className="const-item-card">
                   <div className="const-item-title">✨ {c.name} ({c.indonesian})</div>
                   <div className="const-item-meaning">{c.meaning}</div>
                 </div>
@@ -1441,7 +1137,7 @@ export default function Home() {
       {/* LOADER */}
       <div id="loader">
         <div style={{ color: "#ffffff", fontSize: "12px", letterSpacing: "2px", fontWeight: 600 }}>
-          COSMONANA // INITIALIZING STELLARIUM OBSERVATORY...
+          COSMONANA // INITIALIZING OBSERVATORY...
         </div>
         <div className="loader-bar">
           <div className="loader-fill" id="loader-fill"></div>
