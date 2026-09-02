@@ -338,7 +338,7 @@ export default function Home() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 4500);
-    camera.position.set(40, 2.5, 14);
+    camera.position.set(180, 2.5, 17.6);
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
@@ -355,7 +355,7 @@ export default function Home() {
     controls.enablePan = false;
     controls.minDistance = 6;
     controls.maxDistance = 50;
-    controls.target.set(40, -1.8, 0);
+    controls.target.set(180, -1.8, 0);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.2;
 
@@ -363,11 +363,11 @@ export default function Home() {
     scene.add(ambient);
 
     const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
-    keyLight.position.set(40, 20, 25);
+    keyLight.position.set(180, 20, 25);
     scene.add(keyLight);
 
     const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.8);
-    rimLight.position.set(40, -10, -20);
+    rimLight.position.set(180, -10, -20);
     scene.add(rimLight);
 
     const loaderEl = document.getElementById("loader");
@@ -534,18 +534,18 @@ export default function Home() {
       return tex;
     };
 
-    // 5. 3D PLANETS SYSTEM
+    // 5. 3D PLANETS SYSTEM (Widely spaced to prevent overlap)
     const group3D: Record<string, THREE.Group> = {};
     const basePositions: Record<PlanetName, [number, number, number]> = {
       Matahari: [0, -2.5, 0],
-      Merkurius: [18, -2.5, 0],
-      Venus: [28, -2.5, 0],
-      Bumi: [40, -2.5, 0],
-      Mars: [52, -2.5, 0],
-      Yupiter: [68, -2.5, 0],
-      Saturnus: [86, -2.5, 0],
-      Uranus: [104, -2.5, 0],
-      Neptunus: [122, -2.5, 0],
+      Merkurius: [60, -2.5, 0],
+      Venus: [120, -2.5, 0],
+      Bumi: [180, -2.5, 0],
+      Mars: [240, -2.5, 0],
+      Yupiter: [330, -2.5, 0],
+      Saturnus: [440, -2.5, 0],
+      Uranus: [550, -2.5, 0],
+      Neptunus: [650, -2.5, 0],
     };
 
     ORDER.forEach((name) => {
@@ -615,7 +615,7 @@ export default function Home() {
       }
 
       if (d.ring) {
-        const ringGeo = new THREE.PlaneGeometry(d.size * 4.8, d.size * 4.8);
+        const ringGeo = new THREE.PlaneGeometry(d.size * 2.9, d.size * 2.9);
         const ringMat = new THREE.MeshBasicMaterial({
           map: createSaturnRingTexture(),
           side: THREE.DoubleSide,
