@@ -9,8 +9,8 @@
   --accent-gold: #f6cd7c;
   --pill-bg: rgba(255, 255, 255, 0.12);
   --pill-border: rgba(255, 255, 255, 0.2);
-  --glass-card: rgba(8, 14, 28, 0.88);
-  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-card: rgba(8, 14, 28, 0.92);
+  --glass-border: rgba(255, 255, 255, 0.14);
 }
 
 * {
@@ -40,7 +40,7 @@ html, body {
   outline: none;
 }
 
-/* TOP NAVBAR (Exact match to reference) */
+/* TOP NAVBAR (SpaceEdu Style) */
 .spaceedu-nav {
   position: fixed;
   top: 24px;
@@ -72,8 +72,8 @@ html, body {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 28px;
-  background: rgba(10, 16, 32, 0.6);
+  gap: 22px;
+  background: rgba(10, 16, 32, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 8px 24px;
   border-radius: 999px;
@@ -114,9 +114,9 @@ html, body {
   background: #ffffff;
   color: #050811;
   border: none;
-  padding: 8px 22px;
+  padding: 8px 20px;
   border-radius: 999px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
@@ -128,7 +128,7 @@ html, body {
   box-shadow: 0 0 28px rgba(255, 255, 255, 0.6);
 }
 
-/* HERO SECTION (Exact Typography & Layout) */
+/* HERO SECTION */
 .hero-container {
   position: fixed;
   top: 18%;
@@ -143,7 +143,7 @@ html, body {
 }
 
 .hero-container.faded {
-  opacity: 0.15;
+  opacity: 0.12;
   transform: translateX(-50%) translateY(-20px);
 }
 
@@ -247,7 +247,7 @@ html, body {
   color: var(--accent-cyan);
 }
 
-/* BOTTOM EXPLORATION DRAWER (Interactive Learning & Lab) */
+/* BOTTOM EXPLORATION DRAWER */
 #info-drawer {
   position: fixed;
   bottom: 0;
@@ -255,7 +255,7 @@ html, body {
   transform: translateX(-50%) translateY(105%);
   z-index: 60;
   width: 94%;
-  max-width: 680px;
+  max-width: 720px;
   background: var(--glass-card);
   border: 1px solid var(--glass-border);
   border-bottom: none;
@@ -310,9 +310,9 @@ html, body {
   background: none;
   border: none;
   color: #94a3b8;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
-  padding: 6px 16px;
+  padding: 6px 14px;
   border-radius: 999px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -366,7 +366,7 @@ html, body {
   margin-bottom: 16px;
 }
 
-/* LAB CALCULATOR STYLING */
+/* LAB CALCULATOR & STELLARIUM TIME MACHINE */
 .lab-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -417,6 +417,70 @@ html, body {
 .lab-res span {
   color: var(--accent-gold);
   font-weight: 700;
+}
+
+/* STELLARIUM TIME CONTROLLER */
+.time-machine-box {
+  background: rgba(56, 189, 248, 0.06);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.time-btn-group {
+  display: flex;
+  gap: 6px;
+}
+
+.time-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.time-btn.active {
+  background: var(--accent-cyan);
+  color: #050811;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan-glow);
+}
+
+/* CONSTELLATION CARDS */
+.constellation-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.const-item-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.const-item-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  margin-bottom: 4px;
+}
+
+.const-item-meaning {
+  font-size: 11.5px;
+  color: #cbd5e1;
+  line-height: 1.5;
 }
 
 .drawer-actions-row {

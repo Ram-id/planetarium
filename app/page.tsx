@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
+import { CONSTELLATIONS, DEEP_SKY_OBJECTS } from "../data/stellarium_data";
 
 interface PlanetInfo {
   size: number;
@@ -223,9 +224,11 @@ export default function Home() {
 
   const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Bumi");
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"science" | "lab" | "love">("science");
+  const [activeTab, setActiveTab] = useState<"science" | "lab" | "constellations" | "love">("science");
   const [userWeight, setUserWeight] = useState<number>(45);
   const [userAge, setUserAge] = useState<number>(20);
+  const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
+  const [showConstellations, setShowConstellations] = useState<boolean>(true);
   const [showCosmoModal, setShowCosmoModal] = useState(false);
   const [cosmoInput, setCosmoInput] = useState("");
   const [cosmoReply, setCosmoReply] = useState("");
@@ -234,6 +237,18 @@ export default function Home() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
   const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
+  const timeMultiplierRef = useRef<number>(1);
+  const constellationGroupRef = useRef<THREE.Group | null>(null);
+
+  useEffect(() => {
+    timeMultiplierRef.current = timeMultiplier;
+  }, [timeMultiplier]);
+
+  useEffect(() => {
+    if (constellationGroupRef.current) {
+      constellationGroupRef.current.visible = showConstellations;
+    }
+  }, [showConstellations]);
 
   const playSfx = (type: "whoosh" | "click" | "satellite") => {
     try {
@@ -323,8 +338,6 @@ export default function Home() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 4500);
-
-    // Initial camera position centered on lower planet arc (matching Pinterest reference)
     camera.position.set(40, 2.5, 14);
 
     const renderer = new THREE.WebGLRenderer({
@@ -342,14 +355,13 @@ export default function Home() {
     controls.enablePan = false;
     controls.minDistance = 6;
     controls.maxDistance = 50;
-    controls.target.set(40, -1.8, 0); // Position target down so the planet arcs from the bottom
+    controls.target.set(40, -1.8, 0);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.2;
 
     const ambient = new THREE.AmbientLight(0xffffff, 1.6);
     scene.add(ambient);
 
-    // Key light from top-front to illuminate the top rim of the planet (like Pinterest photo)
     const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
     keyLight.position.set(40, 20, 25);
     scene.add(keyLight);
@@ -421,7 +433,66 @@ export default function Home() {
     const starfieldMesh = new THREE.Points(starGeo, starMat);
     scene.add(starfieldMesh);
 
-    // 2. SATURN RING TEXTURE
+    // 2. STELLARIUM 3D CONSTELLATIONS LAYER
+    const constGroup = new THREE.Group();
+    CONSTELLATIONS.forEach((c) => {
+      // Build constellation line segments
+      const linePoints: THREE.Vector3[] = [];
+      c.lines.forEach(([i1, i2]) => {
+        const s1 = c.stars[i1];
+        const s2 = c.stars[i2];
+        linePoints.push(new THREE.Vector3(s1[0], s1[1], s1[2]));
+        linePoints.push(new THREE.Vector3(s2[0], s2[1], s2[2]));
+      });
+
+      const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
+      const lineMat = new THREE.LineBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.45,
+        blending: THREE.AdditiveBlending,
+      });
+      const lines = new THREE.LineSegments(lineGeo, lineMat);
+      constGroup.add(lines);
+
+      // Add prominent glowing star points at nodes
+      const starNodeGeo = new THREE.BufferGeometry();
+      const nodePositions = new Float32Array(c.stars.length * 3);
+      c.stars.forEach((s, idx) => {
+        nodePositions[idx * 3] = s[0];
+        nodePositions[idx * 3 + 1] = s[1];
+        nodePositions[idx * 3 + 2] = s[2];
+      });
+      starNodeGeo.setAttribute("position", new THREE.BufferAttribute(nodePositions, 3));
+      const starNodeMat = new THREE.PointsMaterial({
+        size: 3.5,
+        color: 0xfde047,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+      });
+      const starNodes = new THREE.Points(starNodeGeo, starNodeMat);
+      constGroup.add(starNodes);
+    });
+    scene.add(constGroup);
+    constellationGroupRef.current = constGroup;
+
+    // 3. STELLARIUM DEEP-SKY OBJECTS (MESSIER CATALOG)
+    DEEP_SKY_OBJECTS.forEach((dso) => {
+      const dsoGeo = new THREE.SphereGeometry(3.2, 16, 16);
+      const dsoMat = new THREE.MeshBasicMaterial({
+        color: dso.color,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35,
+        blending: THREE.AdditiveBlending,
+      });
+      const dsoMesh = new THREE.Mesh(dsoGeo, dsoMat);
+      dsoMesh.position.set(dso.pos[0], dso.pos[1], dso.pos[2]);
+      constGroup.add(dsoMesh);
+    });
+
+    // 4. SATURN RING TEXTURE
     const createSaturnRingTexture = () => {
       const size = 1024;
       const canvas = document.createElement("canvas");
@@ -463,7 +534,7 @@ export default function Home() {
       return tex;
     };
 
-    // 3. 3D PLANETS SYSTEM
+    // 5. 3D PLANETS SYSTEM
     const group3D: Record<string, THREE.Group> = {};
     const basePositions: Record<PlanetName, [number, number, number]> = {
       Matahari: [0, -2.5, 0],
@@ -561,7 +632,7 @@ export default function Home() {
       group3D[name] = grp;
     });
 
-    // 4. ACTIVE SATELLITE ORBITERS
+    // 6. ACTIVE SATELLITE ORBITERS
     const activeSatellites: THREE.Group[] = [];
     const launchSatellite = () => {
       const currentGrp = group3D[activeKey];
@@ -632,14 +703,17 @@ export default function Home() {
 
     function animate() {
       animFrameId = requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
+      const delta = clock.getDelta();
+      const speedFactor = timeMultiplierRef.current;
+      const t = clock.getElapsedTime() * speedFactor;
 
       starfieldMesh.rotation.y = t * 0.002;
+      constGroup.rotation.y = t * 0.001;
 
       // Animate active satellites
       activeSatellites.forEach((sat) => {
         const u = sat.userData;
-        u.angle += 0.02 * u.speed;
+        u.angle += 0.02 * u.speed * speedFactor;
         sat.position.x = u.center.x + Math.cos(u.angle) * u.radius;
         sat.position.z = u.center.z + Math.sin(u.angle) * u.radius;
         sat.position.y = u.center.y + Math.sin(u.angle * 2) * u.inclination * u.radius;
@@ -656,7 +730,7 @@ export default function Home() {
               c.position.x = Math.cos(t * 0.7) * R;
               c.position.z = Math.sin(t * 0.7) * R;
             } else if (c instanceof THREE.Mesh && c.geometry instanceof THREE.SphereGeometry) {
-              c.rotation.y += 0.003;
+              c.rotation.y += 0.003 * speedFactor;
             }
           });
         }
@@ -701,7 +775,7 @@ export default function Home() {
 
   return (
     <>
-      {/* TOP NAVIGATION BAR (SpaceEdu Style) */}
+      {/* TOP NAVIGATION BAR (SpaceEdu Style with Stellarium Features) */}
       <nav className="spaceedu-nav">
         <div className="brand-logo">
           cosmonana<span>.</span>
@@ -718,6 +792,16 @@ export default function Home() {
             Planets
           </button>
           <button
+            className={`nav-link-btn ${drawerOpen && activeTab === "constellations" ? "active" : ""}`}
+            onClick={() => {
+              playSfx("click");
+              setActiveTab("constellations");
+              setDrawerOpen(true);
+            }}
+          >
+            ✨ Constellations ({CONSTELLATIONS.length})
+          </button>
+          <button
             className={`nav-link-btn ${drawerOpen && activeTab === "lab" ? "active" : ""}`}
             onClick={() => {
               playSfx("click");
@@ -725,7 +809,7 @@ export default function Home() {
               setDrawerOpen(true);
             }}
           >
-            Lab & Gravity
+            Lab & Time
           </button>
           <button
             className={`nav-link-btn ${drawerOpen && activeTab === "science" ? "active" : ""}`}
@@ -749,15 +833,32 @@ export default function Home() {
           </button>
         </div>
 
-        <button
-          className="nav-cta-btn"
-          onClick={() => {
-            playSfx("click");
-            setShowCosmoModal(true);
-          }}
-        >
-          Ask Cosmo AI
-        </button>
+        <div style={{ display: "flex", gap: "8px", pointerEvents: "auto" }}>
+          <button
+            className="nav-cta-btn"
+            style={{
+              background: showConstellations ? "rgba(56, 189, 248, 0.2)" : "rgba(255, 255, 255, 0.08)",
+              color: showConstellations ? "#38bdf8" : "#94a3b8",
+              border: "1px solid rgba(56, 189, 248, 0.3)",
+            }}
+            onClick={() => {
+              playSfx("click");
+              setShowConstellations(!showConstellations);
+            }}
+            title="Toggle Garis Rasi Bintang 3D"
+          >
+            {showConstellations ? "✨ Sky: ON" : "✨ Sky: OFF"}
+          </button>
+          <button
+            className="nav-cta-btn"
+            onClick={() => {
+              playSfx("click");
+              setShowCosmoModal(true);
+            }}
+          >
+            Ask Cosmo AI
+          </button>
+        </div>
       </nav>
 
       {/* HERO SECTION (Typography & Center CTA - Matching Reference Photo) */}
@@ -826,13 +927,22 @@ export default function Home() {
               Fakta Sains
             </button>
             <button
+              className={`drawer-tab-btn ${activeTab === "constellations" ? "active" : ""}`}
+              onClick={() => {
+                playSfx("click");
+                setActiveTab("constellations");
+              }}
+            >
+              ✨ Rasi Bintang
+            </button>
+            <button
               className={`drawer-tab-btn ${activeTab === "lab" ? "active" : ""}`}
               onClick={() => {
                 playSfx("click");
                 setActiveTab("lab");
               }}
             >
-              Lab Kosmik
+              Lab & Waktu
             </button>
             <button
               className={`drawer-tab-btn ${activeTab === "love" ? "active" : ""}`}
@@ -873,8 +983,45 @@ export default function Home() {
           </div>
         )}
 
+        {activeTab === "constellations" && (
+          <div>
+            <p style={{ fontSize: "12.5px", color: "var(--accent-cyan)", marginBottom: "12px", fontWeight: 600 }}>
+              🔭 Katalog Rasi Bintang & Deep-Sky Objects (Data Astrometri Stellarium):
+            </p>
+            <div className="constellation-list">
+              {CONSTELLATIONS.map((c) => (
+                <div key={c.id} className="const-item-card">
+                  <div className="const-item-title">✨ {c.name} ({c.indonesian})</div>
+                  <div className="const-item-meaning">{c.meaning}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {activeTab === "lab" && (
           <div>
+            {/* STELLARIUM TIME MACHINE */}
+            <div className="time-machine-box">
+              <div style={{ fontSize: "12px", color: "#ffffff", fontWeight: 700 }}>
+                ⏳ Kecepatan Waktu Orbit (Stellarium Time Machine):
+              </div>
+              <div className="time-btn-group">
+                {[1, 5, 25, 100].map((spd) => (
+                  <button
+                    key={spd}
+                    className={`time-btn ${timeMultiplier === spd ? "active" : ""}`}
+                    onClick={() => {
+                      playSfx("click");
+                      setTimeMultiplier(spd);
+                    }}
+                  >
+                    {spd}x
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="lab-grid">
               <div className="lab-card">
                 <div className="lab-card-title">⚖️ Kalkulator Berat Badan di {activePlanetName}</div>
@@ -951,7 +1098,7 @@ export default function Home() {
           </div>
 
           <p style={{ fontSize: "12.5px", color: "#94a3b8" }}>
-            Tanyakan apa saja seputar misteri astronomi, fisika orbit, atau fakta planet {activePlanetName}!
+            Tanyakan apa saja seputar misteri astronomi, rasi bintang Stellarium, atau fakta planet {activePlanetName}!
           </p>
 
           <div className="cosmo-input-row">
