@@ -8,6 +8,7 @@ import gsap from "gsap";
 interface PlanetInfo {
   size: number;
   tex: string;
+  img?: string;
   color: number;
   emissive?: number;
   moon?: boolean;
@@ -106,6 +107,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
   Bumi: {
     size: 4.5,
     tex: "earth.jpg",
+    img: "earth_spaceedu.png",
     color: 0x3f6fae,
     moon: true,
     indexStr: "PLANET // 03",
@@ -782,7 +784,9 @@ export default function Home() {
       >
         <div
           className="side-peek-preview"
-          style={{ backgroundImage: `url('/textures/${DATA[prevPlanetName].tex}')` }}
+          style={{
+            backgroundImage: `url('${DATA[prevPlanetName].img ? `/images/${DATA[prevPlanetName].img}` : `/textures/${DATA[prevPlanetName].tex}`}')`,
+          }}
         />
         <span>{prevPlanetName}</span>
       </button>
@@ -794,7 +798,9 @@ export default function Home() {
       >
         <div
           className="side-peek-preview"
-          style={{ backgroundImage: `url('/textures/${DATA[nextPlanetName].tex}')` }}
+          style={{
+            backgroundImage: `url('${DATA[nextPlanetName].img ? `/images/${DATA[nextPlanetName].img}` : `/textures/${DATA[nextPlanetName].tex}`}')`,
+          }}
         />
         <span>{nextPlanetName}</span>
       </button>
