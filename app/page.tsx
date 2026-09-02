@@ -230,6 +230,8 @@ export default function Home() {
   const [cosmoLoading, setCosmoLoading] = useState(false);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
+  const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
 
   const playSfx = (type: "whoosh" | "click" | "satellite") => {
     try {
@@ -312,8 +314,6 @@ export default function Home() {
       setCosmoLoading(false);
     }
   };
-
-  const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     if (initialized.current || !canvasRef.current) return;
@@ -604,24 +604,26 @@ export default function Home() {
       const camOffset = pData.size * 2.8 + 5;
 
       keyLight.position.set(targetPos.x, targetPos.y + 15, targetPos.z + 20);
+      rimLight.position.set(targetPos.x, targetPos.y - 10, targetPos.z - 20);
 
       gsap.to(controls.target, {
         x: targetPos.x,
-        y: targetPos.y,
+        y: targetPos.y + 0.7,
         z: targetPos.z,
-        duration: 1.5,
+        duration: 1.4,
         ease: "power3.inOut",
       });
       gsap.to(camera.position, {
         x: targetPos.x,
         y: targetPos.y + 4.2,
         z: targetPos.z + camOffset,
-        duration: 1.5,
+        duration: 1.4,
         ease: "power3.inOut",
       });
 
       setActivePlanetName(name);
     }
+    navigateToPlanetRef.current = navigateToPlanet;
 
     let animFrameId: number;
     const clock = new THREE.Clock();
@@ -686,6 +688,14 @@ export default function Home() {
 
   const calculatedWeight = Math.round(userWeight * currentPlanet.gravityFactor * 10) / 10;
   const calculatedAge = Math.round((userAge * 365.25 / currentPlanet.orbitDays) * 10) / 10;
+
+  const goToPrev = () => {
+    navigateToPlanetRef.current(prevPlanetName);
+  };
+
+  const goToNext = () => {
+    navigateToPlanetRef.current(nextPlanetName);
+  };
 
   return (
     <>
@@ -764,13 +774,10 @@ export default function Home() {
         </button>
       </div>
 
-      {/* SIDE PEEK NAVIGATION (Left & Right) */}
+      {/* SIDE PEEK NAVIGATION (Left & Right - Fully Functional!) */}
       <button
         className="side-peek-btn side-peek-left"
-        onClick={() => {
-          playSfx("whoosh");
-          setActivePlanetName(prevPlanetName);
-        }}
+        onClick={goToPrev}
         title={`Pindah ke ${prevPlanetName}`}
       >
         <div
@@ -782,10 +789,7 @@ export default function Home() {
 
       <button
         className="side-peek-btn side-peek-right"
-        onClick={() => {
-          playSfx("whoosh");
-          setActivePlanetName(nextPlanetName);
-        }}
+        onClick={goToNext}
         title={`Pindah ke ${nextPlanetName}`}
       >
         <div
