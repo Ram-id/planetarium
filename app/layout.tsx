@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ekspedisi Tata Surya // Observatorium Antariksa Nana 🪐✨",
-  description: "Platform simulator dan observatorium interaktif penjelajahan semesta tata surya untuk Nana",
+  title: "CosmoNana — Observatorium Edukasi Semesta Interaktif ✨🪐",
+  description: "Media pembelajaran tata surya interaktif, edukatif, menggemaskan, dan romantis untuk Nana",
 };
 
 export default function RootLayout({

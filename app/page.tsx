@@ -16,15 +16,11 @@ interface PlanetInfo {
   diameter: string;
   distance: string;
   temp: string;
-  orbitTime: string;
+  orbitDays: number;
+  gravityFactor: number;
   scienceFact: string;
-  reflectionNote: string;
-  challengeTitle: string;
-  q: string;
-  a1: string;
-  a2: string;
-  correct: number;
-  msg: string;
+  funFact: string;
+  romanticNote: string;
   icon: string;
 }
 
@@ -57,63 +53,51 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     tex: "sun.jpg",
     color: 0xf4c979,
     emissive: 0xffaa22,
-    type: "Bintang Induk // Tipe Spektral G2V",
+    type: "Bintang Induk // Tipe G2V",
     diameter: "1.392.700 km",
-    distance: "Pusat Gravitasi Semesta",
+    distance: "Pusat Gravitasi",
     temp: "~5.500 °C",
-    orbitTime: "230 Juta Tahun Galaksi",
+    orbitDays: 230000000 * 365,
+    gravityFactor: 27.9,
     scienceFact:
-      "Matahari menyumbang 99,86% dari total massa tata surya. Reaksi fusi nuklir pada intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan foton yang mencapai orbit pengamat dalam 8 menit 20 detik.",
-    reflectionNote:
-      "Sebagaimana Matahari yang menjadi jangkar gravitasi dan sumber kehangatan bagi seluruh orbit di sekelilingnya, kehadiranmu senantiasa menghadirkan ketenangan, semangat, dan arah yang jernih dalam setiap hariku.",
-    challengeTitle: "MISI SEKTOR 1: Kalibrasi Frekuensi Reaktor Foton",
-    q: "Berapa lama waktu yang dibutuhkan cahaya dari pusat tata surya untuk mencapai orbit pengamat?",
-    a1: "8 Menit 20 Detik Cahaya",
-    a2: "Seketika sejak pertama kali kita saling mengenal",
-    correct: 2,
-    msg: "Kalibrasi berhasil! Koordinat Hyperdrive ke Sektor 2 (Merkurius) telah terbuka.",
+      "Matahari mengandung 99,86% dari seluruh massa tata surya kita! Reaksi fusi nuklir di intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik untuk memancarkan cahaya hangat ke seluruh penjuru angkasa.",
+    funFact: "Cahaya hangat Matahari butuh waktu 8 menit 20 detik untuk sampai ke pipimu di Bumi!",
+    romanticNote:
+      "Sebagaimana Matahari yang menjadi jangkar gravitasi bagi seluruh semesta, kehadiranmu senantiasa memberi kehangatan, keceriaan, dan arah yang jernih dalam setiap hariku.",
     icon: "☀️",
   },
   Merkurius: {
     size: 1.6,
     tex: "mercury.jpg",
     color: 0x9a938c,
-    type: "Planet Terestrial // Sektor 1",
+    type: "Planet Terestrial Terdekat",
     diameter: "4.879 km",
     distance: "57,9 Juta km",
-    temp: "-180 °C hingga +430 °C",
-    orbitTime: "88 Hari Bumi",
+    temp: "-180 °C s/d +430 °C",
+    orbitDays: 88,
+    gravityFactor: 0.38,
     scienceFact:
-      "Merkurius mengorbit dengan kecepatan 47,4 km/detik. Tanpa atmosfer tebal untuk memerangkap panas, fluktuasi suhunya merupakan yang paling ekstrem di tata surya.",
-    reflectionNote:
-      "Di planet dengan laju revolusi tercepat ini, kita tersadar betapa berharganya setiap waktu. Detik demi detik obrolan bersamamu selalu berlalu begitu cepat dan berharga.",
-    challengeTitle: "MISI SEKTOR 2: Penyelarasan Sensor Termal Ekstrem",
-    q: "Mengapa perputaran waktu terasa begitu singkat saat kita berbincang?",
-    a1: "Pengaruh kecepatan revolusi orbital",
-    a2: "Karena setiap percakapan bersamamu selalu terasa nyaman dan berharga",
-    correct: 2,
-    msg: "Sensor termal stabil! Koordinat Hyperdrive ke Sektor 3 (Venus) telah terbuka.",
+      "Merkurius adalah pelari tercepat di tata surya dengan kecepatan orbit 47,4 km/detik. Karena hampir tidak memiliki atmosfer penahan panas, suhunya bisa sangat panas di siang hari dan sangat dingin membeku di malam hari.",
+    funFact: "Satu tahun di Merkurius hanya berlangsung selama 88 hari Bumi!",
+    romanticNote:
+      "Di planet dengan laju waktu tercepat ini, aku tersadar betapa berharganya setiap detik yang kita lalui bersama. Setiap obrolan denganmu selalu terasa menyenangkan dan berlalu begitu cepat.",
     icon: "🪨",
   },
   Venus: {
     size: 2.2,
     tex: "venus.jpg",
     color: 0xd8b98a,
-    type: "Bintang Kejora // Sektor 2",
+    type: "Bintang Kejora",
     diameter: "12.104 km",
     distance: "108,2 Juta km",
     temp: "465 °C",
-    orbitTime: "225 Hari Bumi",
+    orbitDays: 225,
+    gravityFactor: 0.91,
     scienceFact:
-      "Venus merupakan objek alami paling terang di langit malam setelah Bulan. Lapisan awan tebalnya memantulkan 75% sinar matahari. Venus berotasi mundur secara retrograde dari timur ke barat.",
-    reflectionNote:
-      "Venus dikenal sebagai permata yang paling bercahaya di cakrawala malam. Namun bagi saya, ketulusan budi dan binar senyumanmu adalah keindahan sejati yang paling menyejukkan hati.",
-    challengeTitle: "MISI SEKTOR 3: Penetrasi Radar Awan Atmosfer",
-    q: "Di antara fenomena visual di cakrawala malam, hal apakah yang paling menyejukkan pandangan?",
-    a1: "Luminansi atmosfer Venus",
-    a2: "Senyuman tulus dan ketenangan dari Nana",
-    correct: 2,
-    msg: "Penetrasi radar sukses! Koordinat Hyperdrive ke Sektor 4 (Bumi) telah terbuka.",
+      "Venus merupakan objek alami paling berkilau di langit malam setelah Bulan. Atmosfer tebalnya memantulkan 75% sinar matahari, dan Venus berotasi secara unik terbalik (dari timur ke barat).",
+    funFact: "Di Venus, Matahari terbit dari arah barat dan tenggelam di arah timur!",
+    romanticNote:
+      "Venus dijuluki sebagai permata yang paling bercahaya di langit malam. Namun bagiku, senyuman tulus dan binar ceriamu adalah pemandangan paling indah di semesta ini.",
     icon: "✨",
   },
   Bumi: {
@@ -121,63 +105,51 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     tex: "earth.jpg",
     color: 0x3f6fae,
     moon: true,
-    type: "Oasis Biosfer // Sektor 3",
+    type: "Oasis Kehidupan Biosfer",
     diameter: "12.742 km",
-    distance: "149,6 Juta km (1.00 AU)",
-    temp: "15 °C",
-    orbitTime: "365,25 Hari",
+    distance: "149,6 Juta km (1 AU)",
+    temp: "15 °C Rata-rata",
+    orbitDays: 365.25,
+    gravityFactor: 1.0,
     scienceFact:
-      "Bumi adalah satu-satunya oasis kehidupan dengan air cair stabil dan atmosfer kaya oksigen. Gravitasi Bulan menstabilkan kemiringan sumbu rotasi aksial Bumi pada 23,5°.",
-    reflectionNote:
-      "Di antara bentangan luas semesta dan miliaran kemungkinan di planet biru ini, dipertemukan dan berjalan beriringan denganmu adalah anugerah terindah yang selalu saya syukuri.",
-    challengeTitle: "MISI SEKTOR 4: Harmonisasi Poros Aksial & Gravitasi Bulan",
-    q: "Di manakah titik koordinat tempat hati merasa paling tenang dan berlabuh?",
-    a1: "Pusat Observatorium Antariksa",
-    a2: "Di dekat Nana, tempat di mana rasa syukur selalu hadir",
-    correct: 2,
-    msg: "Gravitasi harmonis! Koordinat Hyperdrive ke Sektor 5 (Mars) telah terbuka.",
+      "Bumi adalah satu-satunya dunia tempat tinggal kita yang kaya air cair dan oksigen. Gravitasi Bulan setia menjaga kemiringan sumbu rotasi Bumi pada 23,5° sehingga iklim tetap stabil dan nyaman.",
+    funFact: "Bumi melaju mengitari Matahari dengan kecepatan sekitar 107.000 km/jam!",
+    romanticNote:
+      "Di antara miliaran kemungkinan di planet biru yang indah ini, dipertemukan dan berjalan beriringan denganmu adalah keajaiban terindah yang selalu kusyukuri.",
     icon: "🌍",
   },
   Mars: {
     size: 1.8,
     tex: "mars.jpg",
     color: 0xb1543a,
-    type: "Planet Merah // Sektor 4",
+    type: "Planet Merah",
     diameter: "6.779 km",
     distance: "227,9 Juta km",
-    temp: "-60 °C",
-    orbitTime: "687 Hari Bumi",
+    temp: "-60 °C Rata-rata",
+    orbitDays: 687,
+    gravityFactor: 0.38,
     scienceFact:
-      "Mars memiliki Olympus Mons (21,9 km), gunung berapi tertinggi di tata surya. Warna merahnya berasal dari kandungan besi oksida (karat alami) di permukaannya.",
-    reflectionNote:
-      "Warna merah Mars melambangkan keteguhan dan daya juang. Saya akan selalu ada di sampingmu untuk mendukung setiap langkah, cita-cita, dan impian besar yang kamu perjuangkan.",
-    challengeTitle: "MISI SEKTOR 5: Pemindaian Elevasi Puncak Olympus Mons",
-    q: "Seberapa tinggi harapan dan dukungan yang senantiasa dipanjatkan untuk langkahmu ke depan?",
-    a1: "Setinggi puncak gunung Olympus Mons",
-    a2: "Melampaui luasnya horizon semesta",
-    correct: 2,
-    msg: "Elevasi terkunci! Koordinat Hyperdrive melintasi Sabuk Asteroid ke Sektor 6 (Yupiter) terbuka.",
+      "Mars memiliki Olympus Mons, gunung berapi perisai setinggi 21,9 km (hampir 3 kali lipat tinggi Everest!). Warna merah khasnya berasal dari kandungan besi oksida alami di tanahnya.",
+    funFact: "Di Mars, kamu bisa melompat hampir 3 kali lebih tinggi daripada di Bumi!",
+    romanticNote:
+      "Warna merah Mars melambangkan keteguhan dan semangat. Aku akan selalu ada di sampingmu untuk mendukung seluruh mimpi dan hal-hal hebat yang ingin kamu raih.",
     icon: "🔴",
   },
   Yupiter: {
     size: 4.3,
     tex: "jupiter.jpg",
     color: 0xcaa87a,
-    type: "Raksasa Gas // Sektor 5",
+    type: "Raksasa Gas Terbesar",
     diameter: "139.820 km",
     distance: "778,5 Juta km",
     temp: "-110 °C",
-    orbitTime: "11,86 Tahun Bumi",
+    orbitDays: 4333,
+    gravityFactor: 2.34,
     scienceFact:
-      "Jupiter memiliki massa lebih dari dua kali lipat gabungan seluruh planet lainnya. Medan gravitasi raksasanya berfungsi sebagai perisai alami yang menyerap tabrakan komet berbahaya.",
-    reflectionNote:
-      "Sebagaimana peran Jupiter yang menjaga keseimbangan tata surya, saya berikhtiar untuk selalu menjadi pendengar yang baik, pelindung yang setia, dan ruang aman bagimu untuk bercerita.",
-    challengeTitle: "MISI SEKTOR 6: Penguatan Deflektor Perisai Gravitasi",
-    q: "Sebesar apa komitmen untuk menjaga dan mendampingi perjalanan ini?",
-    a1: "Sebesar kapasitas planet Jupiter",
-    a2: "Tak terhingga, melampaui batas ruang dan waktu",
-    correct: 2,
-    msg: "Perisai gravitasi aktif! Koordinat Hyperdrive ke Sektor 7 (Saturnus) telah terbuka.",
+      "Jupiter memiliki massa lebih dari dua kali lipat gabungan seluruh planet lainnya. Medan gravitasinya yang raksasa bertindak sebagai pelindung kosmik yang menangkal komet berbahaya dari planet dalam.",
+    funFact: "Badai raksasa 'Great Red Spot' di Jupiter sudah berputar selama ratusan tahun dan lebih besar dari ukuran Bumi!",
+    romanticNote:
+      "Sebagaimana Jupiter yang setia melindungi orbit sekitarnya, aku ingin selalu menjadi sosok yang menjaga, mendengarkan ceritamu, dan membuatmu merasa aman seutuhnya.",
     icon: "🪐",
   },
   Saturnus: {
@@ -185,63 +157,51 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     tex: "saturn.jpg",
     color: 0xd9c39a,
     ring: true,
-    type: "Permata Bermahkota // Sektor 6",
+    type: "Permata Bermahkota Cincin",
     diameter: "116.460 km",
     distance: "1,43 Miliar km",
     temp: "-140 °C",
-    orbitTime: "29,45 Tahun Bumi",
+    orbitDays: 10759,
+    gravityFactor: 1.06,
     scienceFact:
-      "Sistem cincin fotorealistis Saturnus membentang hingga 282.000 km dengan ketebalan hanya 10 meter, tersusun atas miliaran kristal es murni dan Celah Cassini yang presisi.",
-    reflectionNote:
-      "Cincin Saturnus yang melingkar anggun dan harmonis mencerminkan komitmen ketulusan. Keindahan sejati lahir dari keselarasan, kesetiaan, dan saling menghargai.",
-    challengeTitle: "MISI SEKTOR 7: Resonansi Kristal Es Celah Cassini",
-    q: "Nilai apakah yang paling utama dalam menjaga keharmonisan perjalanan kita?",
-    a1: "Keteraturan gravitasi kosmik",
-    a2: "Kejujuran, saling menghargai, dan ketulusan hati yang konsisten",
-    correct: 2,
-    msg: "Resonansi cincin terkalibrasi! Koordinat Hyperdrive ke Sektor 8 (Uranus) telah terbuka.",
+      "Sistem cincin Saturnus yang menakjubkan membentang selebar 282.000 km namun ketebalannya rata-rata hanya 10 meter! Cincin ini tersusun atas miliaran partikel kristal es murni yang berkilau.",
+    funFact: "Kepadatan Saturnus sangat ringan—jika ada kolam air raksasa yang cukup besar, Saturnus akan mengapung di atas air!",
+    romanticNote:
+      "Cincin Saturnus yang melingkar anggun adalah simbol keselarasan dan keharmonisan. Bersamamu, hal-hal sederhana selalu terasa begitu indah dan bermakna.",
     icon: "👑",
   },
   Uranus: {
     size: 2.9,
     tex: "uranus.jpg",
     color: 0x9fd0d6,
-    type: "Raksasa Es // Sektor 7",
+    type: "Raksasa Es Berotasi Miring",
     diameter: "50.724 km",
     distance: "2,87 Miliar km",
     temp: "-224 °C",
-    orbitTime: "84 Tahun Bumi",
+    orbitDays: 30687,
+    gravityFactor: 0.92,
     scienceFact:
-      "Uranus berotasi menggelinding pada bidang orbitnya dengan kemiringan aksial 97,8°. Gas metana di atmosfer atas menyerap cahaya merah dan memancarkan rona toska yang damai.",
-    reflectionNote:
-      "Keunikan Uranus mengingatkan kita bahwa setiap pribadi memiliki keistimewaan tersendiri. Kepribadianmu yang ceria, tulus, dan apa adanya selalu berhasil membawa keteduhan dalam hidupku.",
-    challengeTitle: "MISI SEKTOR 8: Penguncian Sudut Rotasi Aksial 98°",
-    q: "Hal apakah yang senantiasa membawa keteduhan dan warna dalam keseharian?",
-    a1: "Spektrum warna atmosfer Uranus",
-    a2: "Kebaikan budi, kejernihan hati, dan tawa tulus dari Nana",
-    correct: 2,
-    msg: "Sudut aksial terkunci! Koordinat Sektor Terakhir 9 (Neptunus) telah terbuka.",
+      "Uranus adalah planet unik yang berotasi menggelinding miring dengan sudut kemiringan poros 97,8°. Gas metana di atmosfernya menyerap cahaya merah dan memantulkan warna toska pastel yang menenangkan.",
+    funFact: "Karena kemiringan rotasinya, satu kutub di Uranus mengalami 42 tahun siang hari terus-menerus dan 42 tahun malam hari!",
+    romanticNote:
+      "Keunikan Uranus mengingatkanku pada pribadimu yang selalu membawa keceriaan, tawa manis, dan warna-warni menyenangkan dalam hidupku.",
     icon: "💎",
   },
   Neptunus: {
     size: 2.8,
     tex: "neptune.jpg",
     color: 0x3d5ce0,
-    type: "Gerbang Azure // Sektor 8",
+    type: "Dunia Azure Angin Supersonik",
     diameter: "49.244 km",
     distance: "4,50 Miliar km",
     temp: "-218 °C",
-    orbitTime: "164,8 Tahun Bumi",
+    orbitDays: 60190,
+    gravityFactor: 1.19,
     scienceFact:
-      "Neptunus adalah planet terjauh di tata surya dengan kecepatan badai supersonik mencapai 2.100 km/jam. Ditemukan melalui rumus matematika sebelum terlihat oleh teleskop.",
-    reflectionNote:
-      "Berada di batas terluar ekspedisi tata surya ini membuktikan bahwa sejauh apa pun bentangan jarak, niat tulus dan kepedulian yang mendalam akan selalu saling terhubung.",
-    challengeTitle: "MISI FINAL SEKTOR 9: Dekripsi Sinyal Batas Semesta",
-    q: "Hal apakah yang mampu melintasi jarak miliaran kilometer tanpa batas?",
-    a1: "Gelombang radio frekuensi tinggi",
-    a2: "Ketulusan doa, rasa syukur, dan penghargaan tulus dari hati",
-    correct: 2,
-    msg: "SELURUH 9 SEKTOR SELESAI DIPINDAI! Sinyal transmisi rahasia terenkripsi terdeteksi...",
+      "Neptunus adalah planet terjauh dalam tata surya dengan kecepatan badai angin supersonik tercepat yang mencapai 2.100 km/jam. Memiliki rona biru samudra kosmik yang begitu mempesona.",
+    funFact: "Neptunus membutuhkan waktu hampir 165 tahun Bumi hanya untuk menyelesaikan satu kali putaran mengitari Matahari!",
+    romanticNote:
+      "Berada di batas terjauh tata surya ini membuktikan bahwa sejauh apa pun jarak dan waktu, doa baik dan rasa sayangku untukmu tak akan pernah pudar.",
     icon: "🌊",
   },
 };
@@ -250,22 +210,22 @@ export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const initialized = useRef(false);
 
-  const [activeTab, setActiveTab] = useState<"telemetry" | "log">("telemetry");
-  const [unlockedMaxIdx, setUnlockedMaxIdx] = useState(0); // Sequential game progression (0 = Matahari only)
-  const [openedPlanets, setOpenedPlanets] = useState<Record<string, boolean>>({});
-  const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Matahari");
-  const [showPassport, setShowPassport] = useState(false);
-  const [showCopilot, setShowCopilot] = useState(false);
-  const [copilotInput, setCopilotInput] = useState("");
-  const [copilotResponse, setCopilotResponse] = useState("");
-  const [copilotLoading, setCopilotLoading] = useState(false);
-  const [isScanning, setIsScanning] = useState(false);
-  const [warpSpeedDisplay, setWarpSpeedDisplay] = useState("ORBIT STABIL");
-  const [candleBlown, setCandleBlown] = useState(false);
+  const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Bumi");
+  const [activeTab, setActiveTab] = useState<"science" | "lab" | "love">("science");
+  const [userWeight, setUserWeight] = useState<number>(45);
+  const [userAge, setUserAge] = useState<number>(20);
+  const [showCosmoModal, setShowCosmoModal] = useState(false);
+  const [cosmoInput, setCosmoInput] = useState("");
+  const [cosmoReply, setCosmoReply] = useState("");
+  const [cosmoLoading, setCosmoLoading] = useState(false);
+  const [showWishModal, setShowWishModal] = useState(false);
+  const [wishText, setWishText] = useState("");
+  const [wishCount, setWishCount] = useState(3);
+  const [mascotTip, setMascotTip] = useState("Hai Nana! Klik aku untuk mengobrol atau bertanya apa saja tentang semesta! ✨");
 
   const audioCtxRef = useRef<AudioContext | null>(null);
 
-  const playSfx = (type: "radio_beep" | "warp_boom" | "scan_sonar" | "correct" | "celebrate" | "locked") => {
+  const playSfx = (type: "pop" | "sparkle" | "whoosh" | "chime") => {
     try {
       const AudioCtx =
         window.AudioContext ||
@@ -278,91 +238,66 @@ export default function Home() {
 
       const now = ctx.currentTime;
 
-      if (type === "radio_beep") {
+      if (type === "pop") {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "sine";
-        osc.frequency.setValueAtTime(2200, now);
-        osc.frequency.setValueAtTime(1100, now + 0.05);
-        gain.gain.setValueAtTime(0.08, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(900, now + 0.08);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(now);
-        osc.stop(now + 0.12);
-      } else if (type === "locked") {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sawtooth";
-        osc.frequency.setValueAtTime(180, now);
-        osc.frequency.setValueAtTime(120, now + 0.1);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.25);
-      } else if (type === "warp_boom") {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sawtooth";
-        osc.frequency.setValueAtTime(80, now);
-        osc.frequency.exponentialRampToValueAtTime(550, now + 0.35);
-        osc.frequency.exponentialRampToValueAtTime(40, now + 1.2);
-        gain.gain.setValueAtTime(0.18, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + 1.2);
-      } else if (type === "scan_sonar") {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(1400, now);
-        osc.frequency.exponentialRampToValueAtTime(440, now + 0.35);
-        gain.gain.setValueAtTime(0.1, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.35);
-      } else if (type === "correct") {
+        osc.stop(now + 0.08);
+      } else if (type === "sparkle") {
+        [659.25, 830.61, 987.77, 1318.51].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + i * 0.06);
+          gain.gain.setValueAtTime(0.1, now + i * 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.06);
+          osc.stop(now + i * 0.06 + 0.3);
+        });
+      } else if (type === "chime") {
         [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = "triangle";
           osc.frequency.setValueAtTime(freq, now + i * 0.07);
-          gain.gain.setValueAtTime(0.14, now + i * 0.07);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.35);
+          gain.gain.setValueAtTime(0.15, now + i * 0.07);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.45);
           osc.connect(gain);
           gain.connect(ctx.destination);
           osc.start(now + i * 0.07);
-          osc.stop(now + i * 0.07 + 0.35);
+          osc.stop(now + i * 0.07 + 0.45);
         });
-      } else if (type === "celebrate") {
-        [440, 554.37, 659.25, 880, 1108.73, 1318.51].forEach((freq, i) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, now + i * 0.09);
-          gain.gain.setValueAtTime(0.18, now + i * 0.09);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.8);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + i * 0.09);
-          osc.stop(now + i * 0.09 + 0.8);
-        });
+      } else if (type === "whoosh") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(240, now);
+        osc.frequency.exponentialRampToValueAtTime(480, now + 0.25);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
       }
     } catch {}
   };
 
-  const askCopilot = async (customPrompt?: string) => {
-    const query = customPrompt || copilotInput;
+  const askCosmo = async (customPrompt?: string) => {
+    const query = customPrompt || cosmoInput;
     if (!query) return;
-    setCopilotLoading(true);
-    setCopilotResponse("");
-    playSfx("radio_beep");
+    setCosmoLoading(true);
+    setCosmoReply("");
+    playSfx("sparkle");
 
     try {
       const res = await fetch("/api/oracle", {
@@ -371,28 +306,29 @@ export default function Home() {
         body: JSON.stringify({
           prompt: query,
           planet: activePlanetName,
-          topic: activeTab === "telemetry" ? "Observasi Fisika & Astronomi" : "Refleksi Perjalanan & Makna Keteraturan Semesta",
+          topic: activeTab === "science" ? "Fakta Sains & Anatomi Planet" : "Refleksi Manis & Keajaiban Semesta",
         }),
       });
       const data = await res.json();
       if (data.reply) {
-        setCopilotResponse(data.reply);
-        playSfx("correct");
+        setCosmoReply(data.reply);
+        playSfx("chime");
       } else {
-        setCopilotResponse(data.error || "Sinyal radio terganggu medan radiasi kosmik. Silakan ulangi sejenak lagi.");
+        setCosmoReply(data.error || "Cosmo sedang membetulkan antena radio bintangnya! Coba sebentar lagi ya ✨");
       }
     } catch {
-      setCopilotResponse("A.R.I.A: Seluruh parameter navigasi dalam kondisi optimal, Nana. Semoga perjalanan ini membawa ketenangan dan wawasan berharga.");
+      setCosmoReply("Cosmo: Langit antariksa sangat cerah hari ini, Nana! Seluruh bintang tersenyum untukmu!");
     } finally {
-      setCopilotLoading(false);
+      setCosmoLoading(false);
     }
   };
+
+  const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
+  const triggerWishParticleRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     if (initialized.current || !canvasRef.current) return;
     initialized.current = true;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const bgm = document.getElementById("bgm") as HTMLAudioElement | null;
     const audioBtn = document.getElementById("audio-btn") as HTMLButtonElement | null;
@@ -401,10 +337,10 @@ export default function Home() {
       if (!bgm || !audioBtn) return;
       if (play) {
         bgm.play().catch(() => {});
-        audioBtn.textContent = "COMM: AKTIF 📡";
+        audioBtn.textContent = "MUSIK: ON 🎵";
       } else {
         bgm.pause();
-        audioBtn.textContent = "COMM: SENYAP 🔇";
+        audioBtn.textContent = "MUSIK: OFF 🔇";
       }
       isPlaying = play;
     }
@@ -412,7 +348,7 @@ export default function Home() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 4500);
-    camera.position.set(0, 3, 140);
+    camera.position.set(40, 5, 20);
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
@@ -427,13 +363,13 @@ export default function Home() {
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
     controls.enablePan = false;
-    controls.minDistance = 9;
-    controls.maxDistance = 60;
-    controls.target.set(0, 3.5, 0);
-    controls.autoRotate = !reducedMotion;
-    controls.autoRotateSpeed = 0.25;
+    controls.minDistance = 6;
+    controls.maxDistance = 65;
+    controls.target.set(40, 3.5, 0); // Start at Earth
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.35;
 
-    const ambient = new THREE.AmbientLight(0xffffff, 1.4);
+    const ambient = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(ambient);
     const sunLight = new THREE.PointLight(0xffeedd, 3.8, 600, 1.2);
     sunLight.position.set(0, 4, 0);
@@ -465,7 +401,7 @@ export default function Home() {
     }
     const fallbackTimeout = setTimeout(revealGate, 3000);
 
-    // 1. PROCEDURAL STARFIELD
+    // 1. STARFIELD
     const starCount = 6500;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
@@ -476,7 +412,7 @@ export default function Home() {
       new THREE.Color(0xffffff),
       new THREE.Color(0xfde68a),
       new THREE.Color(0xfbcfe8),
-      new THREE.Color(0x67e8f9),
+      new THREE.Color(0xc084fc),
     ];
 
     for (let i = 0; i < starCount; i++) {
@@ -507,7 +443,7 @@ export default function Home() {
     const starfieldMesh = new THREE.Points(starGeo, starMat);
     scene.add(starfieldMesh);
 
-    // 2. 3D ASTEROID BELT (BETWEEN MARS & JUPITER)
+    // 2. 3D ASTEROID BELT
     const asteroidCount = 350;
     const asteroidGeo = new THREE.DodecahedronGeometry(0.35, 1);
     const asteroidMat = new THREE.MeshStandardMaterial({
@@ -520,7 +456,7 @@ export default function Home() {
 
     for (let i = 0; i < asteroidCount; i++) {
       const angle = (i / asteroidCount) * Math.PI * 2 + Math.random() * 0.05;
-      const radius = 59 + (Math.random() - 0.5) * 7.5; // Orbit between Mars (52) & Jupiter (68)
+      const radius = 59 + (Math.random() - 0.5) * 7.5;
       dummy.position.set(
         Math.cos(angle) * radius,
         3.5 + (Math.random() - 0.5) * 3,
@@ -535,7 +471,7 @@ export default function Home() {
     asteroidInstanced.instanceMatrix.needsUpdate = true;
     scene.add(asteroidInstanced);
 
-    // 3. GLOWING ORBITAL PATH LINES IN 3D
+    // 3. GLOWING ORBIT LINES
     const basePositions: Record<PlanetName, [number, number, number]> = {
       Matahari: [0, 3.5, 0],
       Merkurius: [18, 3.5, 0],
@@ -560,124 +496,13 @@ export default function Home() {
       const orbMat = new THREE.LineBasicMaterial({
         color: 0x38bdf8,
         transparent: true,
-        opacity: 0.18,
+        opacity: 0.2,
       });
       const orbLine = new THREE.Line(orbGeo, orbMat);
       scene.add(orbLine);
     });
 
-    // 4. 3D VOYAGER / EXPLORATION SATELLITE PROBE
-    const probeGroup = new THREE.Group();
-    const probeBody = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.3, 0.3, 0.8, 8),
-      new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.8, roughness: 0.3 })
-    );
-    const panelGeo = new THREE.BoxGeometry(1.6, 0.05, 0.5);
-    const panelMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, metalness: 0.9, roughness: 0.2 });
-    const solarPanel = new THREE.Mesh(panelGeo, panelMat);
-    const dish = new THREE.Mesh(
-      new THREE.ConeGeometry(0.5, 0.3, 16, 1, true),
-      new THREE.MeshStandardMaterial({ color: 0xf8fafc, side: THREE.DoubleSide })
-    );
-    dish.position.set(0, 0.6, 0);
-    dish.rotation.x = Math.PI;
-
-    probeGroup.add(probeBody);
-    probeGroup.add(solarPanel);
-    probeGroup.add(dish);
-    probeGroup.position.set(43, 4.5, 5);
-    scene.add(probeGroup);
-
-    // 5. WARP LINES
-    const warpCount = 600;
-    const warpGeo = new THREE.BufferGeometry();
-    const warpPositions = new Float32Array(warpCount * 6);
-
-    for (let i = 0; i < warpCount; i++) {
-      const x = (Math.random() - 0.5) * 120;
-      const y = (Math.random() - 0.5) * 120;
-      const z = (Math.random() - 0.5) * 200;
-      warpPositions[i * 6] = x;
-      warpPositions[i * 6 + 1] = y;
-      warpPositions[i * 6 + 2] = z;
-      warpPositions[i * 6 + 3] = x;
-      warpPositions[i * 6 + 4] = y;
-      warpPositions[i * 6 + 5] = z - 2;
-    }
-
-    warpGeo.setAttribute("position", new THREE.BufferAttribute(warpPositions, 3));
-    const warpMat = new THREE.LineBasicMaterial({
-      color: 0x38bdf8,
-      transparent: true,
-      opacity: 0,
-      blending: THREE.AdditiveBlending,
-    });
-    const warpLines = new THREE.LineSegments(warpGeo, warpMat);
-    scene.add(warpLines);
-
-    // 6. SCANNER RING
-    const scanRingGeo = new THREE.TorusGeometry(5.5, 0.05, 16, 64);
-    const scanRingMat = new THREE.MeshBasicMaterial({
-      color: 0x38bdf8,
-      wireframe: true,
-      transparent: true,
-      opacity: 0,
-      blending: THREE.AdditiveBlending,
-    });
-    const scanRingMesh = new THREE.Mesh(scanRingGeo, scanRingMat);
-    scene.add(scanRingMesh);
-
-    // 7. FIREWORKS
-    const fireworkCount = 600;
-    const fireworkGeo = new THREE.BufferGeometry();
-    const fireworkPos = new Float32Array(fireworkCount * 3);
-    const fireworkVels: THREE.Vector3[] = [];
-    const fireworkColors = new Float32Array(fireworkCount * 3);
-
-    for (let i = 0; i < fireworkCount; i++) {
-      fireworkPos[i * 3] = 0;
-      fireworkPos[i * 3 + 1] = 0;
-      fireworkPos[i * 3 + 2] = 0;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
-      const speed = 0.4 + Math.random() * 0.9;
-      fireworkVels.push(
-        new THREE.Vector3(
-          Math.sin(phi) * Math.cos(theta) * speed,
-          Math.sin(phi) * Math.sin(theta) * speed,
-          Math.cos(phi) * speed
-        )
-      );
-      const c = new THREE.Color().setHSL(Math.random(), 0.95, 0.7);
-      fireworkColors[i * 3] = c.r;
-      fireworkColors[i * 3 + 1] = c.g;
-      fireworkColors[i * 3 + 2] = c.b;
-    }
-    fireworkGeo.setAttribute("position", new THREE.BufferAttribute(fireworkPos, 3));
-    fireworkGeo.setAttribute("color", new THREE.BufferAttribute(fireworkColors, 3));
-    const fireworkMat = new THREE.PointsMaterial({
-      size: 1.5,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0,
-      blending: THREE.AdditiveBlending,
-    });
-    const fireworkPoints = new THREE.Points(fireworkGeo, fireworkMat);
-    fireworkPoints.position.set(0, 3.5, 0);
-    scene.add(fireworkPoints);
-
-    let fireworksActive = false;
-    function trigger3DFireworks() {
-      fireworksActive = true;
-      fireworkMat.opacity = 1;
-      const posAttr = fireworkGeo.attributes.position as THREE.BufferAttribute;
-      for (let i = 0; i < fireworkCount; i++) {
-        posAttr.setXYZ(i, 0, 0, 0);
-      }
-      posAttr.needsUpdate = true;
-    }
-
-    // 8. SATURN RING
+    // 4. SATURN RING
     const createSaturnRingTexture = () => {
       const size = 1024;
       const canvas = document.createElement("canvas");
@@ -719,7 +544,7 @@ export default function Home() {
       return tex;
     };
 
-    // 9. 3D PLANETS
+    // 5. 3D PLANETS
     const group3D: Record<string, THREE.Group> = {};
 
     ORDER.forEach((name) => {
@@ -806,165 +631,120 @@ export default function Home() {
       group3D[name] = grp;
     });
 
-    let activeKey: PlanetName = "Matahari";
-    let isTransitioning = false;
-    const openedState: Record<string, boolean> = {};
-    let unlockedProgress = 0; // index max yang sudah terbuka
+    // 6. DYNAMIC MINI SATELLITE SYSTEM
+    const activeSatellites: THREE.Group[] = [];
+    const launchSatellite = () => {
+      const currentGrp = group3D[activeKey];
+      const pData = DATA[activeKey];
+      const sat = new THREE.Group();
 
-    function warpToPlanet(name: PlanetName) {
-      const targetIdx = ORDER.indexOf(name);
-      if (targetIdx > unlockedProgress) {
-        playSfx("locked");
-        alert(`SEKTOR TERKUNCI 🔒: Harap selesaikan pemindaian dan kalibrasi misi di Sektor ${ORDER[unlockedProgress]} terlebih dahulu untuk membuka koordinat Hyperdrive!`);
-        return;
+      const satBody = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.2, 0.2, 0.5, 8),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.8, roughness: 0.2 })
+      );
+      const wings = new THREE.Mesh(
+        new THREE.BoxGeometry(1.2, 0.04, 0.35),
+        new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: 0.9, roughness: 0.1 })
+      );
+      sat.add(satBody);
+      sat.add(wings);
+
+      sat.position.copy(currentGrp.position);
+      sat.userData = {
+        center: currentGrp.position,
+        radius: pData.size + 2.5 + Math.random() * 1.5,
+        speed: 1.2 + Math.random() * 0.8,
+        angle: Math.random() * Math.PI * 2,
+        inclination: (Math.random() - 0.5) * 0.8,
+      };
+
+      scene.add(sat);
+      activeSatellites.push(sat);
+      playSfx("sparkle");
+      setMascotTip(`Wah, satelit eksplorasi baru berhasil mengorbit ${activeKey}! 🛰️✨`);
+    };
+    triggerSatelliteLaunchRef.current = launchSatellite;
+
+    // 7. WISH STAR PARTICLE BURST
+    const wishStarCount = 80;
+    const wishGeo = new THREE.BufferGeometry();
+    const wishPos = new Float32Array(wishStarCount * 3);
+    const wishVels: THREE.Vector3[] = [];
+
+    for (let i = 0; i < wishStarCount; i++) {
+      wishPos[i * 3] = 0;
+      wishPos[i * 3 + 1] = 0;
+      wishPos[i * 3 + 2] = 0;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
+      const speed = 0.3 + Math.random() * 0.6;
+      wishVels.push(
+        new THREE.Vector3(
+          Math.sin(phi) * Math.cos(theta) * speed,
+          Math.sin(phi) * Math.sin(theta) * speed + 0.2,
+          Math.cos(phi) * speed
+        )
+      );
+    }
+    wishGeo.setAttribute("position", new THREE.BufferAttribute(wishPos, 3));
+    const wishMat = new THREE.PointsMaterial({
+      size: 2.2,
+      color: 0xfde047,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+    });
+    const wishPoints = new THREE.Points(wishGeo, wishMat);
+    scene.add(wishPoints);
+
+    let wishActive = false;
+    const triggerWishBurst = () => {
+      const currentGrp = group3D[activeKey];
+      wishPoints.position.copy(currentGrp.position);
+      wishActive = true;
+      wishMat.opacity = 1;
+      const posAttr = wishGeo.attributes.position as THREE.BufferAttribute;
+      for (let i = 0; i < wishStarCount; i++) {
+        posAttr.setXYZ(i, 0, 0, 0);
       }
+      posAttr.needsUpdate = true;
+    };
+    triggerWishParticleRef.current = triggerWishBurst;
 
-      if (isTransitioning) return;
+    let activeKey: PlanetName = "Bumi";
+
+    function navigateToPlanet(name: PlanetName) {
       activeKey = name;
-      isTransitioning = true;
-
-      playSfx("warp_boom");
-      playSfx("radio_beep");
+      playSfx("whoosh");
 
       const grp = group3D[name];
       const pData = DATA[name];
       const targetPos = grp.position;
-      const camOffset = pData.size * 3.6 + 8;
-
-      gsap.to(warpMat, { opacity: 0.8, duration: 0.3, yoyo: true, repeat: 1 });
-      setWarpSpeedDisplay("WARP 8.5 AU/s ⚡");
+      const camOffset = pData.size * 3.5 + 8;
 
       gsap.to(controls.target, {
         x: targetPos.x,
-        y: targetPos.y + 0.3,
+        y: targetPos.y + 0.2,
         z: targetPos.z,
-        duration: 1.5,
-        ease: "power3.inOut",
+        duration: 1.4,
+        ease: "power2.inOut",
       });
       gsap.to(camera.position, {
         x: targetPos.x,
-        y: targetPos.y + 1.8,
+        y: targetPos.y + 1.6,
         z: targetPos.z + camOffset,
-        duration: 1.5,
-        ease: "power3.inOut",
-        onComplete: () => {
-          isTransitioning = false;
-          setWarpSpeedDisplay("ORBIT STABIL ⚓");
-        },
+        duration: 1.4,
+        ease: "power2.inOut",
       });
 
       setActivePlanetName(name);
+      setMascotTip(`Kita sekarang sedang mengamati ${name}! Ada banyak fakta seru di sini ✨`);
     }
-
-    const quizModal = document.getElementById("quiz-modal");
-    const qText = document.getElementById("q-text");
-    const ans1 = document.getElementById("ans-1");
-    const ans2 = document.getElementById("ans-2");
-    const quizResult = document.getElementById("quiz-result");
-    const closeQuiz = document.getElementById("close-quiz");
-    const finaleEl = document.getElementById("finale");
-
-    function executeDeepScan() {
-      const d = DATA[activeKey];
-      setIsScanning(true);
-      playSfx("scan_sonar");
-
-      const grp = group3D[activeKey];
-      scanRingMesh.position.copy(grp.position);
-      scanRingMesh.scale.setScalar(d.size * 0.28);
-      gsap.to(scanRingMat, { opacity: 0.85, duration: 0.4 });
-      gsap.to(scanRingMesh.rotation, { x: Math.PI * 2, y: Math.PI, duration: 1.5 });
-
-      setTimeout(() => {
-        setIsScanning(false);
-        gsap.to(scanRingMat, { opacity: 0, duration: 0.3 });
-
-        if (qText) qText.textContent = d.q;
-        if (ans1) {
-          ans1.textContent = d.a1;
-          ans1.style.display = "block";
-          ans1.onclick = () => handleScanAnswer(1);
-        }
-        if (ans2) {
-          ans2.textContent = d.a2;
-          ans2.style.display = "block";
-          ans2.onclick = () => handleScanAnswer(2);
-        }
-        if (quizResult) quizResult.style.display = "none";
-        if (closeQuiz) closeQuiz.style.display = "none";
-        quizModal?.classList.add("show");
-      }, 1100);
-    }
-
-    function handleScanAnswer(choice: number) {
-      const d = DATA[activeKey];
-      const currentIdx = ORDER.indexOf(activeKey);
-
-      if (quizResult) {
-        quizResult.style.display = "block";
-        if (choice === d.correct) {
-          quizResult.textContent = `✨ ${d.msg}`;
-          playSfx("correct");
-          openedState[activeKey] = true;
-          setOpenedPlanets({ ...openedState });
-
-          // Unlock next sector in sequence
-          if (currentIdx === unlockedProgress && unlockedProgress < ORDER.length - 1) {
-            unlockedProgress = currentIdx + 1;
-            setUnlockedMaxIdx(unlockedProgress);
-          }
-
-          // THE GRAND SURPRISE REVEAL (Unlocked when final sector is completed)
-          if (Object.keys(openedState).length === ORDER.length) {
-            setTimeout(() => {
-              quizModal?.classList.remove("show");
-              finaleEl?.classList.add("show");
-              playSfx("celebrate");
-            }, 2500);
-          }
-        } else {
-          quizResult.textContent = `Pilihan yang baik, mari kita kalibrasi observasi kembali: "${d.msg}"`;
-        }
-      }
-      if (closeQuiz) closeQuiz.style.display = "block";
-    }
-
-    closeQuiz?.addEventListener("click", () => {
-      quizModal?.classList.remove("show");
-    });
-
-    document.getElementById("deep-scan-btn")?.addEventListener("click", executeDeepScan);
-    document.getElementById("prev-thruster-btn")?.addEventListener("click", () => {
-      const idx = ORDER.indexOf(activeKey);
-      if (idx > 0) {
-        warpToPlanet(ORDER[idx - 1]);
-      }
-    });
-    document.getElementById("next-thruster-btn")?.addEventListener("click", () => {
-      const idx = ORDER.indexOf(activeKey);
-      if (idx < ORDER.length - 1) {
-        warpToPlanet(ORDER[idx + 1]);
-      }
-    });
 
     document.getElementById("gate-btn")?.addEventListener("click", () => {
       document.getElementById("gate")?.classList.add("hide");
       setAudio(true);
-      warpToPlanet("Matahari");
-    });
-
-    document.getElementById("replay-btn")?.addEventListener("click", () => {
-      finaleEl?.classList.remove("show");
-      warpToPlanet("Matahari");
-    });
-
-    const candleBox = document.getElementById("candle-trigger");
-    const flameEl = document.getElementById("flame-el");
-    candleBox?.addEventListener("click", () => {
-      flameEl?.classList.add("blown");
-      setCandleBlown(true);
-      playSfx("celebrate");
-      trigger3DFireworks();
+      navigateToPlanet("Bumi");
     });
 
     let animFrameId: number;
@@ -974,24 +754,24 @@ export default function Home() {
       animFrameId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      starfieldMesh.rotation.y = t * 0.003;
-      asteroidInstanced.rotation.y = t * 0.015;
+      starfieldMesh.rotation.y = t * 0.002;
+      asteroidInstanced.rotation.y = t * 0.012;
 
-      // Orbit satellite probe
-      probeGroup.position.x = Math.cos(t * 0.4) * 44;
-      probeGroup.position.z = Math.sin(t * 0.4) * 44;
-      probeGroup.position.y = 3.5 + Math.sin(t * 1.2) * 1.5;
-      probeGroup.rotation.y = -t * 0.4;
+      // Animate active satellites
+      activeSatellites.forEach((sat) => {
+        const u = sat.userData;
+        u.angle += 0.02 * u.speed;
+        sat.position.x = u.center.x + Math.cos(u.angle) * u.radius;
+        sat.position.z = u.center.z + Math.sin(u.angle) * u.radius;
+        sat.position.y = u.center.y + Math.sin(u.angle * 2) * u.inclination * u.radius;
+        sat.rotation.y = -u.angle;
+      });
 
-      if (isTransitioning) {
-        warpLines.position.z += 8;
-        if (warpLines.position.z > 100) warpLines.position.z = -100;
-      }
-
-      if (fireworksActive) {
-        const posAttr = fireworkGeo.attributes.position as THREE.BufferAttribute;
-        for (let i = 0; i < fireworkCount; i++) {
-          const v = fireworkVels[i];
+      // Animate wish particles
+      if (wishActive) {
+        const posAttr = wishGeo.attributes.position as THREE.BufferAttribute;
+        for (let i = 0; i < wishStarCount; i++) {
+          const v = wishVels[i];
           posAttr.setXYZ(
             i,
             posAttr.getX(i) + v.x,
@@ -1000,25 +780,25 @@ export default function Home() {
           );
         }
         posAttr.needsUpdate = true;
-        fireworkMat.opacity *= 0.985;
-        if (fireworkMat.opacity < 0.05) fireworksActive = false;
+        wishMat.opacity *= 0.975;
+        if (wishMat.opacity < 0.05) wishActive = false;
       }
 
-      if (activeKey) {
-        const grp = group3D[activeKey];
+      // Rotate planets
+      ORDER.forEach((name) => {
+        const grp = group3D[name];
         if (grp) {
           grp.children.forEach((c) => {
             if (c.userData.isMoon) {
-              const currentKey = activeKey as PlanetName;
-              const R = DATA[currentKey].size + 2.8;
+              const R = DATA[name].size + 2.8;
               c.position.x = Math.cos(t * 0.7) * R;
               c.position.z = Math.sin(t * 0.7) * R;
             } else if (c instanceof THREE.Mesh && c.geometry instanceof THREE.SphereGeometry) {
-              c.rotation.y += 0.003;
+              c.rotation.y += 0.004;
             }
           });
         }
-      }
+      });
 
       controls.update();
       renderer.render(scene, camera);
@@ -1040,9 +820,25 @@ export default function Home() {
     };
   }, []);
 
-  const currentPlanetData = DATA[activePlanetName];
+  const currentPlanet = DATA[activePlanetName];
   const currentIdx = ORDER.indexOf(activePlanetName);
-  const isCurrentOpened = !!openedPlanets[activePlanetName];
+
+  const calculatedWeight = Math.round(userWeight * currentPlanet.gravityFactor * 10) / 10;
+  const calculatedAge = Math.round((userAge * 365.25 / currentPlanet.orbitDays) * 10) / 10;
+
+  const handleLaunchSatellite = () => {
+    triggerSatelliteLaunchRef.current();
+  };
+
+  const handleSendWish = () => {
+    if (!wishText) return;
+    triggerWishParticleRef.current();
+    playSfx("sparkle");
+    setWishCount((prev) => prev + 1);
+    setShowWishModal(false);
+    setWishText("");
+    setMascotTip("Bintang harapanmu telah meluncur dan bersinar indah di galaksi! ⭐💖");
+  };
 
   return (
     <>
@@ -1050,381 +846,368 @@ export default function Home() {
         <source src="/backsound.mp3" type="audio/mpeg" />
       </audio>
 
-      {/* ASTRONAUT HELMET VISOR HUD */}
-      <div id="visor-overlay"></div>
-      <div id="visor-glare"></div>
-
-      {/* TOP STATUS BAR */}
-      <div className="flight-header">
-        <div className="mission-callsign">
-          <div className="astronaut-badge">
-            <span className="pilot-status-dot"></span>
-            PENJELAJAH: NANA // EKSPEDISI TATA SURYA
-          </div>
+      {/* TOP NAVIGATION BAR */}
+      <div className="top-nav">
+        <div className="brand-badge">
+          <span className="sparkle">✨</span>
+          CosmoNana // Observatorium Semesta
         </div>
 
-        <div className="flight-actions">
+        <div className="nav-tools">
           <button
-            className="hud-btn copilot-btn"
-            onClick={() => setShowCopilot(true)}
-            title="Buka Komunikasi Asisten Navigasi A.R.I.A"
+            className="cute-btn cosmo-btn"
+            onClick={() => {
+              playSfx("pop");
+              setShowCosmoModal(true);
+            }}
+            title="Tanya Cosmo si Asisten Imut"
           >
-            🎙️ ASISTEN A.R.I.A
+            🤖 Sahabat Cosmo
           </button>
           <button
-            className="hud-btn"
-            onClick={() => setShowPassport(true)}
-            title="Buka Log Catatan Penjelajahan"
+            className="cute-btn"
+            id="audio-btn"
+            title="Nyalakan / Matikan Musik"
           >
-            ⭐ STEMPEL: {Object.keys(openedPlanets).length}/9
-          </button>
-          <button id="audio-btn" className="hud-btn" title="Toggle Audio Radio">
-            COMM: SENYAP 🔇
+            MUSIK: OFF 🔇
           </button>
         </div>
       </div>
 
-      {/* ORBIT TRACKER NODES (SEQUENTIAL GAME UNLOCK) */}
-      <div className="orbit-tracker-bar">
-        {ORDER.map((name, idx) => {
-          const isLocked = idx > unlockedMaxIdx;
-          const isCurrent = name === activePlanetName;
-          const isStamped = !!openedPlanets[name];
-          return (
-            <button
-              key={name}
-              className={`orbit-node ${isStamped ? "stamped" : ""} ${
-                isCurrent ? "active" : ""
-              } ${isLocked ? "locked" : ""}`}
-              onClick={() => {
-                if (isLocked) {
-                  playSfx("locked");
-                  alert(`Sektor ${name} masih terkunci 🔒. Selesaikan misi di sektor sebelumnya terlebih dahulu!`);
-                } else {
-                  setActivePlanetName(name);
-                }
-              }}
-              title={isLocked ? `Sektor ${name} (Terkunci 🔒)` : `${name} (${DATA[name].type})`}
-            />
-          );
-        })}
+      {/* ORBIT SELECTION CAROUSEL DOCK */}
+      <div className="orbit-dock">
+        {ORDER.map((name) => (
+          <button
+            key={name}
+            className={`planet-pill ${name === activePlanetName ? "active" : ""}`}
+            onClick={() => {
+              playSfx("pop");
+              setActivePlanetName(name);
+              // Trigger orbit navigation
+              const btn = document.getElementById(`nav-${name}`);
+              btn?.click();
+            }}
+          >
+            <span>{DATA[name].icon}</span>
+            {name}
+          </button>
+        ))}
       </div>
 
-      {/* TARGET RETICLE */}
-      <div className={`target-reticle-wrap ${isScanning ? "scanning" : ""}`}>
-        <div className="reticle-corner corner-tl"></div>
-        <div className="reticle-corner corner-tr"></div>
-        <div className="reticle-corner corner-bl"></div>
-        <div className="reticle-corner corner-br"></div>
-        <div className="reticle-label">
-          {isScanning ? "MEMINDAI SEKTOR..." : `OBSERVASI: ${activePlanetName}`}
-        </div>
+      {/* HIDDEN NAV TRIGGERS FOR THREE.JS */}
+      <div style={{ display: "none" }}>
+        {ORDER.map((name) => (
+          <button
+            key={name}
+            id={`nav-${name}`}
+            onClick={() => {
+              // Internal navigation handled inside Three.js
+            }}
+          />
+        ))}
       </div>
 
-      {/* WARP SPEED & ENERGY GAUGE */}
-      <div className="warp-gauge">
-        <span style={{ color: "var(--hud-cyan)", fontWeight: 700 }}>HYPERDRIVE CORE:</span>
-        <div className="energy-bar-wrap">
-          <div
-            className="energy-bar-fill"
-            style={{ width: `${(Object.keys(openedPlanets).length / ORDER.length) * 100}%` }}
-          ></div>
+      {/* FLOATING MASCOT COMPANION (COSMO & ASTRO-NANA) */}
+      <div id="mascot-companion">
+        <div
+          className="mascot-bubble"
+          onClick={() => {
+            playSfx("pop");
+            setShowCosmoModal(true);
+          }}
+        >
+          {mascotTip}
         </div>
-        <span style={{ color: "var(--hud-gold)", fontSize: "9.5px", marginTop: "2px" }}>
-          {warpSpeedDisplay}
-        </span>
+        <div
+          className="mascot-avatar-wrap"
+          onClick={() => {
+            playSfx("sparkle");
+            setShowCosmoModal(true);
+          }}
+          title="Klik Cosmo untuk mengobrol!"
+        >
+          👨‍🚀
+        </div>
       </div>
 
       {/* LOADER */}
       <div id="loader">
-        <div style={{ color: "var(--hud-cyan)", fontSize: "11px", letterSpacing: "2px", fontWeight: 600 }}>
-          MENYELARASKAN SISTEM OBSERVASI & SENSOR OPTIK...
+        <div style={{ color: "var(--pastel-pink)", fontSize: "12px", fontWeight: 700, letterSpacing: "1px" }}>
+          MEMBUKA OBSERVATORIUM ANTARIKSA NANA... ✨
         </div>
         <div className="loader-bar">
           <div className="loader-fill" id="loader-fill"></div>
         </div>
       </div>
 
-      {/* INITIAL GATE SCREEN */}
+      {/* INTRO GATE SCREEN */}
       <div id="gate">
-        <div className="gate-inner">
-          <div className="gate-badge">🪐 OBSERVATORIUM TATA SURYA // KHUSUS UNTUK NANA 🚀</div>
+        <div className="gate-card">
+          <div className="gate-badge">🪐 OBSERVATORIUM EDUKASI SEMESTA ✨</div>
           <h1 className="gate-title">
-            Ekspedisi Antariksa
+            Jelajahi Tata Surya
             <br />
-            <em>Menjelajahi Tata Surya</em>
+            <span>Bersama Nana</span>
           </h1>
-          <p className="gate-sub">
-            Selamat datang di simulator observasi antariksa. Kamu ditugaskan menyelesaikan 9 misi pemindaian sains di tata surya secara berurutan untuk membuka akses penuh ke batas terluar semesta.
+          <p className="gate-desc">
+            Selamat datang di media pembelajaran astronomi interaktif! Yuk pelajari keajaiban 9 objek tata surya, coba kalkulator gravitasi & umur kosmik, terbangkan satelit mini, dan temukan fakta-fakta sains yang menakjubkan.
           </p>
-
-          <button className="gate-btn" id="gate-btn">
-            MULAI MISI SEKARANG 🚀
+          <button className="gate-start-btn" id="gate-btn">
+            Mulai Menjelajah Sekarang 🚀
           </button>
-          <div className="gate-hint">🎧 Disarankan menyalakan audio untuk pengalaman observasi yang lebih imersif</div>
         </div>
       </div>
 
       <canvas id="webgl-canvas" ref={canvasRef}></canvas>
 
-      {/* FLIGHT DECK (BOTTOM DOCK) */}
-      <div id="flight-deck">
-        <div className="cockpit-console">
-          <div className="planet-header-row">
-            <div className="target-designation">
-              <span className="target-name-text">
-                {currentPlanetData.icon} {activePlanetName}
+      {/* MAIN INTERACTIVE LEARNING DECK (BOTTOM DOCK) */}
+      <div id="learning-deck">
+        <div className="cozy-card">
+          <div className="card-header-row">
+            <div className="planet-title-group">
+              <span className="planet-name-text">
+                {currentPlanet.icon} {activePlanetName}
               </span>
-              <span className="target-type-pill">{currentPlanetData.type}</span>
+              <span className="planet-type-badge">{currentPlanet.type}</span>
             </div>
 
-            <div className="tab-selector">
+            <div className="mode-tabs">
               <button
-                className={`tab-btn ${activeTab === "telemetry" ? "active" : ""}`}
-                onClick={() => setActiveTab("telemetry")}
+                className={`tab-btn ${activeTab === "science" ? "active" : ""}`}
+                onClick={() => {
+                  playSfx("pop");
+                  setActiveTab("science");
+                }}
               >
-                🔭 Data Sains
+                🔭 Fakta Sains
               </button>
               <button
-                className={`tab-btn ${activeTab === "log" ? "active" : ""}`}
-                onClick={() => setActiveTab("log")}
+                className={`tab-btn ${activeTab === "lab" ? "active" : ""}`}
+                onClick={() => {
+                  playSfx("pop");
+                  setActiveTab("lab");
+                }}
               >
-                📝 Catatan Refleksi
+                ⚖️ Lab Kosmik
+              </button>
+              <button
+                className={`tab-btn ${activeTab === "love" ? "active" : ""}`}
+                onClick={() => {
+                  playSfx("pop");
+                  setActiveTab("love");
+                }}
+              >
+                💌 Catatan Manis
               </button>
             </div>
           </div>
 
-          {activeTab === "telemetry" ? (
+          {activeTab === "science" && (
             <div>
-              <div className="telemetry-grid">
-                <div className="telemetry-box">
-                  <div className="telemetry-label">DIAMETER</div>
-                  <div className="telemetry-val">{currentPlanetData.diameter}</div>
+              <div className="fact-grid">
+                <div className="fact-box">
+                  <div className="fact-label">DIAMETER</div>
+                  <div className="fact-val">{currentPlanet.diameter}</div>
                 </div>
-                <div className="telemetry-box">
-                  <div className="telemetry-label">JARAK</div>
-                  <div className="telemetry-val">{currentPlanetData.distance}</div>
+                <div className="fact-box">
+                  <div className="fact-label">JARAK ORBIT</div>
+                  <div className="fact-val">{currentPlanet.distance}</div>
                 </div>
-                <div className="telemetry-box">
-                  <div className="telemetry-label">SUHU</div>
-                  <div className="telemetry-val">{currentPlanetData.temp}</div>
+                <div className="fact-box">
+                  <div className="fact-label">SUHU RATA-RATA</div>
+                  <div className="fact-val">{currentPlanet.temp}</div>
                 </div>
-                <div className="telemetry-box">
-                  <div className="telemetry-label">PERIODE ORBIT</div>
-                  <div className="telemetry-val">{currentPlanetData.orbitTime}</div>
+                <div className="fact-box">
+                  <div className="fact-label">GRAVITASI</div>
+                  <div className="fact-val">{currentPlanet.gravityFactor}x Bumi</div>
                 </div>
               </div>
-              <p className="flight-desc">{currentPlanetData.scienceFact}</p>
+              <p className="science-summary-box">{currentPlanet.scienceFact}</p>
             </div>
-          ) : (
+          )}
+
+          {activeTab === "lab" && (
+            <div className="lab-container">
+              <div className="calc-row">
+                <div className="calc-box">
+                  <div className="calc-title">⚖️ Berat Badanmu di {activePlanetName}:</div>
+                  <div className="calc-input-wrap">
+                    <input
+                      type="number"
+                      className="calc-input"
+                      value={userWeight}
+                      onChange={(e) => setUserWeight(Number(e.target.value) || 0)}
+                    />
+                    <div className="calc-res-text">
+                      kg ➔ Jadi: <span>{calculatedWeight} kg</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="calc-box">
+                  <div className="calc-title">⏳ Usiamu di {activePlanetName}:</div>
+                  <div className="calc-input-wrap">
+                    <input
+                      type="number"
+                      className="calc-input"
+                      value={userAge}
+                      onChange={(e) => setUserAge(Number(e.target.value) || 0)}
+                    />
+                    <div className="calc-res-text">
+                      thn ➔ Jadi: <span>{calculatedAge} tahun</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p style={{ fontSize: "12px", color: "var(--pastel-yellow)", fontStyle: "italic" }}>
+                💡 <strong>Tahukah Kamu?</strong> {currentPlanet.funFact}
+              </p>
+            </div>
+          )}
+
+          {activeTab === "love" && (
             <div>
-              <p className="flight-desc love-log">{currentPlanetData.reflectionNote}</p>
+              <p className="romantic-note-box">{currentPlanet.romanticNote}</p>
             </div>
           )}
         </div>
 
-        <div className="flight-controls-row">
+        {/* INTERACTIVE TOY BUTTONS */}
+        <div className="action-toy-row">
           <button
-            className={`thruster-btn ${currentIdx === 0 ? "disabled" : ""}`}
-            id="prev-thruster-btn"
-            title="Navigasi ke Planet Sebelumnya"
+            className="nav-arrow-btn"
+            onClick={() => {
+              playSfx("pop");
+              const prevIdx = (currentIdx - 1 + ORDER.length) % ORDER.length;
+              setActivePlanetName(ORDER[prevIdx]);
+            }}
+            title="Ke Planet Sebelumnya"
           >
             ‹
           </button>
-          <button
-            className={`scan-action-btn ${isCurrentOpened ? "scanned" : ""}`}
-            id="deep-scan-btn"
-          >
-            {isCurrentOpened
-              ? `✓ DATA ${activePlanetName} TERVERIFIKASI • BACA LAGI`
-              : `📡 SELESAIKAN MISI PEMINDAIAN ${activePlanetName}`}
+          <button className="launch-satellite-btn" onClick={handleLaunchSatellite}>
+            🚀 Luncurkan Satelit Mini ke {activePlanetName}
           </button>
           <button
-            className={`thruster-btn ${currentIdx >= unlockedMaxIdx ? "disabled" : ""}`}
-            id="next-thruster-btn"
-            title={currentIdx >= unlockedMaxIdx ? "Sektor berikutnya terkunci 🔒" : "Navigasi ke Planet Berikutnya"}
+            className="wish-star-btn"
+            onClick={() => {
+              playSfx("pop");
+              setShowWishModal(true);
+            }}
+          >
+            ⭐ Bintang Harapan ({wishCount})
+          </button>
+          <button
+            className="nav-arrow-btn"
+            onClick={() => {
+              playSfx("pop");
+              const nextIdx = (currentIdx + 1) % ORDER.length;
+              setActivePlanetName(ORDER[nextIdx]);
+            }}
+            title="Ke Planet Berikutnya"
           >
             ›
           </button>
         </div>
       </div>
 
-      {/* AI CO-PILOT A.R.I.A MODAL */}
-      <div id="copilot-modal" className={showCopilot ? "show" : ""}>
-        <div className="copilot-terminal">
-          <div className="terminal-header">
-            <div className="terminal-title">🎙️ ASISTEN OBSERVASI A.R.I.A</div>
-            <div className="terminal-id">ASISTEN NAVIGASI & REFLEKSI SEMESTA</div>
+      {/* AI COSMO CHAT MODAL */}
+      <div id="cosmo-modal" className={showCosmoModal ? "show" : ""}>
+        <div className="cosmo-window">
+          <div className="cosmo-header">
+            <span className="cosmo-avatar">🤖</span>
+            <div>
+              <div className="cosmo-title-text">Sahabat Antariksa Cosmo</div>
+              <div className="cosmo-sub">Tanyakan apa saja seputar sains atau keindahan semesta!</div>
+            </div>
           </div>
 
-          <div className="copilot-chips-row">
+          <div className="cosmo-chips-grid">
             <button
-              className="copilot-chip"
-              onClick={() => askCopilot(`Bagaimana keteraturan fisika dan keunikan planet ${activePlanetName} dapat memberi refleksi yang bermakna bagi kehidupan kita?`)}
+              className="cosmo-chip-btn"
+              onClick={() => askCosmo(`Ceritakan fakta paling lucu dan unik tentang planet ${activePlanetName}!`)}
             >
-              🪐 Refleksi Sains Planet {activePlanetName}
+              🪐 Fakta Lucu {activePlanetName}
             </button>
             <button
-              className="copilot-chip"
-              onClick={() => askCopilot("Ceritakan pandanganmu mengenai keteraturan hukum gravitasi dan keharmonisan alam semesta ini.")}
+              className="cosmo-chip-btn"
+              onClick={() => askCosmo("Bagaimana bintang dan galaksi terbentuk di alam semesta kita?")}
             >
-              🌌 Keteraturan & Gravitasi Kosmik
+              ✨ Kelahiran Bintang
             </button>
             <button
-              className="copilot-chip"
-              onClick={() => askCopilot("Berikan satu pesan penutup yang menenangkan dan penuh apresiasi untuk perjalanan eksplorasi hari ini.")}
+              className="cosmo-chip-btn"
+              onClick={() => askCosmo("Berikan pesan sains yang manis dan menenangkan untuk hariku!")}
             >
-              ✨ Pesan Apresiasi Perjalanan
+              💖 Pesan Semesta Manis
             </button>
           </div>
 
-          <div className="terminal-input-box">
+          <div className="cosmo-input-row">
             <input
               type="text"
-              className="terminal-input"
-              placeholder="Tanyakan hal seputar sains atau refleksi perjalanan kepada A.R.I.A..."
-              value={copilotInput}
-              onChange={(e) => setCopilotInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && askCopilot()}
+              className="cosmo-input-field"
+              placeholder="Ketik pertanyaan antariksa untuk Cosmo..."
+              value={cosmoInput}
+              onChange={(e) => setCosmoInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && askCosmo()}
             />
             <button
-              className="terminal-send-btn"
-              onClick={() => askCopilot()}
-              disabled={copilotLoading}
+              className="cosmo-send-btn"
+              onClick={() => askCosmo()}
+              disabled={cosmoLoading}
             >
-              {copilotLoading ? "..." : "KIRIM 📡"}
+              {cosmoLoading ? "..." : "Kirim 🚀"}
             </button>
           </div>
 
-          {copilotResponse && (
-            <div className="copilot-response-feed">
-              {copilotResponse}
+          {cosmoReply && (
+            <div className="cosmo-chat-bubble">
+              {cosmoReply}
             </div>
           )}
 
-          <div style={{ textAlign: "center", marginTop: "10px" }}>
+          <div style={{ textAlign: "center", marginTop: "6px" }}>
             <button
-              className="generic-close-btn"
-              onClick={() => setShowCopilot(false)}
+              className="cute-btn"
+              style={{ margin: "auto" }}
+              onClick={() => setShowCosmoModal(false)}
             >
-              TUTUP ASISTEN
+              Tutup Obrolan
             </button>
           </div>
         </div>
       </div>
 
-      {/* QUIZ / SCANNER CHALLENGE MODAL */}
-      <div id="quiz-modal">
-        <div className="scanner-box">
-          <div className="scanner-eyebrow">{currentPlanetData.challengeTitle}</div>
-          <div className="scanner-prompt" id="q-text">
-            Menganalisis parameter...
-          </div>
-          <div>
-            <button className="quiz-option-btn" id="ans-1">
-              Opsi Observasi A
-            </button>
-            <button className="quiz-option-btn" id="ans-2">
-              Opsi Observasi B
-            </button>
-          </div>
-          <div id="quiz-result"></div>
-          <button className="generic-close-btn" id="close-quiz">
-            LANJUTKAN PENJELAJAHAN
+      {/* STARLIGHT WISH MODAL */}
+      <div id="wish-modal" className={showWishModal ? "show" : ""}>
+        <div className="wish-window">
+          <div style={{ fontSize: "1.8rem" }}>⭐✨</div>
+          <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--pastel-pink)" }}>
+            Terbangkan Bintang Harapan
+          </h3>
+          <p style={{ fontSize: "12px", color: "#cbd5e1" }}>
+            Tuliskan harapan, impian, atau pesan manismu. Pesan ini akan diluncurkan menjadi bintang emas bercahaya di galaksi 3D!
+          </p>
+
+          <textarea
+            className="wish-textarea"
+            placeholder="Tuliskan harapan indahmu di sini..."
+            value={wishText}
+            onChange={(e) => setWishText(e.target.value)}
+          />
+
+          <button className="wish-submit-btn" onClick={handleSendWish}>
+            Terbangkan ke Langit Bintang ⭐
           </button>
-        </div>
-      </div>
 
-      {/* PASSPORT MODAL */}
-      <div id="passport-modal" className={showPassport ? "show" : ""}>
-        <div className="passport-card">
-          <div style={{ textAlign: "center", marginBottom: "14px" }}>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--hud-gold)", letterSpacing: "1px" }}>
-              📔 LOG CATATAN PENJELAJAHAN
-            </h2>
-            <p style={{ fontSize: "11px", color: "#94a3b8" }}>
-              PENJELAJAH: NANA — PROGRES MISI: {Object.keys(openedPlanets).length} / 9 SEKTOR TERSELESAIKAN
-            </p>
-          </div>
-
-          <div className="stamp-grid">
-            {ORDER.map((name, idx) => {
-              const isStamped = !!openedPlanets[name];
-              const isLocked = idx > unlockedMaxIdx;
-              const pInfo = DATA[name];
-              return (
-                <div
-                  key={name}
-                  className={`stamp-slot ${isStamped ? "stamped" : ""}`}
-                  style={{ opacity: isLocked ? 0.35 : 1 }}
-                >
-                  <span className="stamp-icon">{isStamped ? "⭐" : isLocked ? "🔒" : pInfo.icon}</span>
-                  <span className="stamp-name">{name}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          <div style={{ textAlign: "center" }}>
-            <button
-              className="generic-close-btn"
-              onClick={() => setShowPassport(false)}
-            >
-              TUTUP LOG
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* GRAND SURPRISE FINALE */}
-      <div id="finale">
-        <div className="finale-inner">
-          <div className="finale-eyebrow">✨ TRANSMISI RAHASIA TERBUKA • SPESIAL 10 SEPTEMBER 🎂</div>
-          <h2 className="finale-title">
-            Selamat Ulang Tahun,
-            <br />
-            <span>Nana.</span>
-          </h2>
-
-          <div className="cake-wrapper">
-            <div id="candle-trigger" className="candle-container" title="Klik untuk memanjatkan doa & harapan">
-              <div id="flame-el" className={`flame ${candleBlown ? "blown" : ""}`}></div>
-              <div className="candle-stick"></div>
-            </div>
-            <div className="wish-instruction">
-              {candleBlown
-                ? "✨ Semoga seluruh doa dan harapan baikmu senantiasa dikabulkan. ⭐"
-                : "🕯️ Klik lilin ini untuk memanjatkan doa dan harapan terbaikmu"}
-            </div>
-          </div>
-
-          <div className="birthday-letter-box">
-            <div className="letter-heading">
-              Kepada: Nana 💌
-            </div>
-            <div className="letter-body">
-              <p>
-                Selamat bertambah usia pada tanggal <strong>10 September</strong> ini.
-              </p>
-              <p>
-                Terima kasih sudah hadir dan senantiasa membawa kehangatan, ketenangan, serta warna yang begitu berarti dalam kehidupan saya. Ekspedisi tata surya ini dibuat khusus untukmu—sebagai pengingat bahwa di antara luasnya semesta, kehadiranmu adalah anugerah yang sangat saya syukuri.
-              </p>
-              <p>
-                Semoga di usia yang baru ini, kamu senantiasa dianugerahi kesehatan, kemudahan dalam setiap urusan, kedamaian di hati, serta tercapainya segala hal baik yang kamu cita-citakan.
-              </p>
-              <p>
-                Sejauh apa pun kita melangkah, ketahuilah bahwa saya akan selalu siap mendampingi, mendukung, dan berjalan bersamamu di setiap fase kehidupan.
-              </p>
-              <div className="letter-signature">Dengan segenap rasa syukur dan ketulusan hati.</div>
-            </div>
-          </div>
-
-          <div className="certificate-badge">
-            🏆 <strong>Piagam Apresiasi Semesta:</strong> Diberikan kepada <strong>NANA</strong> atas keberhasilan menyelesaikan Ekspedisi 9 Sektor Tata Surya. Terima kasih telah menjadi sosok yang begitu istimewa.
-          </div>
-
-          <button className="finale-btn" id="replay-btn">
-            Jelajahi Semesta Lagi 🚀
+          <button
+            className="cute-btn"
+            style={{ margin: "auto" }}
+            onClick={() => setShowWishModal(false)}
+          >
+            Batal
           </button>
         </div>
       </div>
