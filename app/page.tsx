@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
-import { CONSTELLATIONS, DEEP_SKY_OBJECTS } from "../data/stellarium_data";
+import { CONSTELLATIONS, DEEP_SKY_OBJECTS, CelestialObject, Constellation } from "../data/stellarium_data";
 
 interface PlanetInfo {
   size: number;
@@ -223,12 +223,19 @@ export default function Home() {
   const initialized = useRef(false);
 
   const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Bumi");
+  const [viewMode, setViewMode] = useState<"orbit" | "dome">("orbit");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"science" | "lab" | "constellations" | "love">("science");
   const [userWeight, setUserWeight] = useState<number>(45);
   const [userAge, setUserAge] = useState<number>(20);
-  const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
+  
+  // Stellarium Toggles
   const [showConstellations, setShowConstellations] = useState<boolean>(true);
+  const [showGrid, setShowGrid] = useState<boolean>(true);
+  const [showMilkyWay, setShowMilkyWay] = useState<boolean>(true);
+  const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
+  const [selectedCelestial, setSelectedCelestial] = useState<CelestialObject | null>(null);
+
   const [showCosmoModal, setShowCosmoModal] = useState(false);
   const [cosmoInput, setCosmoInput] = useState("");
   const [cosmoReply, setCosmoReply] = useState("");
@@ -236,21 +243,32 @@ export default function Home() {
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
+  const switchViewModeRef = useRef<(mode: "orbit" | "dome") => void>(() => {});
+  const focusCelestialRef = useRef<(obj: CelestialObject) => void>(() => {});
   const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
+
   const timeMultiplierRef = useRef<number>(1);
   const constellationGroupRef = useRef<THREE.Group | null>(null);
+  const gridGroupRef = useRef<THREE.Group | null>(null);
+  const milkyWayGroupRef = useRef<THREE.Group | null>(null);
 
   useEffect(() => {
     timeMultiplierRef.current = timeMultiplier;
   }, [timeMultiplier]);
 
   useEffect(() => {
-    if (constellationGroupRef.current) {
-      constellationGroupRef.current.visible = showConstellations;
-    }
+    if (constellationGroupRef.current) constellationGroupRef.current.visible = showConstellations;
   }, [showConstellations]);
 
-  const playSfx = (type: "whoosh" | "click" | "satellite") => {
+  useEffect(() => {
+    if (gridGroupRef.current) gridGroupRef.current.visible = showGrid;
+  }, [showGrid]);
+
+  useEffect(() => {
+    if (milkyWayGroupRef.current) milkyWayGroupRef.current.visible = showMilkyWay;
+  }, [showMilkyWay]);
+
+  const playSfx = (type: "whoosh" | "click" | "satellite" | "target") => {
     try {
       const AudioCtx =
         window.AudioContext ||
@@ -285,6 +303,18 @@ export default function Home() {
         gain.connect(ctx.destination);
         osc.start(now);
         osc.stop(now + 0.08);
+      } else if (type === "target") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(1200, now);
+        osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.15);
       } else if (type === "satellite") {
         [659.25, 830.61, 1046.5].forEach((freq, i) => {
           const osc = ctx.createOscillator();
@@ -353,13 +383,13 @@ export default function Home() {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.enablePan = false;
-    controls.minDistance = 6;
-    controls.maxDistance = 50;
+    controls.minDistance = 4;
+    controls.maxDistance = 600;
     controls.target.set(180, -1.8, 0);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.2;
 
-    const ambient = new THREE.AmbientLight(0xffffff, 1.6);
+    const ambient = new THREE.AmbientLight(0xffffff, 1.8);
     scene.add(ambient);
 
     const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
@@ -393,7 +423,7 @@ export default function Home() {
     const fallbackTimeout = setTimeout(revealGate, 3000);
 
     // 1. PROCEDURAL STARFIELD
-    const starCount = 6500;
+    const starCount = 8500;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
@@ -403,10 +433,11 @@ export default function Home() {
       new THREE.Color(0xffffff),
       new THREE.Color(0xfde68a),
       new THREE.Color(0xfbcfe8),
+      new THREE.Color(0x67e8f9),
     ];
 
     for (let i = 0; i < starCount; i++) {
-      const r = 350 + Math.random() * 1400;
+      const r = 380 + Math.random() * 1500;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
 
@@ -424,19 +455,101 @@ export default function Home() {
     starGeo.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
 
     const starMat = new THREE.PointsMaterial({
-      size: 1.5,
+      size: 1.6,
       vertexColors: true,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.9,
       blending: THREE.AdditiveBlending,
     });
     const starfieldMesh = new THREE.Points(starGeo, starMat);
     scene.add(starfieldMesh);
 
-    // 2. STELLARIUM 3D CONSTELLATIONS LAYER
+    // 2. STELLARIUM MILKY WAY RIBBON SHADER / PARTICLES
+    const mwGroup = new THREE.Group();
+    const mwCount = 4500;
+    const mwGeo = new THREE.BufferGeometry();
+    const mwPositions = new Float32Array(mwCount * 3);
+    const mwColors = new Float32Array(mwCount * 3);
+
+    for (let i = 0; i < mwCount; i++) {
+      const angle = (i / mwCount) * Math.PI * 2;
+      const radius = 420 + (Math.random() - 0.5) * 60;
+      const spreadY = (Math.random() - 0.5) * 85;
+      const spreadZ = (Math.random() - 0.5) * 85;
+
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * 180 + spreadY;
+      const z = Math.sin(angle) * radius + spreadZ;
+
+      mwPositions[i * 3] = x;
+      mwPositions[i * 3 + 1] = y;
+      mwPositions[i * 3 + 2] = z;
+
+      const col = new THREE.Color().setHSL(0.6 + Math.random() * 0.15, 0.8, 0.65);
+      mwColors[i * 3] = col.r;
+      mwColors[i * 3 + 1] = col.g;
+      mwColors[i * 3 + 2] = col.b;
+    }
+    mwGeo.setAttribute("position", new THREE.BufferAttribute(mwPositions, 3));
+    mwGeo.setAttribute("color", new THREE.BufferAttribute(mwColors, 3));
+    const mwMat = new THREE.PointsMaterial({
+      size: 3.2,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.4,
+      blending: THREE.AdditiveBlending,
+    });
+    const mwMesh = new THREE.Points(mwGeo, mwMat);
+    mwGroup.add(mwMesh);
+    scene.add(mwGroup);
+    milkyWayGroupRef.current = mwGroup;
+
+    // 3. STELLARIUM CELESTIAL EQUATORIAL & AZIMUTHAL GRID
+    const gridGroup = new THREE.Group();
+    for (let lat = -60; lat <= 60; lat += 30) {
+      const r = 360 * Math.cos((lat * Math.PI) / 180);
+      const y = 360 * Math.sin((lat * Math.PI) / 180);
+      const ringGeo = new THREE.BufferGeometry();
+      const points: THREE.Vector3[] = [];
+      for (let a = 0; a <= 64; a++) {
+        const theta = (a / 64) * Math.PI * 2;
+        points.push(new THREE.Vector3(Math.cos(theta) * r, y, Math.sin(theta) * r));
+      }
+      ringGeo.setFromPoints(points);
+      const ringMat = new THREE.LineBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: lat === 0 ? 0.28 : 0.12,
+      });
+      gridGroup.add(new THREE.Line(ringGeo, ringMat));
+    }
+    for (let lon = 0; lon < 360; lon += 45) {
+      const rad = (lon * Math.PI) / 180;
+      const points: THREE.Vector3[] = [];
+      for (let lat = -85; lat <= 85; lat += 5) {
+        const theta = (lat * Math.PI) / 180;
+        points.push(
+          new THREE.Vector3(
+            360 * Math.cos(theta) * Math.cos(rad),
+            360 * Math.sin(theta),
+            360 * Math.cos(theta) * Math.sin(rad)
+          )
+        );
+      }
+      const lonGeo = new THREE.BufferGeometry().setFromPoints(points);
+      const lonMat = new THREE.LineBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.12,
+      });
+      gridGroup.add(new THREE.Line(lonGeo, lonMat));
+    }
+    scene.add(gridGroup);
+    gridGroupRef.current = gridGroup;
+
+    // 4. STELLARIUM 3D CONSTELLATIONS LAYER
     const constGroup = new THREE.Group();
     CONSTELLATIONS.forEach((c) => {
-      // Build constellation line segments
       const linePoints: THREE.Vector3[] = [];
       c.lines.forEach(([i1, i2]) => {
         const s1 = c.stars[i1];
@@ -449,13 +562,12 @@ export default function Home() {
       const lineMat = new THREE.LineBasicMaterial({
         color: 0x38bdf8,
         transparent: true,
-        opacity: 0.45,
+        opacity: 0.55,
         blending: THREE.AdditiveBlending,
       });
       const lines = new THREE.LineSegments(lineGeo, lineMat);
       constGroup.add(lines);
 
-      // Add prominent glowing star points at nodes
       const starNodeGeo = new THREE.BufferGeometry();
       const nodePositions = new Float32Array(c.stars.length * 3);
       c.stars.forEach((s, idx) => {
@@ -465,10 +577,10 @@ export default function Home() {
       });
       starNodeGeo.setAttribute("position", new THREE.BufferAttribute(nodePositions, 3));
       const starNodeMat = new THREE.PointsMaterial({
-        size: 3.5,
+        size: 4.5,
         color: 0xfde047,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.95,
         blending: THREE.AdditiveBlending,
       });
       const starNodes = new THREE.Points(starNodeGeo, starNodeMat);
@@ -477,14 +589,14 @@ export default function Home() {
     scene.add(constGroup);
     constellationGroupRef.current = constGroup;
 
-    // 3. STELLARIUM DEEP-SKY OBJECTS (MESSIER CATALOG)
+    // 5. STELLARIUM DEEP-SKY OBJECTS
     DEEP_SKY_OBJECTS.forEach((dso) => {
-      const dsoGeo = new THREE.SphereGeometry(3.2, 16, 16);
+      const dsoGeo = new THREE.SphereGeometry(4.2, 16, 16);
       const dsoMat = new THREE.MeshBasicMaterial({
         color: dso.color,
         wireframe: true,
         transparent: true,
-        opacity: 0.35,
+        opacity: 0.4,
         blending: THREE.AdditiveBlending,
       });
       const dsoMesh = new THREE.Mesh(dsoGeo, dsoMat);
@@ -492,7 +604,7 @@ export default function Home() {
       constGroup.add(dsoMesh);
     });
 
-    // 4. SATURN RING TEXTURE
+    // 6. SATURN RING TEXTURE
     const createSaturnRingTexture = () => {
       const size = 1024;
       const canvas = document.createElement("canvas");
@@ -503,8 +615,8 @@ export default function Home() {
 
       const cx = size / 2;
       const cy = size / 2;
-      const rInner = size * 0.34;
-      const rOuter = size * 0.49;
+      const rInner = size * 0.32;
+      const rOuter = size * 0.48;
 
       const grad = ctx.createRadialGradient(cx, cy, rInner, cx, cy, rOuter);
       grad.addColorStop(0.0, "rgba(224, 199, 150, 0.0)");
@@ -534,7 +646,7 @@ export default function Home() {
       return tex;
     };
 
-    // 5. 3D PLANETS SYSTEM (Widely spaced to prevent overlap)
+    // 7. 3D PLANETS SYSTEM (Widely spaced coordinates)
     const group3D: Record<string, THREE.Group> = {};
     const basePositions: Record<PlanetName, [number, number, number]> = {
       Matahari: [0, -2.5, 0],
@@ -632,7 +744,7 @@ export default function Home() {
       group3D[name] = grp;
     });
 
-    // 6. ACTIVE SATELLITE ORBITERS
+    // 8. ACTIVE SATELLITE ORBITERS
     const activeSatellites: THREE.Group[] = [];
     const launchSatellite = () => {
       const currentGrp = group3D[activeKey];
@@ -698,17 +810,76 @@ export default function Home() {
     }
     navigateToPlanetRef.current = navigateToPlanet;
 
+    // SWITCH BETWEEN 3D ORBIT MODE AND 360 STELLARIUM DOME MODE
+    function switchViewMode(mode: "orbit" | "dome") {
+      playSfx("whoosh");
+      if (mode === "dome") {
+        gsap.to(controls.target, { x: 0, y: 0, z: 0, duration: 1.6, ease: "power3.inOut" });
+        gsap.to(camera.position, { x: 0, y: 15, z: 45, duration: 1.6, ease: "power3.inOut" });
+        controls.minDistance = 2;
+        controls.maxDistance = 500;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.4;
+      } else {
+        const grp = group3D[activeKey];
+        const pData = DATA[activeKey];
+        const targetPos = grp.position;
+        const camOffset = pData.size * 2.8 + 5;
+        gsap.to(controls.target, {
+          x: targetPos.x,
+          y: targetPos.y + 0.7,
+          z: targetPos.z,
+          duration: 1.5,
+          ease: "power3.inOut",
+        });
+        gsap.to(camera.position, {
+          x: targetPos.x,
+          y: targetPos.y + 4.2,
+          z: targetPos.z + camOffset,
+          duration: 1.5,
+          ease: "power3.inOut",
+        });
+        controls.minDistance = 4;
+        controls.maxDistance = 80;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.2;
+      }
+      setViewMode(mode);
+    }
+    switchViewModeRef.current = switchViewMode;
+
+    function focusCelestial(obj: CelestialObject) {
+      playSfx("target");
+      setSelectedCelestial(obj);
+      gsap.to(controls.target, {
+        x: obj.pos[0],
+        y: obj.pos[1],
+        z: obj.pos[2],
+        duration: 1.4,
+        ease: "power3.inOut",
+      });
+      gsap.to(camera.position, {
+        x: obj.pos[0] * 0.6,
+        y: obj.pos[1] * 0.6 + 10,
+        z: obj.pos[2] * 0.6,
+        duration: 1.4,
+        ease: "power3.inOut",
+      });
+    }
+    focusCelestialRef.current = focusCelestial;
+
     let animFrameId: number;
     const clock = new THREE.Clock();
 
     function animate() {
       animFrameId = requestAnimationFrame(animate);
-      const delta = clock.getDelta();
       const speedFactor = timeMultiplierRef.current;
       const t = clock.getElapsedTime() * speedFactor;
 
       starfieldMesh.rotation.y = t * 0.002;
       constGroup.rotation.y = t * 0.001;
+      gridGroup.rotation.y = t * 0.001;
+      mwGroup.rotation.y = t * 0.0015;
 
       // Animate active satellites
       activeSatellites.forEach((sat) => {
@@ -775,18 +946,20 @@ export default function Home() {
 
   return (
     <>
-      {/* TOP NAVIGATION BAR (SpaceEdu Style with Stellarium Features) */}
+      {/* TOP NAVIGATION BAR */}
       <nav className="spaceedu-nav">
         <div className="brand-logo">
           cosmonana<span>.</span>
+          <span className="brand-badge">STELLARIUM EDITION</span>
         </div>
 
         <div className="nav-links-wrap">
           <button
-            className={`nav-link-btn ${!drawerOpen ? "active" : ""}`}
+            className={`nav-link-btn ${viewMode === "orbit" && !drawerOpen ? "active" : ""}`}
             onClick={() => {
               playSfx("click");
               setDrawerOpen(false);
+              switchViewModeRef.current("orbit");
             }}
           >
             Planets
@@ -799,7 +972,7 @@ export default function Home() {
               setDrawerOpen(true);
             }}
           >
-            ✨ Constellations ({CONSTELLATIONS.length})
+            Constellations ({CONSTELLATIONS.length})
           </button>
           <button
             className={`nav-link-btn ${drawerOpen && activeTab === "lab" ? "active" : ""}`}
@@ -809,7 +982,7 @@ export default function Home() {
               setDrawerOpen(true);
             }}
           >
-            Lab & Time
+            Lab & Gravity
           </button>
           <button
             className={`nav-link-btn ${drawerOpen && activeTab === "science" ? "active" : ""}`}
@@ -833,22 +1006,17 @@ export default function Home() {
           </button>
         </div>
 
-        <div style={{ display: "flex", gap: "8px", pointerEvents: "auto" }}>
+        <div className="nav-right-cluster">
           <button
-            className="nav-cta-btn"
-            style={{
-              background: showConstellations ? "rgba(56, 189, 248, 0.2)" : "rgba(255, 255, 255, 0.08)",
-              color: showConstellations ? "#38bdf8" : "#94a3b8",
-              border: "1px solid rgba(56, 189, 248, 0.3)",
-            }}
+            className={`view-mode-pill ${viewMode === "dome" ? "active" : ""}`}
             onClick={() => {
-              playSfx("click");
-              setShowConstellations(!showConstellations);
+              switchViewModeRef.current(viewMode === "orbit" ? "dome" : "orbit");
             }}
-            title="Toggle Garis Rasi Bintang 3D"
+            title="Ganti antara Mode Eksplorasi Planet & Mode Kubah Langit 360 Stellarium"
           >
-            {showConstellations ? "✨ Sky: ON" : "✨ Sky: OFF"}
+            {viewMode === "orbit" ? "🔭 360° Sky Dome" : "🪐 Planet Orbit"}
           </button>
+
           <button
             className="nav-cta-btn"
             onClick={() => {
@@ -861,55 +1029,171 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* HERO SECTION (Typography & Center CTA - Matching Reference Photo) */}
-      <div className={`hero-container ${drawerOpen ? "faded" : ""}`}>
-        <div className="hero-eyebrow">{currentPlanet.indexStr}</div>
-        <h1 className="hero-title">{activePlanetName}</h1>
-        <p className="hero-desc">{currentPlanet.heroDesc}</p>
+      {/* HERO SECTION (Shown in Orbit Mode) */}
+      {viewMode === "orbit" && (
+        <div className={`hero-container ${drawerOpen ? "faded" : ""}`}>
+          <div className="hero-eyebrow">{currentPlanet.indexStr}</div>
+          <h1 className="hero-title">{activePlanetName}</h1>
+          <p className="hero-desc">{currentPlanet.heroDesc}</p>
+          <button
+            className="hero-cta-btn"
+            onClick={() => {
+              playSfx("click");
+              setDrawerOpen(true);
+            }}
+          >
+            Explore Planet
+          </button>
+        </div>
+      )}
+
+      {/* SIDE PEEK NAVIGATION (Shown in Orbit Mode) */}
+      {viewMode === "orbit" && (
+        <>
+          <button
+            className="side-peek-btn side-peek-left"
+            onClick={goToPrev}
+            title={`Pindah ke ${prevPlanetName}`}
+          >
+            <div
+              className="side-peek-preview"
+              style={{
+                backgroundImage: `url('${DATA[prevPlanetName].img ? `/images/${DATA[prevPlanetName].img}` : `/textures/${DATA[prevPlanetName].tex}`}')`,
+              }}
+            />
+            <span>{prevPlanetName}</span>
+          </button>
+
+          <button
+            className="side-peek-btn side-peek-right"
+            onClick={goToNext}
+            title={`Pindah ke ${nextPlanetName}`}
+          >
+            <div
+              className="side-peek-preview"
+              style={{
+                backgroundImage: `url('${DATA[nextPlanetName].img ? `/images/${DATA[nextPlanetName].img}` : `/textures/${DATA[nextPlanetName].tex}`}')`,
+              }}
+            />
+            <span>{nextPlanetName}</span>
+          </button>
+        </>
+      )}
+
+      {/* STELLARIUM DOCK (Floating Bottom Control Bar) */}
+      <div className={`stellarium-dock ${drawerOpen ? "hidden-dock" : ""}`}>
         <button
-          className="hero-cta-btn"
+          className={`dock-btn ${showConstellations ? "active" : ""}`}
           onClick={() => {
             playSfx("click");
-            setDrawerOpen(true);
+            setShowConstellations(!showConstellations);
+          }}
+          title="Toggle Garis Rasi Bintang"
+        >
+          ✨ Constellations
+        </button>
+
+        <button
+          className={`dock-btn ${showGrid ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setShowGrid(!showGrid);
+          }}
+          title="Toggle Grid Koordinat Langit (RA/Dec)"
+        >
+          🌐 Celestial Grid
+        </button>
+
+        <button
+          className={`dock-btn ${showMilkyWay ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setShowMilkyWay(!showMilkyWay);
+          }}
+          title="Toggle Pita Galaksi Bimasakti"
+        >
+          🌌 Milky Way
+        </button>
+
+        <div className="dock-divider"></div>
+
+        <button
+          className={`dock-btn ${timeMultiplier === 1 ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setTimeMultiplier(1);
           }}
         >
-          Explore Planet
+          1x
+        </button>
+        <button
+          className={`dock-btn ${timeMultiplier === 5 ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setTimeMultiplier(5);
+          }}
+        >
+          5x
+        </button>
+        <button
+          className={`dock-btn ${timeMultiplier === 25 ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setTimeMultiplier(25);
+          }}
+        >
+          25x
+        </button>
+        <button
+          className={`dock-btn ${timeMultiplier === 100 ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setTimeMultiplier(100);
+          }}
+        >
+          100x
         </button>
       </div>
 
-      {/* SIDE PEEK NAVIGATION (Left & Right - Fully Functional!) */}
-      <button
-        className="side-peek-btn side-peek-left"
-        onClick={goToPrev}
-        title={`Pindah ke ${prevPlanetName}`}
-      >
-        <div
-          className="side-peek-preview"
-          style={{
-            backgroundImage: `url('${DATA[prevPlanetName].img ? `/images/${DATA[prevPlanetName].img}` : `/textures/${DATA[prevPlanetName].tex}`}')`,
-          }}
-        />
-        <span>{prevPlanetName}</span>
-      </button>
+      {/* CELESTIAL RETICLE HUD (When an object is selected) */}
+      {selectedCelestial && (
+        <div className="celestial-hud-card">
+          <div className="hud-title-row">
+            <div>
+              <div className="hud-object-name">{selectedCelestial.name}</div>
+              <div className="hud-object-type">{selectedCelestial.type}</div>
+            </div>
+            <button
+              style={{ background: "none", border: "none", color: "#94a3b8", cursor: "pointer", fontSize: "16px" }}
+              onClick={() => setSelectedCelestial(null)}
+            >
+              ✕
+            </button>
+          </div>
 
-      <button
-        className="side-peek-btn side-peek-right"
-        onClick={goToNext}
-        title={`Pindah ke ${nextPlanetName}`}
-      >
-        <div
-          className="side-peek-preview"
-          style={{
-            backgroundImage: `url('${DATA[nextPlanetName].img ? `/images/${DATA[nextPlanetName].img}` : `/textures/${DATA[nextPlanetName].tex}`}')`,
-          }}
-        />
-        <span>{nextPlanetName}</span>
-      </button>
+          <div className="hud-data-table">
+            <div>
+              <div className="hud-data-label">MAGNITUDO</div>
+              <div className="hud-data-val">{selectedCelestial.mag}</div>
+            </div>
+            <div>
+              <div className="hud-data-label">JARAK</div>
+              <div className="hud-data-val">{selectedCelestial.distance}</div>
+            </div>
+            <div style={{ gridColumn: "span 2" }}>
+              <div className="hud-data-label">KOORDINAT (RA / DEC)</div>
+              <div className="hud-data-val">{selectedCelestial.raDec}</div>
+            </div>
+          </div>
+
+          <div className="hud-desc">{selectedCelestial.desc}</div>
+        </div>
+      )}
 
       {/* 3D WEBGL CANVAS */}
       <canvas id="webgl-canvas" ref={canvasRef}></canvas>
 
-      {/* INTERACTIVE LEARNING DRAWER (Slides up smoothly) */}
+      {/* INTERACTIVE LEARNING DRAWER */}
       <div id="info-drawer" className={drawerOpen ? "open" : ""}>
         <div className="drawer-close-bar" onClick={() => setDrawerOpen(false)} title="Tutup Panel"></div>
 
@@ -986,11 +1270,54 @@ export default function Home() {
         {activeTab === "constellations" && (
           <div>
             <p style={{ fontSize: "12.5px", color: "var(--accent-cyan)", marginBottom: "12px", fontWeight: 600 }}>
-              🔭 Katalog Rasi Bintang & Deep-Sky Objects (Data Astrometri Stellarium):
+              🔭 Klik objek untuk mengarahkan bidikan teleskop (*Ocular Reticle Target*):
             </p>
+
+            <div style={{ marginBottom: "16px" }}>
+              <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 700, letterSpacing: "1px", marginBottom: "8px" }}>
+                OBJEK LANGIT DALAM (MESSIER CATALOG):
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                {DEEP_SKY_OBJECTS.map((dso) => (
+                  <div
+                    key={dso.id}
+                    className="const-item-card"
+                    onClick={() => {
+                      focusCelestialRef.current(dso);
+                      setDrawerOpen(false);
+                    }}
+                  >
+                    <div className="const-item-title">🌌 {dso.name}</div>
+                    <div style={{ fontSize: "11px", color: "#94a3b8" }}>{dso.type} • {dso.distance}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 700, letterSpacing: "1px", marginBottom: "8px" }}>
+              RASI BINTANG RESMI (IAU SKY CULTURES):
+            </div>
             <div className="constellation-list">
               {CONSTELLATIONS.map((c) => (
-                <div key={c.id} className="const-item-card">
+                <div
+                  key={c.id}
+                  className="const-item-card"
+                  onClick={() => {
+                    const dsoLike: CelestialObject = {
+                      id: c.id,
+                      name: `${c.name} (${c.indonesian})`,
+                      type: `Rasi Bintang • ${c.english}`,
+                      mag: "Bervariasi",
+                      raDec: "Katalog Rasi IAU",
+                      distance: "Puluhan s/d Ratusan Tahun Cahaya",
+                      desc: `${c.meaning} ${c.lore}`,
+                      pos: c.center,
+                      color: 0x38bdf8,
+                    };
+                    focusCelestialRef.current(dsoLike);
+                    setDrawerOpen(false);
+                  }}
+                >
                   <div className="const-item-title">✨ {c.name} ({c.indonesian})</div>
                   <div className="const-item-meaning">{c.meaning}</div>
                 </div>
@@ -1001,27 +1328,6 @@ export default function Home() {
 
         {activeTab === "lab" && (
           <div>
-            {/* STELLARIUM TIME MACHINE */}
-            <div className="time-machine-box">
-              <div style={{ fontSize: "12px", color: "#ffffff", fontWeight: 700 }}>
-                ⏳ Kecepatan Waktu Orbit (Stellarium Time Machine):
-              </div>
-              <div className="time-btn-group">
-                {[1, 5, 25, 100].map((spd) => (
-                  <button
-                    key={spd}
-                    className={`time-btn ${timeMultiplier === spd ? "active" : ""}`}
-                    onClick={() => {
-                      playSfx("click");
-                      setTimeMultiplier(spd);
-                    }}
-                  >
-                    {spd}x
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="lab-grid">
               <div className="lab-card">
                 <div className="lab-card-title">⚖️ Kalkulator Berat Badan di {activePlanetName}</div>
@@ -1130,7 +1436,7 @@ export default function Home() {
       {/* LOADER */}
       <div id="loader">
         <div style={{ color: "#ffffff", fontSize: "12px", letterSpacing: "2px", fontWeight: 600 }}>
-          COSMONANA // INITIALIZING ORBITAL OBSERVATORY...
+          COSMONANA // INITIALIZING STELLARIUM OBSERVATORY...
         </div>
         <div className="loader-bar">
           <div className="loader-fill" id="loader-fill"></div>

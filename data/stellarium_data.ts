@@ -1,3 +1,15 @@
+export interface CelestialObject {
+  id: string;
+  name: string;
+  type: string;
+  mag: string;
+  raDec: string;
+  distance: string;
+  desc: string;
+  pos: [number, number, number];
+  color: number;
+}
+
 export interface Constellation {
   id: string;
   name: string;
@@ -5,38 +17,29 @@ export interface Constellation {
   indonesian: string;
   meaning: string;
   lore: string;
-  stars: [number, number, number][]; // 3D coordinates on celestial sphere
-  lines: [number, number][]; // pairs of indices in stars array
+  center: [number, number, number];
+  stars: [number, number, number][];
+  lines: [number, number][];
 }
 
-export interface DeepSkyObject {
-  id: string;
-  name: string;
-  type: string;
-  distance: string;
-  pos: [number, number, number];
-  description: string;
-  color: number;
-}
-
-// Top iconic constellations from Stellarium with precise 3D celestial sphere positions (radius ~ 320)
 export const CONSTELLATIONS: Constellation[] = [
   {
     id: "Ori",
     name: "Orion",
     english: "The Hunter",
-    indonesian: "Rasi Pemburu (Waluku)",
-    meaning: "Rasi paling terkenal di langit malam dengan Sabuk Tiga Bintang (Alnitak, Alnilam, Mintaka) dan bintang raksasa merah Betelgeuse serta Rigel.",
-    lore: "Dalam tradisi Jawa kuno, rasi Orion disebut 'Lintang Waluku' yang menjadi penanda musim bercocok tanam. Cahayanya yang gagah dan teratur melambangkan keteguhan.",
+    indonesian: "Rasi Waluku (Pemburu)",
+    meaning: "Rasi paling gagah di langit malam dengan sabuk tiga bintang (Alnitak, Alnilam, Mintaka) dan bintang raksasa Betelgeuse & Rigel.",
+    lore: "Dalam tradisi Jawa kuno, kemunculan Lintang Waluku di ufuk timur menjadi penanda dimulainya musim membajak sawah.",
+    center: [0, 20, -320],
     stars: [
-      [-45, 120, -290],  // 0 Betelgeuse (Alpha Ori)
-      [48, -110, -290],  // 1 Rigel (Beta Ori)
-      [38, 115, -290],   // 2 Bellatrix (Gamma Ori)
-      [-40, -100, -290], // 3 Saiph (Kappa Ori)
-      [-12, 10, -295],   // 4 Alnitak (Belt 1)
-      [0, 15, -295],     // 5 Alnilam (Belt 2)
-      [14, 20, -295],    // 6 Mintaka (Belt 3)
-      [0, 150, -285],    // 7 Meissa (Head)
+      [-45, 120, -320],  // 0 Betelgeuse
+      [48, -110, -320],  // 1 Rigel
+      [38, 115, -320],   // 2 Bellatrix
+      [-40, -100, -320], // 3 Saiph
+      [-12, 10, -325],   // 4 Alnitak
+      [0, 15, -325],     // 5 Alnilam
+      [14, 20, -325],    // 6 Mintaka
+      [0, 150, -315],    // 7 Meissa
     ],
     lines: [
       [7, 0], [7, 2], [0, 4], [2, 6], [4, 5], [5, 6], [4, 3], [6, 1], [3, 1]
@@ -45,10 +48,11 @@ export const CONSTELLATIONS: Constellation[] = [
   {
     id: "UMa",
     name: "Ursa Major",
-    english: "The Great Bear",
-    indonesian: "Beruang Besar (Bintang Biduk / Gubuk Penceng)",
-    meaning: "Rasi utara utama yang memuat asterisma 'Big Dipper'. Dua bintang terdepannya (Dubhe dan Merak) selalu menunjuk lurus ke arah Bintang Kutub Utara (Polaris).",
-    lore: "Bintang Biduk adalah pemandu navigasi para pelaut dan musafir sejak ribuan tahun lalu. Di manapun kita berada, ia selalu memberi petunjuk arah utara yang pasti.",
+    english: "Great Bear",
+    indonesian: "Bintang Biduk (Beruang Besar)",
+    meaning: "Rasi utara utama yang memuat formasi 7 bintang Biduk. Dua bintang terdepannya selalu menunjuk lurus ke arah Kutub Utara.",
+    lore: "Pemandu arah utara para pelaut nusantara sejak berabad-abad silam di samudra lepas.",
+    center: [-100, 260, 100],
     stars: [
       [-180, 240, 120],  // 0 Dubhe
       [-150, 230, 150],  // 1 Merak
@@ -66,14 +70,15 @@ export const CONSTELLATIONS: Constellation[] = [
     id: "Cru",
     name: "Crux",
     english: "Southern Cross",
-    indonesian: "Rasi Salib Selatan (Bintang Pari / Gubug Penceng)",
-    meaning: "Rasi bintang terkecil namun paling terang di belahan langit selatan. Digunakan untuk menentukan arah kutub selatan sejati.",
-    lore: "Bintang Pari adalah mahkota langit selatan nusantara. Menatap formasi empat bintangnya menghadirkan rasa tenang dan kepastian arah di tengah malam gelap.",
+    indonesian: "Bintang Pari (Salib Selatan)",
+    meaning: "Rasi terkecil namun paling terang penunjuk arah kutub selatan sejati di belahan bumi selatan.",
+    lore: "Bintang Pari adalah kompas alami langit nusantara yang meneduhkan hati pelayar malam.",
+    center: [130, -280, 50],
     stars: [
-      [120, -290, 40],   // 0 Acrux (Alpha Cru)
-      [140, -250, 60],   // 1 Gacrux (Gamma Cru)
-      [100, -270, 70],   // 2 Mimosa (Beta Cru)
-      [150, -275, 30],   // 3 Imai (Delta Cru)
+      [120, -290, 40],   // 0 Acrux
+      [140, -250, 60],   // 1 Gacrux
+      [100, -270, 70],   // 2 Mimosa
+      [150, -275, 30],   // 3 Imai
     ],
     lines: [
       [0, 1], [2, 3]
@@ -83,15 +88,16 @@ export const CONSTELLATIONS: Constellation[] = [
     id: "Cas",
     name: "Cassiopeia",
     english: "The Queen",
-    indonesian: "Rasi Ratu Cassiopeia (Bentuk W)",
-    meaning: "Rasi bintang berjarak dekat dengan kutub utara yang membentuk huruf 'W' atau 'M' anggun di langit malam.",
-    lore: "Cassiopeia melingkar abadi mengitari poros langit. Lima bintang utamanya bersinar cemerlang bak mahkota permata yang menghiasi gelapnya galaksi.",
+    indonesian: "Ratu Cassiopeia (Bentuk W)",
+    meaning: "Rasi anggun berbentuk huruf 'W' emas yang melingkari poros langit utara sepanjang malam.",
+    lore: "Mahkota ratu kosmik yang tak pernah tenggelam di bawah cakrawala utara.",
+    center: [160, 250, -100],
     stars: [
-      [220, 220, -60],  // 0 Caph (Beta Cas)
-      [200, 235, -90],  // 1 Schedar (Alpha Cas)
-      [160, 250, -120], // 2 Gamma Cas (Navi)
-      [130, 260, -90],  // 3 Ruchbah (Delta Cas)
-      [90, 280, -110],  // 4 Segin (Epsilon Cas)
+      [220, 220, -60],  // 0 Caph
+      [200, 235, -90],  // 1 Schedar
+      [160, 250, -120], // 2 Navi
+      [130, 260, -90],  // 3 Ruchbah
+      [90, 280, -110],  // 4 Segin
     ],
     lines: [
       [0, 1], [1, 2], [2, 3], [3, 4]
@@ -101,52 +107,88 @@ export const CONSTELLATIONS: Constellation[] = [
     id: "Sco",
     name: "Scorpius",
     english: "The Scorpion",
-    indonesian: "Rasi Kalajengking (Bintang Kelapa / Antares)",
-    meaning: "Rasi megah berbentuk lengkungan kalajengking dengan jantung raksasa merah Antares yang menyala terang.",
-    lore: "Antares dijuluki sebagai 'Rival of Mars' karena warnanya yang merah membara. Bentuk ekor lengkungnya merupakan salah satu formasi rasi paling anggun di semesta.",
+    indonesian: "Rasi Kalajengking (Antares)",
+    meaning: "Rasi megah berwujud kalajengking dengan bintang maharaksasa merah Antares di bagian jantungnya.",
+    lore: "Antares yang merah membara adalah salah satu bintang terbesar di galaksi kita.",
+    center: [-210, -180, -100],
     stars: [
       [-260, -120, -110], // 0 Graffias
       [-270, -140, -90],  // 1 Dschubba
       [-250, -160, -80],  // 2 Pi Sco
-      [-240, -170, -120], // 3 Antares (Heart)
+      [-240, -170, -120], // 3 Antares
       [-220, -200, -130], // 4 Wei
       [-190, -220, -120], // 5 Larawag
       [-160, -230, -90],  // 6 Sargas
-      [-140, -220, -60],  // 7 Shaula (Stinger)
+      [-140, -220, -60],  // 7 Shaula
     ],
     lines: [
       [0, 1], [1, 2], [1, 3], [3, 4], [4, 5], [5, 6], [6, 7]
     ]
+  },
+  {
+    id: "Cyg",
+    name: "Cygnus",
+    english: "The Swan",
+    indonesian: "Rasi Angsa (Salib Utara)",
+    meaning: "Rasi angsa yang terbang melintasi aliran Bimasakti dengan bintang super raksasa Deneb.",
+    lore: "Deneb bersama Vega dan Altair membentuk asterisma Segitiga Musim Panas yang tersohor.",
+    center: [90, 180, 260],
+    stars: [
+      [90, 210, 240],   // 0 Deneb
+      [90, 170, 260],   // 1 Sadr
+      [90, 130, 280],   // 2 Albireo
+      [40, 180, 260],   // 3 Gienah
+      [140, 160, 260],  // 4 Fawaris
+    ],
+    lines: [
+      [0, 1], [1, 2], [3, 1], [1, 4]
+    ]
   }
 ];
 
-// Deep-Sky Objects from Stellarium's Messier Catalog
-export const DEEP_SKY_OBJECTS: DeepSkyObject[] = [
+export const DEEP_SKY_OBJECTS: CelestialObject[] = [
   {
     id: "M31",
     name: "Galaksi Andromeda (M31)",
     type: "Galaksi Spiral Raksasa",
-    distance: "2,5 Juta Tahun Cahaya",
-    pos: [180, 210, -160],
-    description: "Galaksi spiral terdekat dengan Bimasakti yang menampung lebih dari 1 triliun bintang. Objek terjauh yang dapat dilihat mata telanjang manusia.",
+    mag: "+3.44",
+    raDec: "00h 42m 44s / +41° 16′ 09″",
+    distance: "2,537 Juta Tahun Cahaya",
+    desc: "Galaksi tetangga terbesar yang menampung 1 triliun bintang. Objek kosmik terjauh yang dapat dilihat mata telanjang di langit malam yang gelap.",
+    pos: [190, 220, -170],
     color: 0x93c5fd,
   },
   {
     id: "M42",
     name: "Nebula Orion (M42)",
     type: "Nebula Emisi Pembibitan Bintang",
+    mag: "+4.00",
+    raDec: "05h 35m 17s / -05° 23′ 28″",
     distance: "1.344 Tahun Cahaya",
-    pos: [2, 10, -288],
-    description: "Kawah kelahiran bintang paling aktif di galaksi kita. Gas hidrogen bercahaya ungu-merah muda yang memicu terciptanya tata surya baru.",
+    desc: "Kawah kelahiran bintang paling aktif di Bimasakti dengan pendaran gas hidrogen dan gugus bintang muda Trapezium di dalamnya.",
+    pos: [0, 8, -324],
     color: 0xf472b6,
   },
   {
     id: "M45",
     name: "Gugus Bintang Pleiades (M45)",
-    type: "Gugus Bintang Terbuka (Tujuh Bintang)",
+    type: "Gugus Terbuka Tujuh Bintang",
+    mag: "+1.60",
+    raDec: "03h 47m 24s / +24° 07′ 00″",
     distance: "444 Tahun Cahaya",
-    pos: [-80, 140, -260],
-    description: "Gugus bintang biru cemerlang berbalut awan debu refleksi yang berkilau bak permata di rasi Taurus.",
+    desc: "Gugus bintang biru permata yang diselimuti kabut refleksi awan gas bercahaya dingin di rasi Taurus.",
+    pos: [-90, 150, -270],
     color: 0x67e8f9,
+  },
+  {
+    id: "MW_CENTER",
+    name: "Pusat Galaksi Bimasakti (Sagittarius A*)",
+    type: "Lubang Hitam Supermasif",
+    mag: "--",
+    raDec: "17h 45m 40s / -29° 00′ 28″",
+    distance: "26.670 Tahun Cahaya",
+    desc: "Pusat gravitasi dari seluruh galaksi Bimasakti yang berputar dengan massa setara 4,1 juta kali massa Matahari.",
+    pos: [-240, -160, -150],
+    color: 0xfbbf24,
   }
 ];
