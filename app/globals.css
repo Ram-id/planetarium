@@ -760,3 +760,40 @@ html, body {
   background: #ffffff;
   transition: width 0.3s ease;
 }
+
+/* ZOOM & CAMERA CONTROLLER HUD */
+.camera-hud-controls {
+  position: fixed;
+  bottom: 24px;
+  right: 28px;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cam-tool-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(10, 18, 38, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+}
+
+.cam-tool-btn:hover {
+  background: #ffffff;
+  color: #030611;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}

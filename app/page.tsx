@@ -242,6 +242,9 @@ export default function Home() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
   const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
+  const zoomInRef = useRef<() => void>(() => {});
+  const zoomOutRef = useRef<() => void>(() => {});
+  const resetViewRef = useRef<() => void>(() => {});
 
   const timeMultiplierRef = useRef<number>(1);
   const constellationGroupRef = useRef<THREE.Group | null>(null);
@@ -358,9 +361,12 @@ export default function Home() {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.enablePan = false;
-    controls.minDistance = 6;
-    controls.maxDistance = 25;
+    controls.enablePan = true;
+    controls.enableZoom = true;
+    controls.zoomSpeed = 1.2;
+    controls.rotateSpeed = 0.8;
+    controls.minDistance = 1.0; // Bebas zoom-in super dekat hingga detail atmosfer
+    controls.maxDistance = 350; // Bebas zoom-out jauh ke kedalaman antariksa
     controls.target.set(0, -4.5, 0);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.25;
@@ -691,6 +697,36 @@ export default function Home() {
     }
     navigateToPlanetRef.current = navigateToPlanet;
 
+    zoomInRef.current = () => {
+      playSfx("click");
+      const dir = new THREE.Vector3().subVectors(controls.target, camera.position).normalize();
+      gsap.to(camera.position, {
+        x: camera.position.x + dir.x * 4,
+        y: camera.position.y + dir.y * 4,
+        z: camera.position.z + dir.z * 4,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+    };
+
+    zoomOutRef.current = () => {
+      playSfx("click");
+      const dir = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+      gsap.to(camera.position, {
+        x: camera.position.x + dir.x * 6,
+        y: camera.position.y + dir.y * 6,
+        z: camera.position.z + dir.z * 6,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+    };
+
+    resetViewRef.current = () => {
+      playSfx("whoosh");
+      gsap.to(controls.target, { x: 0, y: -4.5, z: 0, duration: 1.0, ease: "power3.inOut" });
+      gsap.to(camera.position, { x: 0, y: 1.8, z: 12.8, duration: 1.0, ease: "power3.inOut" });
+    };
+
     let animFrameId: number;
     const clock = new THREE.Clock();
 
@@ -879,6 +915,32 @@ export default function Home() {
         />
         <span>{nextPlanetName}</span>
       </button>
+
+      {/* FLOATING ZOOM & CAMERA CONTROLS */}
+      <div className="camera-hud-controls">
+        <button
+          className="cam-tool-btn"
+          onClick={() => zoomInRef.current()}
+          title="Zoom In (Dekat)"
+        >
+          +
+        </button>
+        <button
+          className="cam-tool-btn"
+          onClick={() => zoomOutRef.current()}
+          title="Zoom Out (Jauh)"
+        >
+          −
+        </button>
+        <button
+          className="cam-tool-btn"
+          onClick={() => resetViewRef.current()}
+          title="Reset Sudut Pandang"
+          style={{ fontSize: "14px" }}
+        >
+          ⟲
+        </button>
+      </div>
 
       {/* STELLARIUM DOCK (Floating Bottom Control Bar) */}
       <div className={`stellarium-dock ${drawerOpen ? "hidden-dock" : ""}`}>
