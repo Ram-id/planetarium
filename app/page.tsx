@@ -232,7 +232,6 @@ export default function Home() {
   // Stellarium Toggles
   const [showConstellations, setShowConstellations] = useState<boolean>(true);
   const [showGrid, setShowGrid] = useState<boolean>(false);
-  const [showMilkyWay, setShowMilkyWay] = useState<boolean>(true);
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
   const [selectedCelestial, setSelectedCelestial] = useState<CelestialObject | null>(null);
 
@@ -250,7 +249,6 @@ export default function Home() {
   const timeMultiplierRef = useRef<number>(1);
   const constellationGroupRef = useRef<THREE.Group | null>(null);
   const gridGroupRef = useRef<THREE.Group | null>(null);
-  const milkyWayGroupRef = useRef<THREE.Group | null>(null);
 
   useEffect(() => {
     timeMultiplierRef.current = timeMultiplier;
@@ -263,10 +261,6 @@ export default function Home() {
   useEffect(() => {
     if (gridGroupRef.current) gridGroupRef.current.visible = showGrid;
   }, [showGrid]);
-
-  useEffect(() => {
-    if (milkyWayGroupRef.current) milkyWayGroupRef.current.visible = showMilkyWay;
-  }, [showMilkyWay]);
 
   const playSfx = (type: "whoosh" | "click" | "satellite" | "target") => {
     try {
@@ -367,9 +361,9 @@ export default function Home() {
     initialized.current = true;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 4500);
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 4500);
 
-    // Initial camera position for Bumi (Giant Cinematic Bottom Arc like Pinterest!)
+    // Initial camera position for Bumi (Giant Cinematic Bottom Arc)
     const initialPos = [180, -4.2, 0];
     const initialSize = DATA["Bumi"].size;
     camera.position.set(initialPos[0], initialPos[1] + initialSize * 0.45, initialPos[2] + initialSize * 1.62);
@@ -426,7 +420,29 @@ export default function Home() {
     }
     const fallbackTimeout = setTimeout(revealGate, 3000);
 
-    // 1. PROCEDURAL STARFIELD
+    // HELPER: CREATE SMOOTH CIRCULAR STAR TEXTURE (Eliminates all square boxes!)
+    const createCircularStarTexture = (colorStr: string = "#ffffff", glowStr: string = "rgba(56, 189, 248, 0.6)") => {
+      const c = document.createElement("canvas");
+      c.width = 64;
+      c.height = 64;
+      const ctx = c.getContext("2d");
+      if (!ctx) return new THREE.Texture();
+      const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, colorStr);
+      grad.addColorStop(0.2, glowStr);
+      grad.addColorStop(0.6, "rgba(56, 189, 248, 0.15)");
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 64, 64);
+      const tex = new THREE.CanvasTexture(c);
+      tex.needsUpdate = true;
+      return tex;
+    };
+
+    const starSpriteTex = createCircularStarTexture("#ffffff", "rgba(255, 255, 255, 0.7)");
+    const nodeStarSpriteTex = createCircularStarTexture("#fef08a", "rgba(250, 204, 21, 0.8)");
+
+    // 1. PROCEDURAL STARFIELD (SMOOTH CIRCULAR GLOW STARS)
     const starCount = 8500;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
@@ -441,7 +457,7 @@ export default function Home() {
     ];
 
     for (let i = 0; i < starCount; i++) {
-      const r = 450 + Math.random() * 1600;
+      const r = 500 + Math.random() * 1800;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
 
@@ -459,60 +475,22 @@ export default function Home() {
     starGeo.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
 
     const starMat = new THREE.PointsMaterial({
-      size: 1.6,
+      size: 2.2,
+      map: starSpriteTex,
       vertexColors: true,
       transparent: true,
       opacity: 0.85,
       blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
     const starfieldMesh = new THREE.Points(starGeo, starMat);
     scene.add(starfieldMesh);
 
-    // 2. STELLARIUM MILKY WAY RIBBON
-    const mwGroup = new THREE.Group();
-    const mwCount = 4500;
-    const mwGeo = new THREE.BufferGeometry();
-    const mwPositions = new Float32Array(mwCount * 3);
-    const mwColors = new Float32Array(mwCount * 3);
-
-    for (let i = 0; i < mwCount; i++) {
-      const angle = (i / mwCount) * Math.PI * 2;
-      const radius = 480 + (Math.random() - 0.5) * 60;
-      const spreadY = (Math.random() - 0.5) * 85;
-      const spreadZ = (Math.random() - 0.5) * 85;
-
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * 180 + spreadY;
-      const z = Math.sin(angle) * radius + spreadZ;
-
-      mwPositions[i * 3] = x;
-      mwPositions[i * 3 + 1] = y;
-      mwPositions[i * 3 + 2] = z;
-
-      const col = new THREE.Color().setHSL(0.6 + Math.random() * 0.15, 0.8, 0.65);
-      mwColors[i * 3] = col.r;
-      mwColors[i * 3 + 1] = col.g;
-      mwColors[i * 3 + 2] = col.b;
-    }
-    mwGeo.setAttribute("position", new THREE.BufferAttribute(mwPositions, 3));
-    mwGeo.setAttribute("color", new THREE.BufferAttribute(mwColors, 3));
-    const mwMat = new THREE.PointsMaterial({
-      size: 3.2,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.35,
-      blending: THREE.AdditiveBlending,
-    });
-    const mwMesh = new THREE.Points(mwGeo, mwMat);
-    mwGroup.add(mwMesh);
-    scene.add(mwGroup);
-    milkyWayGroupRef.current = mwGroup;
-
-    // 3. STELLARIUM CELESTIAL GRID (Subtle in Orbit Mode)
+    // 2. STELLARIUM CELESTIAL GRID (Subtle Lines)
     const gridGroup = new THREE.Group();
     for (let lat = -60; lat <= 60; lat += 30) {
-      const r = 420 * Math.cos((lat * Math.PI) / 180);
-      const y = 420 * Math.sin((lat * Math.PI) / 180);
+      const r = 480 * Math.cos((lat * Math.PI) / 180);
+      const y = 480 * Math.sin((lat * Math.PI) / 180);
       const ringGeo = new THREE.BufferGeometry();
       const points: THREE.Vector3[] = [];
       for (let a = 0; a <= 64; a++) {
@@ -523,7 +501,7 @@ export default function Home() {
       const ringMat = new THREE.LineBasicMaterial({
         color: 0x38bdf8,
         transparent: true,
-        opacity: lat === 0 ? 0.22 : 0.08,
+        opacity: lat === 0 ? 0.18 : 0.06,
       });
       gridGroup.add(new THREE.Line(ringGeo, ringMat));
     }
@@ -534,9 +512,9 @@ export default function Home() {
         const theta = (lat * Math.PI) / 180;
         points.push(
           new THREE.Vector3(
-            420 * Math.cos(theta) * Math.cos(rad),
-            420 * Math.sin(theta),
-            420 * Math.cos(theta) * Math.sin(rad)
+            480 * Math.cos(theta) * Math.cos(rad),
+            480 * Math.sin(theta),
+            480 * Math.cos(theta) * Math.sin(rad)
           )
         );
       }
@@ -544,7 +522,7 @@ export default function Home() {
       const lonMat = new THREE.LineBasicMaterial({
         color: 0x38bdf8,
         transparent: true,
-        opacity: 0.08,
+        opacity: 0.06,
       });
       gridGroup.add(new THREE.Line(lonGeo, lonMat));
     }
@@ -552,22 +530,22 @@ export default function Home() {
     scene.add(gridGroup);
     gridGroupRef.current = gridGroup;
 
-    // 4. STELLARIUM 3D CONSTELLATIONS LAYER (Deep in Background)
+    // 3. STELLARIUM 3D CONSTELLATIONS LAYER (DELICATE GLOWING LINES & ROUND NODES)
     const constGroup = new THREE.Group();
     CONSTELLATIONS.forEach((c) => {
       const linePoints: THREE.Vector3[] = [];
       c.lines.forEach(([i1, i2]) => {
         const s1 = c.stars[i1];
         const s2 = c.stars[i2];
-        linePoints.push(new THREE.Vector3(s1[0] * 1.3, s1[1] * 1.3, s1[2] * 1.3));
-        linePoints.push(new THREE.Vector3(s2[0] * 1.3, s2[1] * 1.3, s2[2] * 1.3));
+        linePoints.push(new THREE.Vector3(s1[0] * 1.5, s1[1] * 1.5, s1[2] * 1.5));
+        linePoints.push(new THREE.Vector3(s2[0] * 1.5, s2[1] * 1.5, s2[2] * 1.5));
       });
 
       const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
       const lineMat = new THREE.LineBasicMaterial({
         color: 0x38bdf8,
         transparent: true,
-        opacity: 0.35,
+        opacity: 0.28,
         blending: THREE.AdditiveBlending,
       });
       const lines = new THREE.LineSegments(lineGeo, lineMat);
@@ -576,17 +554,19 @@ export default function Home() {
       const starNodeGeo = new THREE.BufferGeometry();
       const nodePositions = new Float32Array(c.stars.length * 3);
       c.stars.forEach((s, idx) => {
-        nodePositions[idx * 3] = s[0] * 1.3;
-        nodePositions[idx * 3 + 1] = s[1] * 1.3;
-        nodePositions[idx * 3 + 2] = s[2] * 1.3;
+        nodePositions[idx * 3] = s[0] * 1.5;
+        nodePositions[idx * 3 + 1] = s[1] * 1.5;
+        nodePositions[idx * 3 + 2] = s[2] * 1.5;
       });
       starNodeGeo.setAttribute("position", new THREE.BufferAttribute(nodePositions, 3));
       const starNodeMat = new THREE.PointsMaterial({
-        size: 3.5,
-        color: 0xfde047,
+        size: 5.5,
+        map: nodeStarSpriteTex,
+        color: 0xfef08a,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.9,
         blending: THREE.AdditiveBlending,
+        depthWrite: false,
       });
       const starNodes = new THREE.Points(starNodeGeo, starNodeMat);
       constGroup.add(starNodes);
@@ -594,9 +574,9 @@ export default function Home() {
     scene.add(constGroup);
     constellationGroupRef.current = constGroup;
 
-    // 5. STELLARIUM DEEP-SKY OBJECTS
+    // 4. STELLARIUM DEEP-SKY OBJECTS
     DEEP_SKY_OBJECTS.forEach((dso) => {
-      const dsoGeo = new THREE.SphereGeometry(4.5, 16, 16);
+      const dsoGeo = new THREE.SphereGeometry(5.0, 16, 16);
       const dsoMat = new THREE.MeshBasicMaterial({
         color: dso.color,
         wireframe: true,
@@ -605,11 +585,11 @@ export default function Home() {
         blending: THREE.AdditiveBlending,
       });
       const dsoMesh = new THREE.Mesh(dsoGeo, dsoMat);
-      dsoMesh.position.set(dso.pos[0] * 1.3, dso.pos[1] * 1.3, dso.pos[2] * 1.3);
+      dsoMesh.position.set(dso.pos[0] * 1.5, dso.pos[1] * 1.5, dso.pos[2] * 1.5);
       constGroup.add(dsoMesh);
     });
 
-    // 6. SATURN RING TEXTURE
+    // 5. SATURN RING TEXTURE
     const createSaturnRingTexture = () => {
       const size = 1024;
       const canvas = document.createElement("canvas");
@@ -651,7 +631,7 @@ export default function Home() {
       return tex;
     };
 
-    // 7. 3D PLANETS SYSTEM (Widely spaced coordinates)
+    // 6. 3D PLANETS SYSTEM (Widely spaced coordinates)
     const group3D: Record<string, THREE.Group> = {};
     const basePositions: Record<PlanetName, [number, number, number]> = {
       Matahari: [0, -4.2, 0],
@@ -749,7 +729,7 @@ export default function Home() {
       group3D[name] = grp;
     });
 
-    // 8. ACTIVE SATELLITE ORBITERS
+    // 7. ACTIVE SATELLITE ORBITERS
     const activeSatellites: THREE.Group[] = [];
     const launchSatellite = () => {
       const currentGrp = group3D[activeKey];
@@ -784,7 +764,6 @@ export default function Home() {
 
     let activeKey: PlanetName = "Bumi";
 
-    // HEROIC CAMERA FRAMING FOR SPACEEDU ORBIT (Giant Curved Bottom Horizon!)
     function navigateToPlanet(name: PlanetName) {
       activeKey = name;
       playSfx("whoosh");
@@ -797,7 +776,6 @@ export default function Home() {
       keyLight.position.set(targetPos.x, targetPos.y + 25, targetPos.z + 30);
       rimLight.position.set(targetPos.x, targetPos.y - 10, targetPos.z - 20);
 
-      // Target slightly lower so planet top hemisphere rises from the bottom
       gsap.to(controls.target, {
         x: targetPos.x,
         y: targetPos.y - R * 0.65,
@@ -805,7 +783,6 @@ export default function Home() {
         duration: 1.4,
         ease: "power3.inOut",
       });
-      // Camera sits right at the upper limb of the planet
       gsap.to(camera.position, {
         x: targetPos.x,
         y: targetPos.y + R * 0.45,
@@ -859,9 +836,9 @@ export default function Home() {
       playSfx("target");
       setSelectedCelestial(obj);
       gsap.to(controls.target, {
-        x: obj.pos[0] * 1.3,
-        y: obj.pos[1] * 1.3,
-        z: obj.pos[2] * 1.3,
+        x: obj.pos[0] * 1.5,
+        y: obj.pos[1] * 1.5,
+        z: obj.pos[2] * 1.5,
         duration: 1.4,
         ease: "power3.inOut",
       });
@@ -886,7 +863,6 @@ export default function Home() {
       starfieldMesh.rotation.y = t * 0.002;
       constGroup.rotation.y = t * 0.001;
       gridGroup.rotation.y = t * 0.001;
-      mwGroup.rotation.y = t * 0.0015;
 
       activeSatellites.forEach((sat) => {
         const u = sat.userData;
@@ -1107,17 +1083,6 @@ export default function Home() {
           title="Toggle Grid Koordinat Langit (RA/Dec)"
         >
           🌐 Celestial Grid
-        </button>
-
-        <button
-          className={`dock-btn ${showMilkyWay ? "active" : ""}`}
-          onClick={() => {
-            playSfx("click");
-            setShowMilkyWay(!showMilkyWay);
-          }}
-          title="Toggle Pita Galaksi Bimasakti"
-        >
-          🌌 Milky Way
         </button>
 
         <div className="dock-divider"></div>
