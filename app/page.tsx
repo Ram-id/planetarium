@@ -218,7 +218,6 @@ const DATA: Record<PlanetName, PlanetInfo> = {
   },
 };
 
-// Spatial layout of the Solar System (spaced out along X/Z plane)
 const PLANET_COORDS: Record<PlanetName, [number, number, number]> = {
   Matahari: [0, 0, 0],
   Merkurius: [70, 0, 0],
@@ -242,6 +241,7 @@ export default function Home() {
   const [userAge, setUserAge] = useState<number>(20);
   
   const [showConstellations, setShowConstellations] = useState<boolean>(true);
+  const [showMilkyWay, setShowMilkyWay] = useState<boolean>(true);
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
   const [selectedCelestial, setSelectedCelestial] = useState<CelestialObject | null>(null);
 
@@ -259,6 +259,7 @@ export default function Home() {
 
   const timeMultiplierRef = useRef<number>(1);
   const constellationGroupRef = useRef<THREE.Group | null>(null);
+  const milkyWayGroupRef = useRef<THREE.Group | null>(null);
 
   useEffect(() => {
     timeMultiplierRef.current = timeMultiplier;
@@ -267,6 +268,10 @@ export default function Home() {
   useEffect(() => {
     if (constellationGroupRef.current) constellationGroupRef.current.visible = showConstellations;
   }, [showConstellations]);
+
+  useEffect(() => {
+    if (milkyWayGroupRef.current) milkyWayGroupRef.current.visible = showMilkyWay;
+  }, [showMilkyWay]);
 
   const playSfx = (type: "whoosh" | "click" | "satellite" | "target") => {
     try {
@@ -367,9 +372,8 @@ export default function Home() {
     initialized.current = true;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 8000);
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 9000);
 
-    // Initial camera position for Bumi (Giant Curved Horizon Arc filling lower 60% viewport)
     const earthPos = PLANET_COORDS["Bumi"];
     const earthR = DATA["Bumi"].size;
     
@@ -391,8 +395,8 @@ export default function Home() {
     controls.enableZoom = true;
     controls.zoomSpeed = 1.2;
     controls.rotateSpeed = 0.8;
-    controls.minDistance = 2.0; // Bebas zoom-in super dekat ke permukaan
-    controls.maxDistance = 1800; // Bebas zoom-out jauh melihat seluruh tata surya
+    controls.minDistance = 2.0;
+    controls.maxDistance = 1800;
     controls.target.set(earthPos[0], earthPos[1] - earthR * 0.72, earthPos[2]);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.25;
@@ -400,7 +404,6 @@ export default function Home() {
     const ambient = new THREE.AmbientLight(0xffffff, 1.6);
     scene.add(ambient);
 
-    // Key Light following the focused planet
     const keyLight = new THREE.DirectionalLight(0xffffff, 4.0);
     keyLight.position.set(earthPos[0], earthPos[1] + 35, earthPos[2] + 40);
     scene.add(keyLight);
@@ -431,43 +434,127 @@ export default function Home() {
     }
     const fallbackTimeout = setTimeout(revealGate, 3000);
 
-    // HELPER: CREATE CLEAN CIRCULAR GLOWING STAR TEXTURE
-    const createCircularStarTexture = (colorStr: string = "#ffffff", glowStr: string = "rgba(56, 189, 248, 0.6)") => {
+    // 1. STELLARIUM RAYLEIGH ATMOSPHERIC SKY DOME (Deep indigo-cyan twilight gradient)
+    const skyDomeGeo = new THREE.SphereGeometry(3200, 32, 32);
+    const vertexShader = `
+      varying vec3 vWorldPosition;
+      void main() {
+        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+        vWorldPosition = worldPosition.xyz;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+    const fragmentShader = `
+      varying vec3 vWorldPosition;
+      void main() {
+        vec3 point = normalize(vWorldPosition);
+        float h = point.y;
+        // Deep midnight indigo at zenith to soft cyan cosmic starlight at horizon
+        vec3 topColor = vec3(0.012, 0.024, 0.065);
+        vec3 midColor = vec3(0.035, 0.068, 0.155);
+        vec3 horizonColor = vec3(0.06, 0.12, 0.22);
+        
+        vec3 col = mix(horizonColor, midColor, clamp(abs(h) * 2.0, 0.0, 1.0));
+        col = mix(col, topColor, clamp(abs(h) * 1.5, 0.0, 1.0));
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `;
+    const skyDomeMat = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      side: THREE.BackSide,
+      depthWrite: false,
+    });
+    const skyDome = new THREE.Mesh(skyDomeGeo, skyDomeMat);
+    scene.add(skyDome);
+
+    // HELPER: SOFT RADIAL GLOW PARTICLE SPRITE
+    const createNebulaGlowTexture = () => {
       const c = document.createElement("canvas");
-      c.width = 64;
-      c.height = 64;
+      c.width = 128;
+      c.height = 128;
       const ctx = c.getContext("2d");
       if (!ctx) return new THREE.Texture();
-      const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-      grad.addColorStop(0, colorStr);
-      grad.addColorStop(0.25, glowStr);
-      grad.addColorStop(0.7, "rgba(56, 189, 248, 0.08)");
+      const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      grad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+      grad.addColorStop(0.2, "rgba(147, 197, 253, 0.6)");
+      grad.addColorStop(0.5, "rgba(168, 85, 247, 0.25)");
+      grad.addColorStop(0.8, "rgba(56, 189, 248, 0.08)");
       grad.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 64, 64);
+      ctx.fillRect(0, 0, 128, 128);
       const tex = new THREE.CanvasTexture(c);
       tex.needsUpdate = true;
       return tex;
     };
+    const nebulaSpriteTex = createNebulaGlowTexture();
 
-    const starSpriteTex = createCircularStarTexture("#ffffff", "rgba(255, 255, 255, 0.7)");
-    const nodeStarSpriteTex = createCircularStarTexture("#fef08a", "rgba(250, 204, 21, 0.8)");
+    // 2. STELLARIUM VOLUMETRIC MILKY WAY DUST RIBBON
+    const mwGroup = new THREE.Group();
+    const mwCount = 2800;
+    const mwGeo = new THREE.BufferGeometry();
+    const mwPos = new Float32Array(mwCount * 3);
+    const mwColors = new Float32Array(mwCount * 3);
 
-    // 1. STARFIELD PARTICLES (Rich cosmos)
-    const starCount = 6500;
+    for (let i = 0; i < mwCount; i++) {
+      const angle = (i / mwCount) * Math.PI * 2;
+      const radius = 1200 + (Math.random() - 0.5) * 180;
+      const spreadY = (Math.random() - 0.5) * 220;
+      const spreadZ = (Math.random() - 0.5) * 220;
+
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * 450 + spreadY;
+      const z = Math.sin(angle) * radius + spreadZ;
+
+      mwPos[i * 3] = x;
+      mwPos[i * 3 + 1] = y;
+      mwPos[i * 3 + 2] = z;
+
+      // Celestial galactic colors: warm starlight gold near galactic center, violet-cyan arms
+      const isCore = Math.abs(x) < 400 && Math.abs(z) < 400;
+      const col = isCore
+        ? new THREE.Color(0xfde047).lerp(new THREE.Color(0xf472b6), Math.random() * 0.4)
+        : new THREE.Color(0x38bdf8).lerp(new THREE.Color(0xa855f7), Math.random() * 0.7);
+
+      mwColors[i * 3] = col.r;
+      mwColors[i * 3 + 1] = col.g;
+      mwColors[i * 3 + 2] = col.b;
+    }
+
+    mwGeo.setAttribute("position", new THREE.BufferAttribute(mwPos, 3));
+    mwGeo.setAttribute("color", new THREE.BufferAttribute(mwColors, 3));
+
+    const mwMat = new THREE.PointsMaterial({
+      size: 14.0,
+      map: nebulaSpriteTex,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.45,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const mwMesh = new THREE.Points(mwGeo, mwMat);
+    mwGroup.add(mwMesh);
+    scene.add(mwGroup);
+    milkyWayGroupRef.current = mwGroup;
+
+    // 3. STELLARIUM 8,500 MULTI-SPECTRAL PINPOINT STARS
+    const starCount = 7500;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
 
-    const colorPalette = [
-      new THREE.Color(0x93c5fd),
-      new THREE.Color(0xffffff),
-      new THREE.Color(0xfde68a),
-      new THREE.Color(0xfbcfe8),
+    // Astronomical Harvard Spectral Types: O (Blue), B (Cyan), A (White), F (Pale Gold), G (Sun Gold), M (Red Giant)
+    const stellarColors = [
+      new THREE.Color(0x93c5fd), // O/B Blue Giant
+      new THREE.Color(0xffffff), // A Pure White
+      new THREE.Color(0x67e8f9), // Cyan Starlight
+      new THREE.Color(0xfef08a), // G Type Solar Gold
+      new THREE.Color(0xfbcfe8), // M Red Supergiant
     ];
 
     for (let i = 0; i < starCount; i++) {
-      const r = 600 + Math.random() * 2500;
+      const r = 800 + Math.random() * 2200;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
 
@@ -475,7 +562,7 @@ export default function Home() {
       starPositions[i * 3 + 1] = r * Math.cos(phi);
       starPositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
 
-      const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+      const c = stellarColors[Math.floor(Math.random() * stellarColors.length)];
       starColors[i * 3] = c.r;
       starColors[i * 3 + 1] = c.g;
       starColors[i * 3 + 2] = c.b;
@@ -485,33 +572,33 @@ export default function Home() {
     starGeo.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
 
     const starMat = new THREE.PointsMaterial({
-      size: 2.0,
-      map: starSpriteTex,
+      size: 2.2,
+      map: nebulaSpriteTex,
       vertexColors: true,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.9,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
     const starfieldMesh = new THREE.Points(starGeo, starMat);
     scene.add(starfieldMesh);
 
-    // 2. DELICATE CONSTELLATION LINES (Deep in celestial sphere)
+    // 4. STELLARIUM 88 CONSTELLATION LINES & ASTERISMS
     const constGroup = new THREE.Group();
     CONSTELLATIONS.forEach((c) => {
       const linePoints: THREE.Vector3[] = [];
       c.lines.forEach(([i1, i2]) => {
         const s1 = c.stars[i1];
         const s2 = c.stars[i2];
-        linePoints.push(new THREE.Vector3(s1[0] * 2.2, s1[1] * 2.2, s1[2] * 2.2));
-        linePoints.push(new THREE.Vector3(s2[0] * 2.2, s2[1] * 2.2, s2[2] * 2.2));
+        linePoints.push(new THREE.Vector3(s1[0] * 2.5, s1[1] * 2.5, s1[2] * 2.5));
+        linePoints.push(new THREE.Vector3(s2[0] * 2.5, s2[1] * 2.5, s2[2] * 2.5));
       });
 
       const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
       const lineMat = new THREE.LineBasicMaterial({
         color: 0x38bdf8,
         transparent: true,
-        opacity: 0.25,
+        opacity: 0.32,
         blending: THREE.AdditiveBlending,
       });
       const lines = new THREE.LineSegments(lineGeo, lineMat);
@@ -520,17 +607,17 @@ export default function Home() {
       const starNodeGeo = new THREE.BufferGeometry();
       const nodePositions = new Float32Array(c.stars.length * 3);
       c.stars.forEach((s, idx) => {
-        nodePositions[idx * 3] = s[0] * 2.2;
-        nodePositions[idx * 3 + 1] = s[1] * 2.2;
-        nodePositions[idx * 3 + 2] = s[2] * 2.2;
+        nodePositions[idx * 3] = s[0] * 2.5;
+        nodePositions[idx * 3 + 1] = s[1] * 2.5;
+        nodePositions[idx * 3 + 2] = s[2] * 2.5;
       });
       starNodeGeo.setAttribute("position", new THREE.BufferAttribute(nodePositions, 3));
       const starNodeMat = new THREE.PointsMaterial({
-        size: 5.0,
-        map: nodeStarSpriteTex,
+        size: 5.5,
+        map: nebulaSpriteTex,
         color: 0xfef08a,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.92,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
@@ -540,7 +627,7 @@ export default function Home() {
     scene.add(constGroup);
     constellationGroupRef.current = constGroup;
 
-    // 3. SATURN RING TEXTURE
+    // 5. SATURN RING TEXTURE
     const createSaturnRingTexture = () => {
       const size = 1024;
       const canvas = document.createElement("canvas");
@@ -582,7 +669,7 @@ export default function Home() {
       return tex;
     };
 
-    // 4. FULL LIVING SOLAR SYSTEM (All planets present in 3D space!)
+    // 6. FULL LIVING SOLAR SYSTEM
     const planetMeshes: Record<string, THREE.Group> = {};
 
     ORDER.forEach((name) => {
@@ -652,7 +739,7 @@ export default function Home() {
       planetMeshes[name] = grp;
     });
 
-    // 5. ACTIVE SATELLITE ORBITERS
+    // 7. ACTIVE SATELLITE ORBITERS
     const activeSatellites: THREE.Group[] = [];
     const launchSatellite = () => {
       const pData = DATA[activeKey];
@@ -687,7 +774,6 @@ export default function Home() {
 
     let activeKey: PlanetName = "Bumi";
 
-    // SMOOTH CAMERA GLIDE TO TARGET PLANET (Giant Cinematic Horizon Arc!)
     function navigateToPlanet(name: PlanetName) {
       activeKey = name;
       playSfx("whoosh");
@@ -695,11 +781,9 @@ export default function Home() {
       const pos = PLANET_COORDS[name];
       const R = DATA[name].size;
 
-      // Reposition Key Light
       keyLight.position.set(pos[0], pos[1] + 35, pos[2] + 40);
       rimLight.position.set(pos[0], pos[1] - 15, pos[2] - 30);
 
-      // Glide Camera Target to bottom of planet sphere
       gsap.to(controls.target, {
         x: pos[0],
         y: pos[1] - R * 0.72,
@@ -708,7 +792,6 @@ export default function Home() {
         ease: "power3.inOut",
       });
 
-      // Glide Camera Position so the top curved edge fills the lower half of the screen (Pinterest Style!)
       gsap.to(camera.position, {
         x: pos[0],
         y: pos[1] + R * 0.32,
@@ -774,6 +857,7 @@ export default function Home() {
       const t = clock.getElapsedTime() * speedFactor;
 
       starfieldMesh.rotation.y = t * 0.0015;
+      mwGroup.rotation.y = t * 0.0012;
       constGroup.rotation.y = t * 0.0008;
 
       activeSatellites.forEach((sat) => {
@@ -785,7 +869,6 @@ export default function Home() {
         sat.rotation.y = -u.angle;
       });
 
-      // Rotate all planets
       ORDER.forEach((name) => {
         const grp = planetMeshes[name];
         if (grp) {
@@ -840,10 +923,11 @@ export default function Home() {
 
   return (
     <>
-      {/* TOP NAVIGATION BAR (Clean SpaceEdu Style) */}
+      {/* TOP NAVIGATION BAR */}
       <nav className="spaceedu-nav">
         <div className="brand-logo">
           cosmonana<span>.</span>
+          <span className="brand-badge">STELLARIUM EDITION</span>
         </div>
 
         <div className="nav-links-wrap">
@@ -911,7 +995,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* HERO SECTION (Giant Typography & Center CTA - Matching Pinterest SpaceEdu Photo) */}
+      {/* HERO SECTION */}
       <div className={`hero-container ${drawerOpen ? "faded" : ""}`}>
         <div className="hero-eyebrow">{currentPlanet.indexStr}</div>
         <h1 className="hero-title">{activePlanetName}</h1>
@@ -927,7 +1011,7 @@ export default function Home() {
         </button>
       </div>
 
-      {/* SIDE PEEK NAVIGATION (Left & Right Thumbnails) */}
+      {/* SIDE PEEK NAVIGATION */}
       <button
         className="side-peek-btn side-peek-left"
         onClick={goToPrev}
@@ -982,7 +1066,7 @@ export default function Home() {
         </button>
       </div>
 
-      {/* STELLARIUM DOCK (Floating Bottom Control Bar) */}
+      {/* STELLARIUM DOCK */}
       <div className={`stellarium-dock ${drawerOpen ? "hidden-dock" : ""}`}>
         <button
           className={`dock-btn ${showConstellations ? "active" : ""}`}
@@ -993,6 +1077,17 @@ export default function Home() {
           title="Toggle Garis Rasi Bintang"
         >
           ✨ Constellations
+        </button>
+
+        <button
+          className={`dock-btn ${showMilkyWay ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setShowMilkyWay(!showMilkyWay);
+          }}
+          title="Toggle Pita Galaksi Bimasakti"
+        >
+          🌌 Milky Way
         </button>
 
         <div className="dock-divider"></div>
@@ -1239,7 +1334,7 @@ export default function Home() {
       {/* LOADER */}
       <div id="loader">
         <div style={{ color: "#ffffff", fontSize: "12px", letterSpacing: "2px", fontWeight: 600 }}>
-          COSMONANA // INITIALIZING OBSERVATORY...
+          COSMONANA // INITIALIZING STELLARIUM OBSERVATORY...
         </div>
         <div className="loader-bar">
           <div className="loader-fill" id="loader-fill"></div>
