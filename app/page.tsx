@@ -519,20 +519,23 @@ export default function Home() {
         const audio = new Audio("/audio/bgm.mp3");
         audio.loop = true;
         audio.volume = 0.55;
+        audio.preload = "auto";
         audio.addEventListener("ended", () => {
           audio.currentTime = 0;
           audio.play().catch(() => {});
         });
         bgmAudioRef.current = audio;
       }
-      bgmAudioRef.current
-        .play()
-        .then(() => {
-          setIsAudioPlaying(true);
-        })
-        .catch(() => {
-          setIsAudioPlaying(false);
-        });
+      const playPromise = bgmAudioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsAudioPlaying(true);
+          })
+          .catch(() => {
+            setIsAudioPlaying(false);
+          });
+      }
     } catch {
       setIsAudioPlaying(false);
     }
@@ -556,23 +559,39 @@ export default function Home() {
     }
   };
 
-  // Auto-play BGM on first user interaction
+  // Auto-play BGM immediately on page load, with fallback on first gesture (touch/click/scroll/key)
   useEffect(() => {
+    // 1. Attempt immediate auto-play
+    startAmbientSoundscape();
+
+    // 2. Setup listeners for browsers requiring user gesture
+    const interactionEvents = [
+      "click",
+      "pointerdown",
+      "touchstart",
+      "touchend",
+      "keydown",
+      "scroll",
+      "wheel",
+    ];
+
     const handleFirstUserGesture = () => {
-      if (!isAudioPlaying && !bgmAudioRef.current) {
+      if (!bgmAudioRef.current || bgmAudioRef.current.paused) {
         startAmbientSoundscape();
       }
-      window.removeEventListener("click", handleFirstUserGesture);
-      window.removeEventListener("keydown", handleFirstUserGesture);
-      window.removeEventListener("touchstart", handleFirstUserGesture);
+      interactionEvents.forEach((evt) => {
+        window.removeEventListener(evt, handleFirstUserGesture);
+      });
     };
-    window.addEventListener("click", handleFirstUserGesture);
-    window.addEventListener("keydown", handleFirstUserGesture);
-    window.addEventListener("touchstart", handleFirstUserGesture);
+
+    interactionEvents.forEach((evt) => {
+      window.addEventListener(evt, handleFirstUserGesture, { passive: true, once: true });
+    });
+
     return () => {
-      window.removeEventListener("click", handleFirstUserGesture);
-      window.removeEventListener("keydown", handleFirstUserGesture);
-      window.removeEventListener("touchstart", handleFirstUserGesture);
+      interactionEvents.forEach((evt) => {
+        window.removeEventListener(evt, handleFirstUserGesture);
+      });
       if (bgmAudioRef.current) {
         bgmAudioRef.current.pause();
       }
