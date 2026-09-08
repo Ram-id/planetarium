@@ -1146,6 +1146,138 @@ export default function Home() {
         </div>
       </div>
 
+      {/* TANYA MAS DHANI CHAT MODAL (WHATSAPP/MESSENGER BUBBLE STYLE) */}
+      <div className={`chat-modal-backdrop ${showDhaniModal ? "show" : ""}`}>
+        <div className="chat-messenger-window">
+          {/* Chat Header */}
+          <div className="chat-header">
+            <div className="chat-user-info">
+              <div className="chat-avatar-wrap">
+                🪐
+                <div className="chat-online-dot"></div>
+              </div>
+              <div className="chat-name-col">
+                <div className="chat-name-title">Mas Dhani 💖</div>
+                <div className="chat-status-subtitle">
+                  <span>●</span> Online • Siap nemenin Nana
+                </div>
+              </div>
+            </div>
+            <div className="chat-header-actions">
+              <button
+                className="chat-close-btn"
+                onClick={() => {
+                  playSfx("click");
+                  setShowDhaniModal(false);
+                }}
+                title="Tutup Chat"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          {/* Chat Body / Message Feed */}
+          <div className="chat-body-feed">
+            <div className="chat-date-pill">HARI INI</div>
+
+            {chatMessages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`chat-msg-row ${msg.sender === "nana" ? "outgoing" : "incoming"}`}
+              >
+                <div
+                  className={`chat-bubble ${msg.sender === "nana" ? "outgoing-bubble" : "incoming-bubble"}`}
+                >
+                  <p style={{ margin: 0 }}>{msg.text}</p>
+                  <div className="chat-bubble-footer">
+                    <span>{msg.time}</span>
+                    {msg.sender === "nana" && <span>✓✓</span>}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {dhaniLoading && (
+              <div className="chat-msg-row incoming">
+                <div className="chat-typing-bubble">
+                  <div className="typing-dot"></div>
+                  <div className="typing-dot"></div>
+                  <div className="typing-dot"></div>
+                </div>
+              </div>
+            )}
+
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Quick FAQ Chips */}
+          <div className="chat-faq-container">
+            <div className="chat-faq-title">Pertanyaan Cepat untuk Nana:</div>
+            <div className="chat-faq-scroll">
+              <button
+                className="chat-faq-chip"
+                onClick={() =>
+                  askDhani(`Mas Dhani, ceritain rahasia paling romantis tentang planet ${activePlanetName} dong! ✨`)
+                }
+              >
+                🪐 Rahasia Planet {activePlanetName}
+              </button>
+              <button
+                className="chat-faq-chip"
+                onClick={() =>
+                  askDhani("Mas Dhani, kenapa kamu selalu manggil aku dengan penuh kasih sayang?")
+                }
+              >
+                💖 Kenapa Nana spesial?
+              </button>
+              <button
+                className="chat-faq-chip"
+                onClick={() =>
+                  askDhani("Mas Dhani, rasi bintang apa yang paling cocok buat nemenin malam kita?")
+                }
+              >
+                ✨ Rekomendasi Rasi Bintang
+              </button>
+              <button
+                className="chat-faq-chip"
+                onClick={() =>
+                  askDhani(`Mas Dhani, kalau kita tinggal berdua di ${activePlanetName}, gimana ya?`)
+                }
+              >
+                🚀 Hidup di {activePlanetName}
+              </button>
+            </div>
+          </div>
+
+          {/* Chat Input Bar */}
+          <form
+            className="chat-input-bar"
+            onSubmit={(e) => {
+              e.preventDefault();
+              askDhani();
+            }}
+          >
+            <input
+              type="text"
+              className="chat-input-box"
+              placeholder="Tulis pesan atau pertanyaan ke Mas Dhani..."
+              value={dhaniInput}
+              onChange={(e) => setDhaniInput(e.target.value)}
+              disabled={dhaniLoading}
+            />
+            <button
+              type="submit"
+              className="chat-send-btn"
+              disabled={dhaniLoading || !dhaniInput.trim()}
+              title="Kirim Pesan"
+            >
+              ➤
+            </button>
+          </form>
+        </div>
+      </div>
+
       {/* INTERACTIVE LEARNING DRAWER */}
       <div id="info-drawer" className={drawerOpen ? "open" : ""}>
         <div className="drawer-close-bar" onClick={() => setDrawerOpen(false)} title="Tutup Panel"></div>
