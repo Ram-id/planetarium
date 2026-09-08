@@ -102,7 +102,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Matahari menyumbang 99,86% massa seluruh tata surya. Reaksi fusi nuklir di intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan foton yang mencapai permukaan Bumi dalam 500 detik (8,3 menit cahaya).",
     romanticNote:
-      "Terima kasih sudah selalu menjadi sumber energi baik dan kehangatan dalam hari-hari mas. Di tengah segala rutinitas dan lelahnya beraktivitas, kabar dan senyumanmu selalu berhasil menghadirkan rasa tenang. Semoga harimu selalu dipenuhi kebaikan dan kelancaran yaa, cantikku sayang. ☀️🤍",
+      "Makasih yaa udah selalu jadi alasan mas buat semangat setiap hari. Secapek apa pun kegiatannya, kalau udah dapet kabar atau denger cerita kamu tuh rasanya langsung adem lagi. Jangan lupa jaga kesehatan dan jangan skip makan yaa sayangggku, mas selalu doain yang terbaik buat kamu. ☀️🤍",
   },
   Merkurius: {
     size: 2.8,
@@ -125,7 +125,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Merkurius memiliki kecepatan orbit rata-rata 47,4 km/detik. Tanpa atmosfer penahan panas yang tebal, gradien suhunya paling ekstrem di tata surya. Resonansi spin-orbit 3:2 membuat 1 hari di Merkurius setara dengan 176 hari Bumi.",
     romanticNote:
-      "Di tengah dunia yang sering bergerak serba cepat dan penuh tuntutan, mas harap kamu selalu ingat untuk mengambil jeda dan bernapas lega yaa sayang. Jangan terlalu keras pada dirimu sendiri, setiap proses dan usaha yang kamu jalani sangat berharga. Mas akan selalu ada di sini mendukungmu. ✨",
+      "Kalau harimu lagi kerasa capek atau buru-buru banget, tarik napas dulu yaa sayanggg. Nggak apa-apa pelan-pelan, jangan terlalu keras sama diri sendiri. Apa pun yang lagi kamu usahain, mas selalu bangga sama kamu dan siap dengerin keluh kesahmu kapan aja. 🤍✨",
   },
   Venus: {
     size: 6.6,
@@ -148,7 +148,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Venus memiliki efek rumah kaca tak terkendali dengan tekanan atmosfer 92 kali lipat Bumi. Venus berotasi secara retrograde (searah jarum jam) sangat lambat, sehingga matahari terbit di barat dan terbenam di timur.",
     romanticNote:
-      "Venus mungkin menjadi objek paling bercahaya di langit senja, tetapi ketulusan, kebaikan hati, dan caramu memperlakukan orang lain selalu punya tempat yang jauh lebih istimewa. Tetaplah menjadi dirimu yang apa adanya, dengan segala ketulusan yang kamu miliki, cintaku. 💖",
+      "Bintang paling terang di langit senja aja masih kalah manis sama senyumanmu, hehe. Mas suka banget sama ketulusan dan cara kamu peduli ke orang-orang sekitar. Tetap jadi dirimu yang manis dan apa adanya yaa cantikkk sayaaanggg. 💖",
   },
   Bumi: {
     size: 7.0,
@@ -173,7 +173,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Kemiringan sumbu rotasi Bumi 23,44° menghasilkan siklus 4 musim teratur. Gravitasi Bulan (berjarak 384.400 km) menstabilkan sumbu rotasi Bumi sehingga iklim tetap bersahabat bagi kehidupan selama miliaran tahun.",
     romanticNote:
-      "Dari luasnya semesta yang dingin dan tak terhingga, dipertemukan dan bisa saling menjaga denganmu adalah salah satu takdir terindah yang selalu mas syukuri setiap hari. Terima kasih sudah mau berproses, belajar, dan melangkah bersama, sayangku. 🌍🫶",
+      "Dari miliaran orang di bumi, bisa ketemu dan deket sama kamu tuh salah satu hal yang paling mas syukuri sampai sekarang. Makasih yaa udah hadir dan mau nemenin proses mas sejauh ini. Mas sayang banget sama kamu, cintaaakuuu. 🌍🫶",
   },
   Mars: {
     size: 3.8,
@@ -196,7 +196,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Mars memiliki Olympus Mons (tinggi 21,9 km, 2,5 kali Everest) dan ngarai Valles Marineris sepanjang 4.000 km. Satu hari di Mars (Sol) berlangsung 24 jam 37 menit, sangat mirip dengan Bumi.",
     romanticNote:
-      "Setiap perjalanan dan impian baik selalu membutuhkan ketabahan. Apa pun tantangan atau hal berat yang sedang kamu hadapi, percayalah bahwa kamu memiliki ketangguhan hati yang luar biasa, sayang. Mas selalu bangga padamu dan siap mendampingi setiap langkahmu. 🚀",
+      "Kalau lagi ada hal berat yang bikin kamu kepikiran, inget yaa sayanggg... kamu itu orang yang hebat dan kuat banget. Jangan ngerasa sendirian yaa, mas bakal selalu ada di sampingmu buat semangatin kamu terus. Semangat terus cantikku sayang! 🚀🤍",
   },
   Yupiter: {
     size: 18.5,
@@ -219,7 +219,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Jupiter memiliki massa 318 kali Bumi (2,5 kali massa seluruh planet lain digabungkan). Rotasinya yang secepat 9,9 jam menghasilkan gaya sentrifugal tinggi dan badai Great Red Spot yang telah berkecamuk lebih dari 350 tahun.",
     romanticNote:
-      "Sebagaimana Yupiter yang hadir menjaga keseimbangan tata surya, mas ingin selalu menjadi ruang yang aman dan nyaman untukmu—tempat kamu bisa menceritakan apa saja, menaruh lelah, dan selalu merasa dimengerti tanpa perlu merasa sendirian, cintaku sayang. 🪐",
+      "Mas pengen selalu jadi tempat kamu buat pulang dan cerita apa aja—mau hal remeh, hal seru, sampai rasa capekmu. Kamu nggak perlu sungkan yaa sayang, mas selalu siap jadi pendengar setiamu kapan pun kamu butuh. 🪐🤍",
   },
   Saturnus: {
     size: 15.5,
@@ -243,7 +243,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Saturnus adalah satu-satunya planet yang massa jenisnya lebih rendah dari air (0,687 g/cm³). Cincinnya terdiri dari 99% pecahan es murni dengan ketebalan vertikal hanya sekitar 10 meter.",
     romanticNote:
-      "Keindahan yang menawan lahir dari keselarasan dan kesabaran. Kehadiranmu membawa keteduhan dan harmoni tersendiri dalam hidup mas. Terima kasih atas setiap perhatian tulus dan kebaikan yang selalu kamu bawa ke dalam hari-hari kita, cantikku sayang. ✨🤍",
+      "Cincin Saturnus boleh jadi yang paling cantik di tata surya, tapi di mata mas, kamu tetep yang paling juara cantiknya. Makasih yaa udah selalu ngasih perhatian manis dan bikin hari-hari mas jadi jauh lebih berwarna. Sayanggg banget sama kamu! ✨🤍",
   },
   Uranus: {
     size: 10.0,
@@ -266,7 +266,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Dengan kemiringan poros 97,77°, Uranus menggelinding di sepanjang orbitnya, menyebabkan setiap kutub mengalami 42 tahun siang konstan diikuti 42 tahun malam konstan. Metana di atmosfernya menyerap spektrum merah.",
     romanticNote:
-      "Uranus mengajarkan bahwa memiliki poros dan cara tersendiri bukanlah kekurangan, melainkan keistimewaan. Sudut pandangmu yang unik, kehangatanmu, dan caramu menyayangi adalah hal-hal yang membuatmu begitu istimewa di mata mas, sayangku. 💙",
+      "Mas suka banget sama semua hal tentang kamu—lucunya kamu, cara kamu ngomong, sampai kebiasaan-kebiasaan kecilmu yang ngegemesin. Jangan pernah ragu sama dirimu sendiri yaa sayangggku, kamu itu istimewa banget buat mas. 💙✨",
   },
   Neptunus: {
     size: 9.6,
@@ -289,7 +289,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Neptunus ditemukan melalui prediksi matematika gravitasi sebelum diamati teleskop. Memiliki kecepatan angin tercepat di tata surya mencapai 2.100 km/jam. Memerlukan 164,8 tahun Bumi untuk satu kali revolusi lengkap mengitari Matahari.",
     romanticNote:
-      "Bahkan di titik terjauh yang paling hening di tepian tata surya, rasa tenang dan teduh selalu hadir saat mengingatmu. Di mana pun kamu berada, semoga kamu selalu merasa dijaga dalam doa, dihargai, dan dicintai sepenuh hati, cintaku sayang. 🌌✨",
+      "Walau kadang ada jarak atau waktu yang bikin kita belum bisa ketemu langsung, rasa sayang dan doa mas selalu nyampe buat kamu di sana. Jangan pernah ngerasa kesepian yaa cintaaa, mas selalu bawa nama kamu di setiap doa mas. I love you, cantikku sayaaanggg. 🌌🤍",
   },
 };
 
