@@ -242,11 +242,9 @@ export default function Home() {
   const [showMilkyWay, setShowMilkyWay] = useState<boolean>(true);
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
 
-  // Ambient Soundscape state & refs
+  // Background Music state & refs (Sal Priadi - Dari Planet Lain)
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
-  const ambientOscillatorsRef = useRef<OscillatorNode[]>([]);
-  const ambientGainRef = useRef<GainNode | null>(null);
-  const chordIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const bgmAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Solar System Scope Orrery Modal state
   const [showOrreryModal, setShowOrreryModal] = useState(false);
@@ -297,115 +295,37 @@ export default function Home() {
     if (skyDomeMeshRef.current) skyDomeMeshRef.current.visible = showMilkyWay;
   }, [showMilkyWay]);
 
-  // PROCEDURAL AMBIENT DEEP SPACE SOUNDSCAPE (Brian Eno / Interstellar Style)
+  // BGM CONTROLS (Sal Priadi - Dari Planet Lain)
   const startAmbientSoundscape = () => {
     try {
-      const AudioCtx =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new AudioCtx();
-      }
-      const ctx = audioCtxRef.current;
-      if (ctx.state === "suspended") ctx.resume();
-
-      if (ambientGainRef.current) {
-        ambientGainRef.current.gain.setValueAtTime(ambientGainRef.current.gain.value, ctx.currentTime);
-        ambientGainRef.current.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 1.5);
-        setIsAudioPlaying(true);
-        return;
-      }
-
-      // Master ambient gain node with smooth fade-in
-      const masterGain = ctx.createGain();
-      masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
-      masterGain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 2.5);
-      masterGain.connect(ctx.destination);
-      ambientGainRef.current = masterGain;
-
-      // Warm lowpass filter for deep space tone
-      const filter = ctx.createBiquadFilter();
-      filter.type = "lowpass";
-      filter.frequency.setValueAtTime(450, ctx.currentTime);
-      filter.connect(masterGain);
-
-      // Deep space drone oscillators (warm sine & triangle waves)
-      const droneFreqs = [55.0, 82.41, 110.0, 164.81];
-      const oscs: OscillatorNode[] = [];
-
-      droneFreqs.forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const oscGain = ctx.createGain();
-        osc.type = i % 2 === 0 ? "sine" : "triangle";
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-        osc.detune.setValueAtTime((i - 1.5) * 3.5, ctx.currentTime);
-        oscGain.gain.setValueAtTime(0.07 / (i + 1), ctx.currentTime);
-        osc.connect(oscGain);
-        oscGain.connect(filter);
-        osc.start();
-        oscs.push(osc);
-      });
-
-      // Dreamy space chord pad progression (Amaj7 -> F#m7 -> Dmaj9 -> Esus4)
-      const chordProgression = [
-        [220, 277.18, 329.63, 415.30], // Amaj7
-        [185.00, 220.00, 277.18, 329.63], // F#m7
-        [146.83, 220.00, 277.18, 369.99], // Dmaj9
-        [164.81, 220.00, 246.94, 329.63], // Esus4
-      ];
-
-      let chordIdx = 0;
-      const playNextChord = () => {
-        if (!audioCtxRef.current || audioCtxRef.current.state === "closed") return;
-        const now = ctx.currentTime;
-        const currentChord = chordProgression[chordIdx % chordProgression.length];
-        chordIdx++;
-
-        currentChord.forEach((f) => {
-          const chordOsc = ctx.createOscillator();
-          const chordGain = ctx.createGain();
-          chordOsc.type = "sine";
-          chordOsc.frequency.setValueAtTime(f, now);
-          chordGain.gain.setValueAtTime(0.001, now);
-          chordGain.gain.linearRampToValueAtTime(0.035, now + 3.0);
-          chordGain.gain.exponentialRampToValueAtTime(0.001, now + 9.5);
-
-          chordOsc.connect(chordGain);
-          chordGain.connect(filter);
-          chordOsc.start(now);
-          chordOsc.stop(now + 10.0);
+      if (!bgmAudioRef.current) {
+        const audio = new Audio("/audio/bgm.mp3");
+        audio.loop = true;
+        audio.volume = 0.55;
+        audio.addEventListener("ended", () => {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
         });
-      };
-
-      playNextChord();
-      chordIntervalRef.current = setInterval(playNextChord, 8500);
-
-      ambientOscillatorsRef.current = oscs;
-      setIsAudioPlaying(true);
-    } catch {}
+        bgmAudioRef.current = audio;
+      }
+      bgmAudioRef.current
+        .play()
+        .then(() => {
+          setIsAudioPlaying(true);
+        })
+        .catch(() => {
+          setIsAudioPlaying(false);
+        });
+    } catch {
+      setIsAudioPlaying(false);
+    }
   };
 
   const stopAmbientSoundscape = () => {
     try {
-      if (ambientGainRef.current && audioCtxRef.current) {
-        const ctx = audioCtxRef.current;
-        ambientGainRef.current.gain.setValueAtTime(ambientGainRef.current.gain.value, ctx.currentTime);
-        ambientGainRef.current.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
+      if (bgmAudioRef.current) {
+        bgmAudioRef.current.pause();
       }
-      setTimeout(() => {
-        ambientOscillatorsRef.current.forEach((osc) => {
-          try {
-            osc.stop();
-            osc.disconnect();
-          } catch {}
-        });
-        ambientOscillatorsRef.current = [];
-        if (chordIntervalRef.current) {
-          clearInterval(chordIntervalRef.current);
-          chordIntervalRef.current = null;
-        }
-        ambientGainRef.current = null;
-      }, 1300);
       setIsAudioPlaying(false);
     } catch {}
   };
@@ -419,20 +339,26 @@ export default function Home() {
     }
   };
 
-  // Auto-init soundscape on first user gesture
+  // Auto-play BGM on first user interaction
   useEffect(() => {
     const handleFirstUserGesture = () => {
-      if (!isAudioPlaying) {
+      if (!isAudioPlaying && !bgmAudioRef.current) {
         startAmbientSoundscape();
       }
       window.removeEventListener("click", handleFirstUserGesture);
       window.removeEventListener("keydown", handleFirstUserGesture);
+      window.removeEventListener("touchstart", handleFirstUserGesture);
     };
     window.addEventListener("click", handleFirstUserGesture);
     window.addEventListener("keydown", handleFirstUserGesture);
+    window.addEventListener("touchstart", handleFirstUserGesture);
     return () => {
       window.removeEventListener("click", handleFirstUserGesture);
       window.removeEventListener("keydown", handleFirstUserGesture);
+      window.removeEventListener("touchstart", handleFirstUserGesture);
+      if (bgmAudioRef.current) {
+        bgmAudioRef.current.pause();
+      }
     };
   }, []);
 
@@ -1061,19 +987,19 @@ export default function Home() {
               setDrawerOpen(true);
             }}
           >
-            💖 Notes for Nana
+            💖 Pesan untuk Sayang
           </button>
         </div>
 
         <div className="nav-right-cluster">
-          {/* AMBIENT SOUNDSCAPE TOGGLE */}
+          {/* BACKGROUND MUSIC TOGGLE */}
           <button
             className={`audio-toggle-btn ${isAudioPlaying ? "playing" : ""}`}
             onClick={toggleAmbientAudio}
-            title={isAudioPlaying ? "Matikan Musik Luar Angkasa" : "Putar Musik Luar Angkasa"}
+            title={isAudioPlaying ? "Jeda Lagu (Sal Priadi - Dari Planet Lain)" : "Putar Lagu (Sal Priadi - Dari Planet Lain)"}
           >
             <span className="audio-icon">{isAudioPlaying ? "🎵" : "🔇"}</span>
-            <span className="audio-label">{isAudioPlaying ? "Soundscape On" : "Soundscape Off"}</span>
+            <span className="audio-label">{isAudioPlaying ? "Dari Planet Lain ✨" : "Putar Musik"}</span>
             {isAudioPlaying && (
               <span className="soundwave-anim">
                 <span className="bar"></span>
