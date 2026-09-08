@@ -395,6 +395,10 @@ export default function Home() {
 
   const spawn3DLanternRef = useRef<(lantern: SkyLantern, isNewLaunch?: boolean) => void>(() => {});
 
+  // Floating Cosmic Wish Pop-up Whisper state (auto-pop up one flying wish cleanly)
+  const [whisperLantern, setWhisperLantern] = useState<SkyLantern | null>(null);
+  const [whisperVisible, setWhisperVisible] = useState(false);
+
   // Load persisted lanterns and game highscore from localStorage
   useEffect(() => {
     try {
@@ -455,6 +459,28 @@ export default function Home() {
   const [showDhaniModal, setShowDhaniModal] = useState(false);
   const [dhaniInput, setDhaniInput] = useState("");
   const [dhaniLoading, setDhaniLoading] = useState(false);
+
+  useEffect(() => {
+    const whisperInterval = setInterval(() => {
+      if (
+        lanternsListRef.current.length > 0 &&
+        !showLanternModal &&
+        !showLanternViewModal &&
+        !showDhaniModal
+      ) {
+        const randomLantern =
+          lanternsListRef.current[Math.floor(Math.random() * lanternsListRef.current.length)];
+        setWhisperLantern(randomLantern);
+        setWhisperVisible(true);
+
+        setTimeout(() => {
+          setWhisperVisible(false);
+        }, 6500);
+      }
+    }, 14000);
+
+    return () => clearInterval(whisperInterval);
+  }, [showLanternModal, showLanternViewModal, showDhaniModal]);
 
   interface ChatMessage {
     id: string;
@@ -1645,6 +1671,13 @@ export default function Home() {
       lanternLight.position.y = 0;
       group.add(lanternLight);
 
+      // Invisible larger click collider for effortless mobile touch & cursor clicks
+      const hitboxGeo = new THREE.SphereGeometry(6.5, 10, 10);
+      const hitboxMat = new THREE.MeshBasicMaterial({ visible: false, transparent: true, opacity: 0 });
+      const hitbox = new THREE.Mesh(hitboxGeo, hitboxMat);
+      hitbox.userData = { lanternId: l.id, isLantern: true };
+      group.add(hitbox);
+
       if (isNewLaunch) {
         // Start from near current camera view and float upward smoothly
         const camPos = camera.position.clone();
@@ -1670,7 +1703,7 @@ export default function Home() {
 
       scene.add(group);
       activeLanternMeshes.push(group);
-      clickableLanternObjects.push(lanternBody, topCap);
+      clickableLanternObjects.push(lanternBody, topCap, hitbox);
     };
 
     // Spawn initial pre-seeded lanterns
@@ -2319,7 +2352,7 @@ export default function Home() {
         }
       });
 
-      // Floating Cosmic Sky Lanterns Motion & Coordinate Projection
+      // Floating Cosmic Sky Lanterns Motion (Clean & Serene)
       activeLanternMeshes.forEach((meshGrp) => {
         const u = meshGrp.userData;
         meshGrp.position.y += (u.riseSpeed || 0.015) * (speedFactor === 0 ? 0.05 : speedFactor);
@@ -2329,24 +2362,6 @@ export default function Home() {
         meshGrp.position.x += Math.sin(t * 0.7 + (u.wobblePhase || 0)) * 0.035;
         meshGrp.position.z += Math.cos(t * 0.7 + (u.wobblePhase || 0)) * 0.035;
         meshGrp.rotation.y += 0.003;
-
-        // Project 3D position to 2D screen coordinate for badge
-        const badgeEl = document.getElementById("lantern-badge-" + u.lanternId);
-        if (badgeEl) {
-          const p3d = new THREE.Vector3();
-          meshGrp.getWorldPosition(p3d);
-          p3d.y += 3.8;
-          p3d.project(camera);
-          const isVis = p3d.z < 1.0;
-          if (isVis) {
-            const sx = (p3d.x * 0.5 + 0.5) * window.innerWidth;
-            const sy = (-(p3d.y * 0.5) + 0.5) * window.innerHeight;
-            badgeEl.style.transform = `translate3d(${sx}px, ${sy}px, 0)`;
-            badgeEl.style.display = "flex";
-          } else {
-            badgeEl.style.display = "none";
-          }
-        }
       });
 
       // Ultra-smooth zero-jitter camera tracking of active planet in orbit mode
@@ -2666,7 +2681,42 @@ export default function Home() {
         </button>
       </div>
 
-      {/* 3D ORBIT FLOATING PLANET BADGES & LANTERNS LAYER */}
+      {/* FLOATING COSMIC WISH POPUP (BISIKAN HARAPAN MELAYANG DI LANGIT) */}
+      {whisperLantern && whisperVisible && (
+        <div
+          className="cosmic-whisper-balloon"
+          onClick={() => {
+            playSfx("wish");
+            setSelectedLantern(whisperLantern);
+            setShowLanternViewModal(true);
+          }}
+          title="Klik untuk membuka lampion dan membaca doa selengkapnya ✨"
+        >
+          <div className="whisper-header">
+            <span className="whisper-flame">🏮</span>
+            <span className="whisper-title">
+              Lampion <strong style={{ color: whisperLantern.color }}>{whisperLantern.colorName}</strong>
+            </span>
+            <button
+              className="whisper-close-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                setWhisperVisible(false);
+              }}
+              title="Tutup"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="whisper-quote">&ldquo;{whisperLantern.text}&rdquo;</div>
+          <div className="whisper-footer">
+            <span className="whisper-author">Oleh: {whisperLantern.author}</span>
+            <span className="whisper-hint">Klik untuk buka doa 🤍</span>
+          </div>
+        </div>
+      )}
+
+      {/* 3D ORBIT FLOATING PLANET BADGES LAYER */}
       <div className="orbit-labels-layer">
         {ORDER.map((name) => {
           const d = DATA[name];
@@ -2690,24 +2740,6 @@ export default function Home() {
             </div>
           );
         })}
-
-        {/* 3D Floating Lantern Badges in the Sky */}
-        {lanternsList.map((l) => (
-          <div
-            key={l.id}
-            id={`lantern-badge-${l.id}`}
-            className="floating-lantern-badge"
-            onClick={() => {
-              playSfx("wish");
-              setSelectedLantern(l);
-              setShowLanternViewModal(true);
-            }}
-            title={`Buka Lampion: "${l.text.slice(0, 32)}..."`}
-          >
-            <span style={{ fontSize: "13px" }}>🏮</span>
-            <span style={{ color: l.color, fontWeight: 700 }}>{l.author}</span>
-          </div>
-        ))}
       </div>
 
       {/* BOTTOM-RIGHT QUICK SKY LANTERNS TRAY */}
