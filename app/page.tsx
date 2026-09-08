@@ -235,16 +235,13 @@ export default function Home() {
 
   const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Bumi");
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"science" | "lab" | "love">("science");
+  const [activeTab, setActiveTab] = useState<"science" | "lab" | "map" | "love">("science");
   const [userWeight, setUserWeight] = useState<number>(45);
   const [userAge, setUserAge] = useState<number>(20);
   
   const [showMilkyWay, setShowMilkyWay] = useState<boolean>(true);
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
-
-  // Background Music state & refs (Sal Priadi - Dari Planet Lain)
-  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
-  const bgmAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [showPingToast, setShowPingToast] = useState<boolean>(false);
 
   // Solar System Scope Orrery Modal state
   const [showOrreryModal, setShowOrreryModal] = useState(false);
@@ -283,6 +280,14 @@ export default function Home() {
   const zoomInRef = useRef<() => void>(() => {});
   const zoomOutRef = useRef<() => void>(() => {});
   const resetViewRef = useRef<() => void>(() => {});
+  const focusOnRouteRef = useRef<() => void>(() => {});
+
+  const earthPulseRef = useRef<{
+    mesh: THREE.Mesh;
+    curve: THREE.QuadraticBezierCurve3;
+    jogjaRing: THREE.Mesh;
+    bogorRing: THREE.Mesh;
+  } | null>(null);
 
   const timeMultiplierRef = useRef<number>(1);
   const skyDomeMeshRef = useRef<THREE.Mesh | null>(null);
@@ -294,73 +299,6 @@ export default function Home() {
   useEffect(() => {
     if (skyDomeMeshRef.current) skyDomeMeshRef.current.visible = showMilkyWay;
   }, [showMilkyWay]);
-
-  // BGM CONTROLS (Sal Priadi - Dari Planet Lain)
-  const startAmbientSoundscape = () => {
-    try {
-      if (!bgmAudioRef.current) {
-        const audio = new Audio("/audio/bgm.mp3");
-        audio.loop = true;
-        audio.volume = 0.55;
-        audio.addEventListener("ended", () => {
-          audio.currentTime = 0;
-          audio.play().catch(() => {});
-        });
-        bgmAudioRef.current = audio;
-      }
-      bgmAudioRef.current
-        .play()
-        .then(() => {
-          setIsAudioPlaying(true);
-        })
-        .catch(() => {
-          setIsAudioPlaying(false);
-        });
-    } catch {
-      setIsAudioPlaying(false);
-    }
-  };
-
-  const stopAmbientSoundscape = () => {
-    try {
-      if (bgmAudioRef.current) {
-        bgmAudioRef.current.pause();
-      }
-      setIsAudioPlaying(false);
-    } catch {}
-  };
-
-  const toggleAmbientAudio = () => {
-    playSfx("click");
-    if (isAudioPlaying) {
-      stopAmbientSoundscape();
-    } else {
-      startAmbientSoundscape();
-    }
-  };
-
-  // Auto-play BGM on first user interaction
-  useEffect(() => {
-    const handleFirstUserGesture = () => {
-      if (!isAudioPlaying && !bgmAudioRef.current) {
-        startAmbientSoundscape();
-      }
-      window.removeEventListener("click", handleFirstUserGesture);
-      window.removeEventListener("keydown", handleFirstUserGesture);
-      window.removeEventListener("touchstart", handleFirstUserGesture);
-    };
-    window.addEventListener("click", handleFirstUserGesture);
-    window.addEventListener("keydown", handleFirstUserGesture);
-    window.addEventListener("touchstart", handleFirstUserGesture);
-    return () => {
-      window.removeEventListener("click", handleFirstUserGesture);
-      window.removeEventListener("keydown", handleFirstUserGesture);
-      window.removeEventListener("touchstart", handleFirstUserGesture);
-      if (bgmAudioRef.current) {
-        bgmAudioRef.current.pause();
-      }
-    };
-  }, []);
 
   const playSfx = (type: "whoosh" | "click" | "satellite" | "target") => {
     try {
@@ -592,6 +530,16 @@ export default function Home() {
       return tex;
     };
 
+    // HELPER: LAT/LON TO 3D CARTESIAN ON SPHERE
+    const getEarthVector3 = (lat: number, lon: number, radius: number) => {
+      const phi = THREE.MathUtils.degToRad(lat);
+      const theta = THREE.MathUtils.degToRad(lon);
+      const x = radius * Math.cos(phi) * Math.sin(theta);
+      const y = radius * Math.sin(phi);
+      const z = radius * Math.cos(phi) * Math.cos(theta);
+      return new THREE.Vector3(x, y, z);
+    };
+
     // 4. FULL LIVING SOLAR SYSTEM (All planets present in 3D space!)
     const planetMeshes: Record<string, THREE.Group> = {};
     const clickablePlanetMeshes: THREE.Object3D[] = [];
@@ -633,6 +581,103 @@ export default function Home() {
       sphere.userData = { planetName: name };
       grp.add(sphere);
       clickablePlanetMeshes.push(sphere);
+
+      // 3D PETA RUTE JOGJA ⇄ BOGOR PADA BUMI
+      if (name === "Bumi") {
+        const earthRouteGroup = new THREE.Group();
+        const R = d.size;
+
+        const pJogja = getEarthVector3(-7.797, 110.37, R + 0.05);
+        const pBogor = getEarthVector3(-6.595, 106.816, R + 0.05);
+
+        // Elevated arc midpoint
+        const midPoint = new THREE.Vector3()
+          .addVectors(pJogja, pBogor)
+          .multiplyScalar(0.5)
+          .normalize()
+          .multiplyScalar(R + 0.95);
+
+        const arcCurve = new THREE.QuadraticBezierCurve3(pJogja, midPoint, pBogor);
+
+        // Glowing Neon Tube
+        const tubeGeo = new THREE.TubeGeometry(arcCurve, 40, 0.08, 8, false);
+        const tubeMat = new THREE.MeshBasicMaterial({
+          color: 0xec4899,
+          transparent: true,
+          opacity: 0.9,
+        });
+        const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
+        earthRouteGroup.add(tubeMesh);
+
+        // Core cyan laser line
+        const linePoints = arcCurve.getPoints(50);
+        const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
+        const lineMat = new THREE.LineBasicMaterial({
+          color: 0x38bdf8,
+          linewidth: 2,
+        });
+        const lineMesh = new THREE.Line(lineGeo, lineMat);
+        earthRouteGroup.add(lineMesh);
+
+        // Jogja Marker (Mas Dhani - Cyan)
+        const jogjaPin = new THREE.Group();
+        jogjaPin.position.copy(pJogja);
+        const jogjaCore = new THREE.Mesh(
+          new THREE.SphereGeometry(0.18, 16, 16),
+          new THREE.MeshBasicMaterial({ color: 0x38bdf8 })
+        );
+        const jogjaRing = new THREE.Mesh(
+          new THREE.RingGeometry(0.18, 0.38, 16),
+          new THREE.MeshBasicMaterial({
+            color: 0x38bdf8,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.8,
+          })
+        );
+        jogjaRing.lookAt(pJogja.clone().multiplyScalar(2));
+        jogjaPin.add(jogjaCore);
+        jogjaPin.add(jogjaRing);
+        earthRouteGroup.add(jogjaPin);
+
+        // Bogor Marker (Sayangku - Rose/Gold)
+        const bogorPin = new THREE.Group();
+        bogorPin.position.copy(pBogor);
+        const bogorCore = new THREE.Mesh(
+          new THREE.SphereGeometry(0.18, 16, 16),
+          new THREE.MeshBasicMaterial({ color: 0xf472b6 })
+        );
+        const bogorRing = new THREE.Mesh(
+          new THREE.RingGeometry(0.18, 0.38, 16),
+          new THREE.MeshBasicMaterial({
+            color: 0xf472b6,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.8,
+          })
+        );
+        bogorRing.lookAt(pBogor.clone().multiplyScalar(2));
+        bogorPin.add(bogorCore);
+        bogorPin.add(bogorRing);
+        earthRouteGroup.add(bogorPin);
+
+        // Animated traveling pulse orb
+        const pulseMesh = new THREE.Mesh(
+          new THREE.SphereGeometry(0.15, 16, 16),
+          new THREE.MeshBasicMaterial({ color: 0xffffff })
+        );
+        pulseMesh.position.copy(pJogja);
+        earthRouteGroup.add(pulseMesh);
+
+        earthPulseRef.current = {
+          mesh: pulseMesh,
+          curve: arcCurve,
+          jogjaRing,
+          bogorRing,
+        };
+
+        sphere.add(earthRouteGroup);
+      }
 
       if (d.moon) {
         const moonGeo = new THREE.SphereGeometry(d.size * 0.25, 32, 32);
@@ -804,6 +849,27 @@ export default function Home() {
       });
     };
 
+    focusOnRouteRef.current = () => {
+      playSfx("whoosh");
+      const earthPos = PLANET_COORDS["Bumi"];
+      const R = DATA["Bumi"].size;
+      gsap.to(controls.target, {
+        x: earthPos[0],
+        y: earthPos[1],
+        z: earthPos[2],
+        duration: 1.2,
+        ease: "power3.inOut",
+      });
+      const pMid = getEarthVector3(-7.2, 108.6, R * 1.6);
+      gsap.to(camera.position, {
+        x: earthPos[0] + pMid.x,
+        y: earthPos[1] + pMid.y + 1.5,
+        z: earthPos[2] + pMid.z,
+        duration: 1.2,
+        ease: "power3.inOut",
+      });
+    };
+
     // 6. 3D RAYCASTER FOR INTERACTIVE PLANET CLICKS & HOVER
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -872,6 +938,21 @@ export default function Home() {
 
       if (skyDomeMeshRef.current) {
         skyDomeMeshRef.current.rotation.y = t * 0.0004;
+      }
+
+      // Route pulse and beacon rings animation on Earth
+      if (earthPulseRef.current?.mesh && earthPulseRef.current.curve) {
+        const progress = (Math.sin(clock.getElapsedTime() * 2.2) + 1) / 2;
+        const pt = earthPulseRef.current.curve.getPoint(progress);
+        earthPulseRef.current.mesh.position.copy(pt);
+
+        const ringScale = 1 + Math.sin(clock.getElapsedTime() * 4) * 0.25;
+        if (earthPulseRef.current.jogjaRing) {
+          earthPulseRef.current.jogjaRing.scale.set(ringScale, ringScale, 1);
+        }
+        if (earthPulseRef.current.bogorRing) {
+          earthPulseRef.current.bogorRing.scale.set(ringScale, ringScale, 1);
+        }
       }
 
       activeSatellites.forEach((sat) => {
@@ -992,23 +1073,6 @@ export default function Home() {
         </div>
 
         <div className="nav-right-cluster">
-          {/* BACKGROUND MUSIC TOGGLE */}
-          <button
-            className={`audio-toggle-btn ${isAudioPlaying ? "playing" : ""}`}
-            onClick={toggleAmbientAudio}
-            title={isAudioPlaying ? "Jeda Lagu (Sal Priadi - Dari Planet Lain)" : "Putar Lagu (Sal Priadi - Dari Planet Lain)"}
-          >
-            <span className="audio-icon">{isAudioPlaying ? "🎵" : "🔇"}</span>
-            <span className="audio-label">{isAudioPlaying ? "Dari Planet Lain ✨" : "Putar Musik"}</span>
-            {isAudioPlaying && (
-              <span className="soundwave-anim">
-                <span className="bar"></span>
-                <span className="bar"></span>
-                <span className="bar"></span>
-              </span>
-            )}
-          </button>
-
           {/* SOLAR SYSTEM SCOPE LIVE ORRERY BUTTON */}
           <button
             className="view-mode-pill"
@@ -1377,6 +1441,17 @@ export default function Home() {
             >
               Lab & Waktu
             </button>
+            {activePlanetName === "Bumi" && (
+              <button
+                className={`drawer-tab-btn ${activeTab === "map" ? "active" : ""}`}
+                onClick={() => {
+                  playSfx("click");
+                  setActiveTab("map");
+                }}
+              >
+                🗺️ Rute Jogja ⇄ Bogor
+              </button>
+            )}
             <button
               className={`drawer-tab-btn ${activeTab === "love" ? "active" : ""}`}
               onClick={() => {
@@ -1384,7 +1459,7 @@ export default function Home() {
                 setActiveTab("love");
               }}
             >
-              💖 Pesan untuk Nana
+              💖 Pesan untuk Sayang
             </button>
           </div>
         </div>
@@ -1446,6 +1521,218 @@ export default function Home() {
                   <div className="lab-res">
                     tahun ➔ Jadi: <span>{calculatedAge} tahun</span>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "map" && activePlanetName === "Bumi" && (
+          <div className="earth-route-container">
+            <div className="earth-radar-map-card">
+              <div className="radar-header">
+                <div className="radar-title-badge">
+                  <span>🗺️</span> Peta Rute: Jogja ⇄ Bogor
+                </div>
+                <div className="radar-live-indicator">
+                  <div className="radar-live-dot"></div>
+                  <span>TERHUBUNG LANGSUNG</span>
+                </div>
+              </div>
+
+              {/* RADAR SVG MAP VISUALIZER */}
+              <div className="radar-svg-wrapper">
+                <svg
+                  className="radar-svg"
+                  viewBox="0 0 500 200"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Radar Circular Grids */}
+                  <circle cx="250" cy="100" r="90" stroke="rgba(56, 189, 248, 0.15)" strokeWidth="1" strokeDasharray="4 4" />
+                  <circle cx="250" cy="100" r="60" stroke="rgba(56, 189, 248, 0.18)" strokeWidth="1" />
+                  <circle cx="250" cy="100" r="30" stroke="rgba(56, 189, 248, 0.22)" strokeWidth="1" />
+                  <line x1="250" y1="10" x2="250" y2="190" stroke="rgba(56, 189, 248, 0.12)" strokeWidth="1" />
+                  <line x1="160" y1="100" x2="340" y2="100" stroke="rgba(56, 189, 248, 0.12)" strokeWidth="1" />
+
+                  {/* Rotating Radar Sweep Line */}
+                  <line
+                    x1="250"
+                    y1="100"
+                    x2="340"
+                    y2="100"
+                    stroke="url(#radarGradient)"
+                    strokeWidth="2"
+                    className="radar-sweep-line"
+                  />
+
+                  <defs>
+                    <linearGradient id="radarGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="rgba(56, 189, 248, 0.8)" />
+                      <stop offset="100%" stopColor="rgba(56, 189, 248, 0)" />
+                    </linearGradient>
+                    <linearGradient id="routeLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#f472b6" />
+                      <stop offset="50%" stopColor="#ffffff" />
+                      <stop offset="100%" stopColor="#38bdf8" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Stylized Java Island Coast Outline */}
+                  <path
+                    d="M 60,110 Q 110,85 160,95 Q 230,80 320,105 Q 400,115 440,110 Q 420,135 340,130 Q 220,135 120,130 Z"
+                    fill="rgba(56, 189, 248, 0.06)"
+                    stroke="rgba(56, 189, 248, 0.3)"
+                    strokeWidth="1.5"
+                  />
+
+                  {/* Connection Arc Line (Bogor to Jogja) */}
+                  <path
+                    d="M 120,105 Q 240,45 360,115"
+                    fill="none"
+                    stroke="url(#routeLineGrad)"
+                    strokeWidth="2.5"
+                    className="radar-route-dash"
+                  />
+
+                  {/* Distance Pill Badge */}
+                  <g transform="translate(205, 52)">
+                    <rect width="90" height="22" rx="11" fill="rgba(15, 23, 42, 0.9)" stroke="rgba(56, 189, 248, 0.5)" strokeWidth="1" />
+                    <text x="45" y="15" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="bold" letterSpacing="0.5">
+                      ~442.8 KM
+                    </text>
+                  </g>
+
+                  {/* Bogor Marker */}
+                  <g transform="translate(120, 105)">
+                    <circle r="14" fill="rgba(244, 114, 182, 0.2)" />
+                    <circle r="8" fill="rgba(244, 114, 182, 0.4)" />
+                    <circle r="4" fill="#f472b6" />
+                    <text x="-8" y="24" fill="#fbcfe8" fontSize="10.5" fontWeight="bold">
+                      📍 Bogor (Sayangku 🌻)
+                    </text>
+                    <text x="-8" y="36" fill="#94a3b8" fontSize="8.5">
+                      6.595° S, 106.816° E
+                    </text>
+                  </g>
+
+                  {/* Jogja Marker */}
+                  <g transform="translate(360, 115)">
+                    <circle r="14" fill="rgba(56, 189, 248, 0.2)" />
+                    <circle r="8" fill="rgba(56, 189, 248, 0.4)" />
+                    <circle r="4" fill="#38bdf8" />
+                    <text x="-25" y="24" fill="#bae6fd" fontSize="10.5" fontWeight="bold">
+                      📍 Jogja (Mas Dhani 🪐)
+                    </text>
+                    <text x="-25" y="36" fill="#94a3b8" fontSize="8.5">
+                      7.797° S, 110.370° E
+                    </text>
+                  </g>
+                </svg>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="radar-actions-bar">
+                <button
+                  className="radar-action-btn radar-ping-btn"
+                  onClick={() => {
+                    playSfx("satellite");
+                    setShowPingToast(true);
+                    setTimeout(() => setShowPingToast(false), 4500);
+                  }}
+                >
+                  <span>📡</span> Kirim Sinyal Rindu (Ping Radar)
+                </button>
+                <button
+                  className="radar-action-btn radar-focus-btn"
+                  onClick={() => {
+                    focusOnRouteRef.current();
+                  }}
+                  title="Pusatkan Kamera 3D ke Jawa / Rute Jogja-Bogor"
+                >
+                  <span>🛰️</span> Fokus Kamera ke Rute 3D
+                </button>
+              </div>
+
+              {/* Ping Toast Notification */}
+              {showPingToast && (
+                <div className="ping-toast">
+                  <span>✨</span>
+                  <span><strong>Sinyal Rindu Terkirim:</strong> Sinyal cinta dan doa tulus dari Mas Dhani di Jogja telah sampai ke Bogor dengan kecepatan cahaya! 💖🌻</span>
+                </div>
+              )}
+
+              {/* Telemetry Grid */}
+              <div className="telemetry-grid">
+                <div className="telemetry-card">
+                  <div className="telemetry-label">
+                    <span>📍</span> TITIK JOGJA (MAS DHANI)
+                  </div>
+                  <div className="telemetry-val">D.I. Yogyakarta</div>
+                  <div className="telemetry-sub">7° 47&apos; 49&quot; S, 110° 22&apos; 13&quot; E • Ruang Doa & Rindu</div>
+                </div>
+
+                <div className="telemetry-card">
+                  <div className="telemetry-label">
+                    <span>🌻</span> TITIK BOGOR (SAYANGKU)
+                  </div>
+                  <div className="telemetry-val">Kota Bogor, Jawa Barat</div>
+                  <div className="telemetry-sub">6° 35&apos; 42&quot; S, 106° 47&apos; 59&quot; E • Kota Hujan & Rumah Terhangat</div>
+                </div>
+
+                <div className="telemetry-card">
+                  <div className="telemetry-label">
+                    <span>📏</span> JARAK UDARA LURUS
+                  </div>
+                  <div className="telemetry-val">442.8 Kilometer</div>
+                  <div className="telemetry-sub">Jarak Great-Circle Sphere di Permukaan Bumi</div>
+                </div>
+
+                <div className="telemetry-card">
+                  <div className="telemetry-label">
+                    <span>🛣️</span> JARAK RUTE JALUR DARAT
+                  </div>
+                  <div className="telemetry-val">~560 Kilometer</div>
+                  <div className="telemetry-sub">Melintasi Koridor Tol Trans-Jawa</div>
+                </div>
+              </div>
+
+              {/* Travel Matrix Comparison */}
+              <div className="travel-matrix">
+                <div className="travel-matrix-title">⚡ Estimasi Waktu Tempuh Jogja ⇄ Bogor</div>
+                <div className="travel-matrix-row">
+                  <div className="travel-mode">
+                    <span>✈️</span> Pesawat Udara (YIA ⇄ CGK/HLP)
+                  </div>
+                  <div className="travel-duration">~1 Jam 10 Menit</div>
+                </div>
+                <div className="travel-matrix-row">
+                  <div className="travel-mode">
+                    <span>🚄</span> Kereta Eksekutif (Taksaka / Argo Dwipangga)
+                  </div>
+                  <div className="travel-duration">~6 Jam 30 Menit</div>
+                </div>
+                <div className="travel-matrix-row">
+                  <div className="travel-mode">
+                    <span>🚗</span> Perjalanan Mobil / Tol Trans-Jawa
+                  </div>
+                  <div className="travel-duration">~7 Jam 45 Menit</div>
+                </div>
+                <div className="travel-matrix-row">
+                  <div className="travel-mode">
+                    <span>🤍</span> Sinyal Rindu & Doa Tulus Mas Dhani
+                  </div>
+                  <div className="travel-duration instant">0.000 Detik (Real-time) ✨</div>
+                </div>
+              </div>
+
+              {/* Inside Joke & Romantic Note Card */}
+              <div className="route-story-card">
+                <div className="route-story-badge">
+                  <span>💖</span> Catatan Khusus untuk Sayang
+                </div>
+                <div className="route-story-quote">
+                  &ldquo;Jauh di peta hanyalah ilusi angka di atas kertas. Dari Jogja sampai ke Bogor, rasa sayang, perhatian, dan doa mas selalu sampai tanpa perlu jeda waktu. Masih ingat candaan manis kamu dulu: &apos;nanti aku pindahin Bogor biar deketan sama Jogja&apos; hehe 🌻🤍. Mau sejauh apa pun kilometernya, tempat pulang dan tujuan mas selalu kamu.&rdquo;
                 </div>
               </div>
             </div>
