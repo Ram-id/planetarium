@@ -2774,5 +2774,679 @@ html, body {
   }
 }
 
+/* ===================================================
+   RESPONSIVE MOBILE & TABLET STYLING ADAPTATION
+   =================================================== */
+
+/* TABLET & INTERMEDIATE SCREENS (<= 1024px) */
+@media (max-width: 1024px) {
+  .spaceedu-nav {
+    flex-wrap: wrap;
+    gap: 10px;
+    left: 16px;
+    right: 16px;
+    top: 14px;
+  }
+
+  .nav-links-wrap {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 6px 14px;
+    gap: 16px;
+    white-space: nowrap;
+    justify-content: flex-start;
+  }
+
+  .nav-links-wrap::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-container {
+    top: 18%;
+  }
+
+  .hero-title {
+    font-size: 3.2rem;
+  }
+}
+
+/* MOBILE PHONES (<= 768px) */
+@media (max-width: 768px) {
+  /* 1. TOP NAVBAR */
+  .spaceedu-nav {
+    left: 10px;
+    right: 10px;
+    top: 10px;
+    gap: 8px;
+  }
+
+  .brand-logo {
+    font-size: 1.05rem;
+  }
+
+  .brand-badge {
+    font-size: 8px;
+    padding: 1px 6px;
+    letter-spacing: 0.5px;
+    margin-left: 4px;
+  }
+
+  .nav-right-cluster {
+    gap: 5px;
+  }
+
+  .view-mode-pill {
+    padding: 5px 10px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .audio-toggle-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+    gap: 5px;
+  }
+
+  .nav-cta-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .nav-links-wrap {
+    padding: 5px 12px;
+    gap: 12px;
+    border-radius: 16px;
+  }
+
+  .nav-link-btn {
+    font-size: 11px;
+    padding: 2px 4px;
+  }
+
+  /* 2. HERO SECTION */
+  .hero-container {
+    top: 18%;
+    width: 92%;
+    max-width: 92%;
+  }
+
+  .hero-eyebrow {
+    font-size: 9.5px;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+  }
+
+  .hero-title {
+    font-size: 2.3rem;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .hero-desc {
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    max-width: 92%;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .hero-cta-btn {
+    padding: 9px 24px;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+
+  /* 3. SIDE PEEK NAVIGATION */
+  .side-peek-btn {
+    top: 50%;
+    padding: 4px;
+    gap: 0;
+  }
+
+  .side-peek-left {
+    left: 8px;
+  }
+
+  .side-peek-right {
+    right: 8px;
+  }
+
+  .side-peek-btn span {
+    display: none;
+  }
+
+  .side-peek-preview {
+    width: 38px;
+    height: 38px;
+  }
+
+  /* 4. FLOATING HUD CONTROLS */
+  .floating-dhani-launcher {
+    bottom: 74px;
+    left: 10px;
+    padding: 5px 12px 5px 6px;
+    gap: 6px;
+  }
+
+  .floating-dhani-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+
+  .floating-dhani-title {
+    font-size: 11px;
+  }
+
+  .floating-dhani-sub {
+    display: none;
+  }
+
+  .camera-hud-controls {
+    bottom: 74px;
+    right: 10px;
+    gap: 6px;
+  }
+
+  .cam-tool-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 13px;
+  }
+
+  .lanterns-sky-tray {
+    bottom: 125px;
+    right: 10px;
+    padding: 5px 11px;
+    gap: 6px;
+  }
+
+  .tray-flame {
+    font-size: 14px;
+  }
+
+  .tray-title {
+    font-size: 10.5px;
+  }
+
+  /* 5. STELLARIUM DOCK (Smooth Horizontal Scroll on Mobile) */
+  .stellarium-dock {
+    bottom: 12px;
+    width: 95vw;
+    max-width: 95vw;
+    padding: 6px 8px;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-radius: 18px;
+    justify-content: flex-start;
+  }
+
+  .stellarium-dock::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dock-btn {
+    padding: 5px 10px;
+    font-size: 10.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .dock-divider {
+    flex-shrink: 0;
+  }
+
+  /* 6. INFO DRAWER */
+  #info-drawer {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 22px 22px 0 0;
+    padding: 16px 16px 28px;
+    max-height: 82vh;
+  }
+
+  .drawer-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .drawer-planet-name {
+    font-size: 1.35rem;
+  }
+
+  .drawer-tab-selector {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .drawer-tab-selector::-webkit-scrollbar {
+    display: none;
+  }
+
+  .drawer-tab-btn {
+    padding: 6px 8px;
+    font-size: 10.5px;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .metric-item {
+    padding: 8px 6px;
+  }
+
+  .metric-lbl {
+    font-size: 8.5px;
+  }
+
+  .metric-val {
+    font-size: 11px;
+  }
+
+  .drawer-desc-box {
+    font-size: 12px;
+    padding: 10px 12px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .lab-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .drawer-actions-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .action-btn-primary,
+  .action-btn-secondary {
+    width: 100%;
+    padding: 11px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  /* 7. MODALS (Full Mobile Compatibility) */
+  .chat-modal-backdrop,
+  .orrery-modal-backdrop,
+  .lantern-modal-backdrop,
+  .lantern-view-modal-backdrop,
+  .polaroid-modal-backdrop,
+  .capsule-modal-backdrop,
+  .game-modal-backdrop {
+    padding: 8px;
+  }
+
+  .chat-messenger-window {
+    width: 100%;
+    max-width: 100%;
+    height: 92vh;
+    max-height: 92vh;
+    border-radius: 18px;
+  }
+
+  .chat-header {
+    padding: 10px 14px;
+  }
+
+  .chat-avatar-wrap {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .chat-name-title {
+    font-size: 13.5px;
+  }
+
+  .chat-status-subtitle {
+    font-size: 10.5px;
+  }
+
+  .chat-bubble {
+    max-width: 90%;
+    font-size: 12.5px;
+    padding: 8px 12px;
+  }
+
+  .chat-input-bar {
+    padding: 8px 10px 10px;
+  }
+
+  .chat-input-box {
+    font-size: 12.5px;
+    padding: 8px 12px;
+  }
+
+  .chat-send-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .orrery-modal-window {
+    width: 100%;
+    height: 92vh;
+    border-radius: 16px;
+  }
+
+  .orrery-modal-header {
+    padding: 10px 14px;
+  }
+
+  .orrery-modal-title {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .orrery-badge {
+    display: none;
+  }
+
+  .lantern-modal-window {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 18px;
+  }
+
+  .lantern-modal-header {
+    padding: 12px 16px;
+  }
+
+  .lantern-modal-title {
+    font-size: 14px;
+  }
+
+  .lantern-modal-body {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .lantern-prompt-card {
+    padding: 12px;
+  }
+
+  .lantern-prompt-text {
+    font-size: 12px;
+  }
+
+  .lantern-color-row {
+    gap: 6px;
+  }
+
+  .lantern-color-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .lantern-textarea {
+    height: 90px;
+    font-size: 12.5px;
+    padding: 10px 12px;
+  }
+
+  .lantern-author-input {
+    font-size: 12.5px;
+    padding: 8px 12px;
+  }
+
+  .lantern-launch-btn {
+    padding: 12px;
+    font-size: 12.5px;
+  }
+
+  .lantern-view-card {
+    padding: 16px;
+    gap: 12px;
+    border-radius: 18px;
+  }
+
+  .lantern-paper-quote {
+    font-size: 14px;
+  }
+
+  .lantern-actions-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .polaroid-modal-window {
+    max-height: 92vh;
+    border-radius: 18px;
+  }
+
+  .polaroid-preview-area {
+    padding: 16px;
+  }
+
+  .polaroid-card {
+    width: 230px;
+    padding: 10px 10px 16px 10px;
+  }
+
+  .polaroid-caption-text {
+    font-size: 14px;
+  }
+
+  .polaroid-controls-box {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  .polaroid-filter-row {
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .filter-chip-btn {
+    padding: 4px 10px;
+    font-size: 10.5px;
+  }
+
+  .polaroid-caption-input {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .polaroid-actions-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .polaroid-download-btn {
+    padding: 10px;
+    font-size: 12.5px;
+  }
+
+  .capsule-modal-window {
+    max-height: 92vh;
+    border-radius: 18px;
+  }
+
+  .capsule-tab-bar {
+    padding: 4px 6px;
+    gap: 4px;
+  }
+
+  .capsule-tab-btn {
+    padding: 7px 8px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .capsule-content-body {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .love-letter-paper {
+    padding: 18px 14px;
+  }
+
+  .wax-seal {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+    right: 14px;
+    top: -12px;
+  }
+
+  .letter-heading {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .letter-paragraphs {
+    font-size: 12px;
+    line-height: 1.65;
+    gap: 10px;
+  }
+
+  .letter-sign-off {
+    font-size: 12px;
+    margin-top: 14px;
+  }
+
+  .reasons-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .reason-card {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .reason-text {
+    font-size: 12px;
+  }
+
+  .quiz-q-text {
+    font-size: 13.5px;
+  }
+
+  .quiz-options-list {
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .quiz-option-btn {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .quiz-feedback-box {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .quiz-next-btn {
+    padding: 10px;
+    font-size: 12.5px;
+  }
+
+  .quiz-trophy-card {
+    padding: 16px;
+  }
+
+  .trophy-emoji {
+    font-size: 42px;
+  }
+
+  .game-modal-window {
+    max-height: 92vh;
+    border-radius: 18px;
+  }
+
+  .game-hud-bar {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .game-canvas-wrap {
+    height: 290px;
+  }
+
+  .game-touch-controls {
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .game-touch-btn {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  .game-overlay-title {
+    font-size: 18px;
+  }
+
+  .game-overlay-sub {
+    font-size: 12px;
+  }
+
+  .game-start-btn {
+    padding: 10px 22px;
+    font-size: 13px;
+  }
+
+  .cosmic-toast {
+    width: 88vw;
+    max-width: 88vw;
+    font-size: 11px;
+    bottom: 74px;
+    padding: 8px 14px;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* EXTRA SMALL PHONES (<= 480px) */
+@media (max-width: 480px) {
+  .brand-badge {
+    display: none;
+  }
+
+  .audio-toggle-btn .audio-label {
+    display: none;
+  }
+
+  .hero-container {
+    top: 20%;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-desc {
+    -webkit-line-clamp: 2;
+  }
+}
+
 
 
