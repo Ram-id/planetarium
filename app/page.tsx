@@ -67,6 +67,30 @@ const LINEAR_COORDS: Record<PlanetName, number> = {
   Neptunus: 790,
 };
 
+const PLANET_ICONS: Record<PlanetName, string> = {
+  Matahari: "☀️",
+  Merkurius: "☿",
+  Venus: "♀",
+  Bumi: "🌍",
+  Mars: "♂",
+  Yupiter: "♃",
+  Saturnus: "♄",
+  Uranus: "♅",
+  Neptunus: "♆",
+};
+
+const PLANET_GLOW: Record<PlanetName, { color: number; intensity: number; power: number }> = {
+  Matahari: { color: 0xff8811, intensity: 2.2, power: 2.0 },
+  Merkurius: { color: 0x94a3b8, intensity: 0.6, power: 3.2 },
+  Venus: { color: 0xf59e0b, intensity: 1.4, power: 2.5 },
+  Bumi: { color: 0x38bdf8, intensity: 1.6, power: 2.4 },
+  Mars: { color: 0xf97316, intensity: 1.1, power: 2.8 },
+  Yupiter: { color: 0xfbbf24, intensity: 1.3, power: 2.5 },
+  Saturnus: { color: 0xfde047, intensity: 1.2, power: 2.6 },
+  Uranus: { color: 0x06b6d4, intensity: 1.5, power: 2.3 },
+  Neptunus: { color: 0x3b82f6, intensity: 1.7, power: 2.2 },
+};
+
 const DATA: Record<PlanetName, PlanetInfo> = {
   Matahari: {
     size: 28.0,
@@ -293,6 +317,7 @@ export default function Home() {
   const [userAge, setUserAge] = useState<number>(20);
 
   const [showMilkyWay, setShowMilkyWay] = useState<boolean>(true);
+  const [showOrbitLabels, setShowOrbitLabels] = useState<boolean>(true);
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
 
   // Background Music state & refs (User Uploaded Soundtrack)
@@ -334,12 +359,14 @@ export default function Home() {
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
   const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
   const switchLayoutModeRef = useRef<(mode: LayoutMode) => void>(() => {});
+  const viewSolarOverviewRef = useRef<() => void>(() => {});
   const zoomInRef = useRef<() => void>(() => {});
   const zoomOutRef = useRef<() => void>(() => {});
   const resetViewRef = useRef<() => void>(() => {});
 
   const layoutModeRef = useRef<LayoutMode>("orbit");
   const timeMultiplierRef = useRef<number>(1);
+  const showOrbitLabelsRef = useRef<boolean>(true);
   const skyDomeMeshRef = useRef<THREE.Mesh | null>(null);
 
   useEffect(() => {
@@ -349,6 +376,10 @@ export default function Home() {
   useEffect(() => {
     timeMultiplierRef.current = timeMultiplier;
   }, [timeMultiplier]);
+
+  useEffect(() => {
+    showOrbitLabelsRef.current = showOrbitLabels;
+  }, [showOrbitLabels]);
 
   useEffect(() => {
     if (skyDomeMeshRef.current) skyDomeMeshRef.current.visible = showMilkyWay;
@@ -589,17 +620,17 @@ export default function Home() {
     controls.maxDistance = 3500;
     controls.target.set(earthOrbitR, 0, 0);
 
-    // 2. CENTRAL SOLAR LIGHTING (Physical Source of Illumination from Sun)
-    const sunPointLight = new THREE.PointLight(0xfffaed, 4.5, 3000, 0.4);
+    // 2. CENTRAL SOLAR LIGHTING (Physical Radiant Light from the Sun)
+    const sunPointLight = new THREE.PointLight(0xfffaed, 5.0, 3500, 0.4);
     sunPointLight.position.set(0, 0, 0);
     scene.add(sunPointLight);
 
     // Subtle deep-space ambient light
-    const ambientLight = new THREE.AmbientLight(0x1a263e, 0.45);
+    const ambientLight = new THREE.AmbientLight(0x1a263e, 0.5);
     scene.add(ambientLight);
 
     // Keylight helper for active inspection
-    const inspectLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    const inspectLight = new THREE.DirectionalLight(0xffffff, 1.3);
     inspectLight.position.set(earthOrbitR + 20, 20, 30);
     scene.add(inspectLight);
 
@@ -630,7 +661,7 @@ export default function Home() {
     const skyDomeMat = new THREE.MeshBasicMaterial({
       side: THREE.BackSide,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.92,
     });
     texLoader.load("/textures/milkyway_stellarium.jpg", (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace;
@@ -641,15 +672,56 @@ export default function Home() {
       skyDomeMat.needsUpdate = true;
     });
     const skyDome = new THREE.Mesh(skyDomeGeo, skyDomeMat);
-    // Authentic galactic plane tilt ~60 degrees relative to ecliptic
     skyDome.rotation.z = THREE.MathUtils.degToRad(60.2);
     skyDome.rotation.x = THREE.MathUtils.degToRad(27.4);
     scene.add(skyDome);
     skyDomeMeshRef.current = skyDome;
 
-    // 4. ASTEROID BELT (Sabuk Asteroid Mars - Yupiter at 2.2 - 3.2 AU)
-    const asteroidCount = 750;
-    const asteroidGeo = new THREE.DodecahedronGeometry(0.7, 1);
+    // 4. COSMIC STARDUST & ECLIPTIC AMBIENT PARTICLES
+    const dustCount = 1200;
+    const dustGeo = new THREE.BufferGeometry();
+    const dustPositions = new Float32Array(dustCount * 3);
+    const dustColors = new Float32Array(dustCount * 3);
+
+    for (let i = 0; i < dustCount; i++) {
+      const r = 50 + Math.random() * 2500;
+      const th = Math.random() * Math.PI * 2;
+      const y = (Math.random() - 0.5) * 55;
+      dustPositions[i * 3] = Math.cos(th) * r;
+      dustPositions[i * 3 + 1] = y;
+      dustPositions[i * 3 + 2] = Math.sin(th) * r;
+
+      const colorChoice = Math.random();
+      if (colorChoice > 0.6) {
+        dustColors[i * 3] = 0.35;
+        dustColors[i * 3 + 1] = 0.75;
+        dustColors[i * 3 + 2] = 1.0;
+      } else if (colorChoice > 0.3) {
+        dustColors[i * 3] = 1.0;
+        dustColors[i * 3 + 1] = 0.85;
+        dustColors[i * 3 + 2] = 0.45;
+      } else {
+        dustColors[i * 3] = 0.9;
+        dustColors[i * 3 + 1] = 0.95;
+        dustColors[i * 3 + 2] = 1.0;
+      }
+    }
+    dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
+    dustGeo.setAttribute("color", new THREE.BufferAttribute(dustColors, 3));
+    const dustMat = new THREE.PointsMaterial({
+      size: 2.2,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const dustParticles = new THREE.Points(dustGeo, dustMat);
+    scene.add(dustParticles);
+
+    // 5. ASTEROID BELT (Sabuk Asteroid Mars - Yupiter at 2.2 - 3.2 AU)
+    const asteroidCount = 800;
+    const asteroidGeo = new THREE.DodecahedronGeometry(0.75, 1);
     const asteroidMat = new THREE.MeshStandardMaterial({
       color: 0x8c827a,
       roughness: 0.85,
@@ -676,13 +748,54 @@ export default function Home() {
     asteroidInstanced.instanceMatrix.needsUpdate = true;
     scene.add(asteroidInstanced);
 
-    // 5. SOLAR SYSTEM ARCHITECTURE (All 8 Planets + Sun + Moon + Saturn Rings)
+    // Helper: Atmospheric Fresnel Inverted-Rim Shader
+    function createAtmosphereMaterial(colorHex: number, intensity: number = 1.3, power: number = 2.6) {
+      return new THREE.ShaderMaterial({
+        uniforms: {
+          glowColor: { value: new THREE.Color(colorHex) },
+          intensity: { value: intensity },
+          power: { value: power },
+        },
+        vertexShader: `
+          varying vec3 vNormal;
+          varying vec3 vPosition;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 glowColor;
+          uniform float intensity;
+          uniform float power;
+          varying vec3 vNormal;
+          varying vec3 vPosition;
+          void main() {
+            vec3 viewDir = normalize(-vPosition);
+            float rim = 1.0 - max(0.0, dot(vNormal, viewDir));
+            float alpha = pow(rim, power) * intensity;
+            gl_FragColor = vec4(glowColor, alpha);
+          }
+        `,
+        blending: THREE.AdditiveBlending,
+        side: THREE.BackSide,
+        transparent: true,
+        depthWrite: false,
+      });
+    }
+
+    // 6. SOLAR SYSTEM ARCHITECTURE (All 8 Planets + Sun + Moon + Saturn Rings + Glow Halos)
     const planetGroupMap: Record<string, THREE.Group> = {};
     const planetBodyMap: Record<string, THREE.Group> = {};
     const planetSphereMap: Record<string, THREE.Mesh> = {};
     const orbitLineMap: Record<string, THREE.Line> = {};
+    const orbitPulseMap: Record<string, THREE.Mesh> = {};
     const clickablePlanetMeshes: THREE.Object3D[] = [];
     const planetAngles: Record<string, number> = {};
+
+    let sunCoronaMat: THREE.ShaderMaterial | null = null;
+    let earthCloudMesh: THREE.Mesh | null = null;
 
     ORDER.forEach((name) => {
       const d = DATA[name];
@@ -693,7 +806,7 @@ export default function Home() {
       scene.add(pivotGrp);
       planetGroupMap[name] = pivotGrp;
 
-      // Draw Glowing Keplerian Orbit Ring in 3D Space
+      // Draw High-Resolution Glowing Keplerian Orbit Ring in 3D Space
       if (d.orbitRadius > 0) {
         const orbitCurve = new THREE.EllipseCurve(
           0,
@@ -705,18 +818,29 @@ export default function Home() {
           false,
           0
         );
-        const orbitPts = orbitCurve.getPoints(128);
+        const orbitPts = orbitCurve.getPoints(256);
         const orbitGeo = new THREE.BufferGeometry().setFromPoints(
           orbitPts.map((p) => new THREE.Vector3(p.x, 0, p.y))
         );
         const orbitMat = new THREE.LineBasicMaterial({
-          color: 0x38bdf8,
+          color: name === "Bumi" ? 0x60a5fa : 0x38bdf8,
           transparent: true,
-          opacity: 0.16,
+          opacity: name === "Bumi" ? 0.65 : 0.22,
         });
         const orbitLine = new THREE.Line(orbitGeo, orbitMat);
         pivotGrp.add(orbitLine);
         orbitLineMap[name] = orbitLine;
+
+        // Glowing Orbital Energy Pulse Bead along the track
+        const pulseGeo = new THREE.SphereGeometry(1.1, 16, 16);
+        const pulseMat = new THREE.MeshBasicMaterial({
+          color: d.color || 0x38bdf8,
+          transparent: true,
+          opacity: 0.85,
+        });
+        const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
+        pivotGrp.add(pulseMesh);
+        orbitPulseMap[name] = pulseMesh;
       }
 
       // Planet Body Group (Translates along orbit or linear position)
@@ -739,7 +863,7 @@ export default function Home() {
         sphereMat = new THREE.MeshStandardMaterial({
           color: 0xffeedd,
           emissive: 0xffaa22,
-          emissiveIntensity: 1.8,
+          emissiveIntensity: 2.0,
           roughness: 0.15,
         });
         texLoader.load(`/textures/${d.tex}`, (tex) => {
@@ -747,6 +871,80 @@ export default function Home() {
           (sphereMat as THREE.MeshStandardMaterial).emissiveMap = tex;
           sphereMat.needsUpdate = true;
         });
+
+        // Pulsing Solar Corona Glow Shell
+        const coronaGeo = new THREE.SphereGeometry(d.size * 1.18, 64, 64);
+        sunCoronaMat = new THREE.ShaderMaterial({
+          uniforms: {
+            time: { value: 0 },
+            coronaColor: { value: new THREE.Color(0xff7700) },
+            coreColor: { value: new THREE.Color(0xfff3cc) },
+          },
+          vertexShader: `
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            void main() {
+              vNormal = normalize(normalMatrix * normal);
+              vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            uniform float time;
+            uniform vec3 coronaColor;
+            uniform vec3 coreColor;
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            void main() {
+              vec3 viewDir = normalize(-vPosition);
+              float rim = 1.0 - max(0.0, dot(vNormal, viewDir));
+              float pulse = 0.88 + 0.12 * sin(time * 2.5);
+              float alpha = pow(rim, 2.2) * 1.8 * pulse;
+              vec3 col = mix(coronaColor, coreColor, pow(rim, 4.0));
+              gl_FragColor = vec4(col, alpha);
+            }
+          `,
+          blending: THREE.AdditiveBlending,
+          side: THREE.BackSide,
+          transparent: true,
+          depthWrite: false,
+        });
+        const coronaMesh = new THREE.Mesh(coronaGeo, sunCoronaMat);
+        bodyGrp.add(coronaMesh);
+
+        // Outer Soft Solar Flare Aura
+        const outerAuraGeo = new THREE.SphereGeometry(d.size * 1.48, 48, 48);
+        const outerAuraMat = new THREE.ShaderMaterial({
+          uniforms: {
+            auraColor: { value: new THREE.Color(0xff4400) },
+          },
+          vertexShader: `
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            void main() {
+              vNormal = normalize(normalMatrix * normal);
+              vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            uniform vec3 auraColor;
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            void main() {
+              vec3 viewDir = normalize(-vPosition);
+              float rim = 1.0 - max(0.0, dot(vNormal, viewDir));
+              float alpha = pow(rim, 3.2) * 0.85;
+              gl_FragColor = vec4(auraColor, alpha);
+            }
+          `,
+          blending: THREE.AdditiveBlending,
+          side: THREE.BackSide,
+          transparent: true,
+          depthWrite: false,
+        });
+        const outerAuraMesh = new THREE.Mesh(outerAuraGeo, outerAuraMat);
+        bodyGrp.add(outerAuraMesh);
       } else {
         sphereMat = new THREE.MeshStandardMaterial({
           color: d.color,
@@ -757,6 +955,13 @@ export default function Home() {
           (sphereMat as THREE.MeshStandardMaterial).map = tex;
           sphereMat.needsUpdate = true;
         });
+
+        // Atmospheric Halo Glow Shell
+        const glowCfg = PLANET_GLOW[name] || { color: 0x38bdf8, intensity: 1.2, power: 2.5 };
+        const haloGeo = new THREE.SphereGeometry(d.size * 1.15, 48, 48);
+        const haloMat = createAtmosphereMaterial(glowCfg.color, glowCfg.intensity, glowCfg.power);
+        const haloMesh = new THREE.Mesh(haloGeo, haloMat);
+        bodyGrp.add(haloMesh);
       }
 
       const sphere = new THREE.Mesh(sphereGeo, sphereMat);
@@ -768,6 +973,25 @@ export default function Home() {
       bodyGrp.add(sphere);
       planetSphereMap[name] = sphere;
       clickablePlanetMeshes.push(sphere);
+
+      // Earth Cloud Layer
+      if (name === "Bumi") {
+        const cloudGeo = new THREE.SphereGeometry(d.size * 1.018, 64, 64);
+        const cloudMat = new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.35,
+          roughness: 0.8,
+          blending: THREE.AdditiveBlending,
+        });
+        texLoader.load(`/textures/${d.tex}`, (tex) => {
+          cloudMat.map = tex;
+          cloudMat.needsUpdate = true;
+        });
+        earthCloudMesh = new THREE.Mesh(cloudGeo, cloudMat);
+        earthCloudMesh.rotation.z = THREE.MathUtils.degToRad(-d.axialTilt);
+        bodyGrp.add(earthCloudMesh);
+      }
 
       // Moon for Earth
       if (d.moon) {
@@ -827,7 +1051,7 @@ export default function Home() {
       }
     });
 
-    // 6. ACTIVE SATELLITE LAUNCHER
+    // 7. ACTIVE SATELLITE LAUNCHER
     const activeSatellites: THREE.Group[] = [];
     const launchSatellite = () => {
       const pData = DATA[activeKey];
@@ -870,6 +1094,21 @@ export default function Home() {
       playSfx("whoosh");
 
       const d = DATA[name];
+
+      // Highlight active planet orbit line with its distinct color
+      ORDER.forEach((pName) => {
+        const oLine = orbitLineMap[pName];
+        if (oLine) {
+          const mat = oLine.material as THREE.LineBasicMaterial;
+          if (pName === name) {
+            mat.opacity = 0.65;
+            mat.color.setHex(DATA[pName].color || 0x38bdf8);
+          } else {
+            mat.opacity = 0.22;
+            mat.color.setHex(0x38bdf8);
+          }
+        }
+      });
 
       if (layoutModeRef.current === "linear") {
         const posX = LINEAR_COORDS[name];
@@ -918,6 +1157,26 @@ export default function Home() {
     }
     navigateToPlanetRef.current = navigateToPlanet;
 
+    // SOLAR OVERVIEW CAMERA PRESET (Pandangan Semesta Penuh)
+    const viewSolarOverview = () => {
+      playSfx("whoosh");
+      gsap.to(controls.target, {
+        x: 0,
+        y: 0,
+        z: 0,
+        duration: 1.6,
+        ease: "power3.inOut",
+      });
+      gsap.to(camera.position, {
+        x: 0,
+        y: 580,
+        z: 1100,
+        duration: 1.6,
+        ease: "power3.inOut",
+      });
+    };
+    viewSolarOverviewRef.current = viewSolarOverview;
+
     // DUAL MODE SWITCHER (Orbit 3D vs Berjajar Linear)
     const switchLayoutMode = (mode: LayoutMode) => {
       playSfx("whoosh");
@@ -925,9 +1184,12 @@ export default function Home() {
       setLayoutMode(mode);
 
       if (mode === "linear") {
-        // Hide orbital rings and asteroid belt
+        // Hide orbital rings, pulse beads, and asteroid belt
         Object.values(orbitLineMap).forEach((line) => {
           line.visible = false;
+        });
+        Object.values(orbitPulseMap).forEach((pulse) => {
+          pulse.visible = false;
         });
         if (asteroidInstanced) asteroidInstanced.visible = false;
 
@@ -963,9 +1225,12 @@ export default function Home() {
           ease: "power3.inOut",
         });
       } else {
-        // Orbit mode: restore orbital lines and asteroid belt
+        // Orbit mode: restore orbital lines, pulse beads, and asteroid belt
         Object.values(orbitLineMap).forEach((line) => {
           line.visible = true;
+        });
+        Object.values(orbitPulseMap).forEach((pulse) => {
+          pulse.visible = true;
         });
         if (asteroidInstanced) asteroidInstanced.visible = true;
 
@@ -1025,9 +1290,9 @@ export default function Home() {
       playSfx("click");
       const dir = new THREE.Vector3().subVectors(controls.target, camera.position).normalize();
       gsap.to(camera.position, {
-        x: camera.position.x + dir.x * 10,
-        y: camera.position.y + dir.y * 10,
-        z: camera.position.z + dir.z * 10,
+        x: camera.position.x + dir.x * 12,
+        y: camera.position.y + dir.y * 12,
+        z: camera.position.z + dir.z * 12,
         duration: 0.4,
         ease: "power2.out",
       });
@@ -1037,9 +1302,9 @@ export default function Home() {
       playSfx("click");
       const dir = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
       gsap.to(camera.position, {
-        x: camera.position.x + dir.x * 20,
-        y: camera.position.y + dir.y * 20,
-        z: camera.position.z + dir.z * 20,
+        x: camera.position.x + dir.x * 24,
+        y: camera.position.y + dir.y * 24,
+        z: camera.position.z + dir.z * 24,
         duration: 0.4,
         ease: "power2.out",
       });
@@ -1087,7 +1352,7 @@ export default function Home() {
       }
     };
 
-    // 7. RAYCASTER FOR INTERACTIVE 3D PLANET CLICKS
+    // 8. RAYCASTER FOR INTERACTIVE 3D PLANET CLICKS
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     let isDragging = false;
@@ -1151,11 +1416,21 @@ export default function Home() {
     function animate() {
       animFrameId = requestAnimationFrame(animate);
       const speedFactor = timeMultiplierRef.current;
-      const t = clock.getElapsedTime() * speedFactor;
+      const t = clock.getElapsedTime();
+
+      // Sun Corona Shader pulse animation
+      if (sunCoronaMat) {
+        sunCoronaMat.uniforms.time.value = t;
+      }
 
       // Milky Way slow cosmic rotation
       if (skyDomeMeshRef.current) {
         skyDomeMeshRef.current.rotation.y = t * 0.0003;
+      }
+
+      // Cosmic dust particles gentle drift
+      if (dustParticles) {
+        dustParticles.rotation.y = t * 0.0006;
       }
 
       // Asteroid belt orbital motion (only in orbit mode)
@@ -1186,12 +1461,28 @@ export default function Home() {
             0,
             Math.sin(curAng) * d.orbitRadius
           );
+
+          // Orbit Pulse Bead glide
+          const pulseMesh = orbitPulseMap[name];
+          if (pulseMesh) {
+            const pulseAng = curAng + Math.PI * 0.35;
+            pulseMesh.position.set(
+              Math.cos(pulseAng) * d.orbitRadius,
+              0,
+              Math.sin(pulseAng) * d.orbitRadius
+            );
+          }
         }
 
         // Axial Spin (Rotasi pada poros)
         if (sphere) {
-          const spinSpeed = (24.0 / d.rotationHours) * 0.02 * speedFactor;
+          const spinSpeed = (24.0 / d.rotationHours) * 0.02 * (speedFactor === 0 ? 0.005 : speedFactor);
           sphere.rotation.y += spinSpeed;
+        }
+
+        // Earth Clouds dynamic offset rotation
+        if (name === "Bumi" && earthCloudMesh) {
+          earthCloudMesh.rotation.y += 0.02 * (speedFactor === 0 ? 0.006 : speedFactor) * 1.15;
         }
 
         // Moon Orbiting Earth
@@ -1199,7 +1490,7 @@ export default function Home() {
           bodyGrp.children.forEach((c) => {
             if (c.userData.isMoon) {
               const moonR = d.size + 9.0;
-              const moonAng = t * 1.8;
+              const moonAng = t * 1.8 * (speedFactor === 0 ? 0.1 : speedFactor);
               c.position.set(
                 Math.cos(moonAng) * moonR,
                 Math.sin(moonAng) * 1.5,
@@ -1218,7 +1509,7 @@ export default function Home() {
           const worldPos = new THREE.Vector3();
           targetBody.getWorldPosition(worldPos);
 
-          u.angle += 0.02 * u.speed * speedFactor;
+          u.angle += 0.02 * u.speed * (speedFactor === 0 ? 0.1 : speedFactor);
           sat.position.x = worldPos.x + Math.cos(u.angle) * u.radius;
           sat.position.z = worldPos.z + Math.sin(u.angle) * u.radius;
           sat.position.y = worldPos.y + Math.sin(u.angle * 2) * u.inclination * u.radius;
@@ -1226,14 +1517,46 @@ export default function Home() {
         }
       });
 
-      // Smooth tracking of active planet in orbit mode
-      if (layoutModeRef.current === "orbit") {
+      // Ultra-smooth zero-jitter camera tracking of active planet in orbit mode
+      if (layoutModeRef.current === "orbit" && activeKey) {
         const activeBody = planetBodyMap[activeKey];
         if (activeBody) {
           const targetPos = new THREE.Vector3();
           activeBody.getWorldPosition(targetPos);
+          const prevTarget = controls.target.clone();
           controls.target.lerp(targetPos, 0.08);
+          const delta = new THREE.Vector3().subVectors(controls.target, prevTarget);
+          camera.position.add(delta);
         }
+      }
+
+      // Update 3D Floating Planet Badges screen positions
+      if (layoutModeRef.current === "orbit" && showOrbitLabelsRef.current) {
+        ORDER.forEach((name) => {
+          const el = document.getElementById(`planet-badge-${name}`);
+          const body = planetBodyMap[name];
+          if (el && body) {
+            const p3d = new THREE.Vector3();
+            body.getWorldPosition(p3d);
+            const d = DATA[name];
+            p3d.y += d.size * 1.35 + 2.5;
+            p3d.project(camera);
+            const isVisible = p3d.z < 1.0;
+            if (isVisible) {
+              const sx = (p3d.x * 0.5 + 0.5) * window.innerWidth;
+              const sy = (-(p3d.y * 0.5) + 0.5) * window.innerHeight;
+              el.style.transform = `translate3d(${sx}px, ${sy}px, 0)`;
+              el.style.display = "flex";
+            } else {
+              el.style.display = "none";
+            }
+          }
+        });
+      } else {
+        ORDER.forEach((name) => {
+          const el = document.getElementById(`planet-badge-${name}`);
+          if (el) el.style.display = "none";
+        });
       }
 
       controls.update();
@@ -1468,6 +1791,40 @@ export default function Home() {
         >
           ⟲
         </button>
+        <button
+          className="cam-tool-btn"
+          onClick={() => viewSolarOverviewRef.current()}
+          title="Pandangan Semesta Penuh (Solar System Overview)"
+          style={{ fontSize: "13px" }}
+        >
+          🔭
+        </button>
+      </div>
+
+      {/* 3D ORBIT FLOATING PLANET BADGES & BEACONS LAYER */}
+      <div className="orbit-labels-layer">
+        {ORDER.map((name) => {
+          const d = DATA[name];
+          const icon = PLANET_ICONS[name] || "🪐";
+          return (
+            <div
+              key={name}
+              id={`planet-badge-${name}`}
+              className={`planet-orbit-badge ${activePlanetName === name ? "active" : ""}`}
+              onClick={() => {
+                playSfx("target");
+                navigateToPlanetRef.current(name);
+              }}
+              title={`Fokus ke ${name} (${d.realAU})`}
+            >
+              <span className="badge-icon">{icon}</span>
+              <div className="badge-text-wrap">
+                <span className="badge-name">{name}</span>
+                <span className="badge-dist">{d.realAU}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* STELLARIUM DOCK */}
@@ -1491,6 +1848,27 @@ export default function Home() {
 
         <div className="dock-divider"></div>
 
+        {/* Solar System Full Overview Button */}
+        <button
+          className="dock-btn"
+          onClick={() => viewSolarOverviewRef.current()}
+          title="Lihat Seluruh Tata Surya dari Sudut Orbit Kosmik"
+        >
+          🔭 Pandangan Semesta
+        </button>
+
+        {/* Orbit Labels Toggle */}
+        <button
+          className={`dock-btn ${showOrbitLabels ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setShowOrbitLabels(!showOrbitLabels);
+          }}
+          title="Tampilkan / Sembunyikan Label Nama & Jarak Orbit Planet"
+        >
+          🏷️ Label Orbit
+        </button>
+
         <button
           className={`dock-btn ${showMilkyWay ? "active" : ""}`}
           onClick={() => {
@@ -1510,10 +1888,22 @@ export default function Home() {
           }}
           title="Buka Simulasi Orbit Heliosentris Solar System Scope"
         >
-          🔭 Orrery Sandbox
+          🪐 Orrery Sandbox
         </button>
 
         <div className="dock-divider"></div>
+
+        {/* Play/Pause Orbit Time Multiplier */}
+        <button
+          className={`dock-btn ${timeMultiplier === 0 ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setTimeMultiplier(timeMultiplier === 0 ? 1 : 0);
+          }}
+          title={timeMultiplier === 0 ? "Lanjutkan Gerakan Orbit" : "Jeda Gerakan Orbit"}
+        >
+          {timeMultiplier === 0 ? "▶️ Lanjut" : "⏸️ Jeda"}
+        </button>
 
         <button
           className={`dock-btn ${timeMultiplier === 1 ? "active" : ""}`}
@@ -1521,6 +1911,7 @@ export default function Home() {
             playSfx("click");
             setTimeMultiplier(1);
           }}
+          title="Kecepatan Orbit Realistis 1x"
         >
           1x
         </button>
@@ -1530,6 +1921,7 @@ export default function Home() {
             playSfx("click");
             setTimeMultiplier(5);
           }}
+          title="Kecepatan Orbit 5x"
         >
           5x
         </button>
@@ -1539,6 +1931,7 @@ export default function Home() {
             playSfx("click");
             setTimeMultiplier(25);
           }}
+          title="Kecepatan Orbit 25x"
         >
           25x
         </button>
@@ -1548,6 +1941,7 @@ export default function Home() {
             playSfx("click");
             setTimeMultiplier(100);
           }}
+          title="Kecepatan Orbit 100x"
         >
           100x
         </button>

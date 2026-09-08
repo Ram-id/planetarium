@@ -1505,4 +1505,89 @@ html, body {
   font-size: 10.5px;
 }
 
+/* ===================================================
+   3D ORBIT FLOATING PLANET BADGES & BEACONS
+   =================================================== */
+
+.orbit-labels-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.planet-orbit-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  transform: translate3d(-9999px, -9999px, 0);
+  margin-left: -55px;
+  margin-top: -38px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(8, 14, 30, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 4px 12px 4px 8px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(56, 189, 248, 0.15);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+.planet-orbit-badge:hover {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: #38bdf8;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.5);
+  transform: scale(1.1) !important;
+}
+
+.planet-orbit-badge.active {
+  background: rgba(30, 58, 138, 0.85);
+  border-color: #60a5fa;
+  box-shadow: 0 0 30px rgba(96, 165, 250, 0.6);
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  flex-shrink: 0;
+}
+
+.badge-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.badge-text-wrap {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.badge-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.badge-dist {
+  font-size: 9px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.planet-orbit-badge.active .badge-name {
+  color: #93c5fd;
+}
+
 
