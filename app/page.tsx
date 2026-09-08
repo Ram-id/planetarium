@@ -2047,7 +2047,7 @@ export default function Home() {
     };
 
     const handlePointerMove = (e: PointerEvent) => {
-      if (Math.hypot(e.clientX - startX, e.clientY - startY) > 6) {
+      if (Math.hypot(e.clientX - startX, e.clientY - startY) > 18) {
         isDragging = true;
       }
 
@@ -2064,7 +2064,7 @@ export default function Home() {
     };
 
     const handlePointerUp = (e: PointerEvent) => {
-      if (isDragging || Math.hypot(e.clientX - startX, e.clientY - startY) > 8) {
+      if (isDragging || Math.hypot(e.clientX - startX, e.clientY - startY) > 22) {
         return;
       }
 
