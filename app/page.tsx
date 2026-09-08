@@ -250,8 +250,31 @@ export default function Home() {
 
   const [showDhaniModal, setShowDhaniModal] = useState(false);
   const [dhaniInput, setDhaniInput] = useState("");
-  const [dhaniReply, setDhaniReply] = useState("");
   const [dhaniLoading, setDhaniLoading] = useState(false);
+
+  interface ChatMessage {
+    id: string;
+    sender: "dhani" | "nana";
+    text: string;
+    time: string;
+  }
+
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    {
+      id: "initial-1",
+      sender: "dhani",
+      text: "Halo Nana sayang! ✨ Lagi pengen tahu atau nanya apa hari ini seputar semesta, rasi bintang, atau harimu? Mas Dhani siap temani dan jawab apa pun buat kamu! 🪐💖",
+      time: "Sekarang",
+    },
+  ]);
+
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (showDhaniModal && chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMessages, showDhaniModal, dhaniLoading]);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
@@ -342,9 +365,22 @@ export default function Home() {
 
   const askDhani = async (customPrompt?: string) => {
     const query = customPrompt || dhaniInput;
-    if (!query) return;
+    if (!query.trim()) return;
+
+    const now = new Date();
+    const timeStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+
+    // Append Nana's outgoing message
+    const userMsg: ChatMessage = {
+      id: `nana-${Date.now()}`,
+      sender: "nana",
+      text: query,
+      time: timeStr,
+    };
+
+    setChatMessages((prev) => [...prev, userMsg]);
+    setDhaniInput("");
     setDhaniLoading(true);
-    setDhaniReply("");
     playSfx("click");
 
     try {
@@ -358,13 +394,25 @@ export default function Home() {
         }),
       });
       const data = await res.json();
-      if (data.reply) {
-        setDhaniReply(data.reply);
-      } else {
-        setDhaniReply(data.error || "Mas Dhani lagi di sini nemenin kamu, Nana sayang!");
-      }
+      const replyText =
+        data.reply ||
+        "Halo Nana sayang! Di antara miliaran bintang di galaksi, senyumanmu adalah hal paling indah di semesta ini. ✨💖";
+
+      const dhaniMsg: ChatMessage = {
+        id: `dhani-${Date.now()}`,
+        sender: "dhani",
+        text: replyText,
+        time: timeStr,
+      };
+      setChatMessages((prev) => [...prev, dhaniMsg]);
     } catch {
-      setDhaniReply("Halo Nana sayang! ✨ Mas Dhani lagi di sini nemenin kamu. Sinyal antariksa sempat berkedip, tapi tanyakan apa saja lagi ya, Mas siap jawab! 🪐💖");
+      const errorMsg: ChatMessage = {
+        id: `dhani-${Date.now()}`,
+        sender: "dhani",
+        text: "Halo Nana sayang! ✨ Mas Dhani selalu ada di sini nemenin kamu. Sinyal antariksa sempat berkedip, tapi tanyakan apa saja lagi ya, Mas siap jawab! 🪐💖",
+        time: timeStr,
+      };
+      setChatMessages((prev) => [...prev, errorMsg]);
     } finally {
       setDhaniLoading(false);
     }
@@ -1235,130 +1283,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* TANYA MAS DHANI MODAL */}
-      <div id="cosmo-modal" className={showDhaniModal ? "show" : ""}>
-        <div className="masdhani-dialog">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div className="masdhani-avatar">🪐</div>
-              <div>
-                <h3 style={{ fontSize: "1.15rem", fontWeight: 700, color: "#ffffff", letterSpacing: "0.5px" }}>
-                  Tanya Mas Dhani ✨
-                </h3>
-                <div style={{ fontSize: "11px", color: "#f472b6", fontWeight: 600 }}>
-                  Observatorium & Ruang Obrolan Khusus Nana
-                </div>
-              </div>
-            </div>
-            <button
-              className="orrery-close-btn"
-              onClick={() => setShowDhaniModal(false)}
-              title="Tutup Obrolan"
-            >
-              ✕
-            </button>
-          </div>
 
-          {/* WARM GREETING BUBBLE */}
-          <div className="masdhani-greeting-box">
-            <div style={{ fontSize: "20px" }}>💖</div>
-            <div>
-              <strong>Halo Nana sayang!</strong> Mau tahu atau nanya apa hari ini seputar keajaiban tata surya, rasi bintang, atau hal-hal seru lainnya? Mas Dhani siap temani dan ceritain semuanya buat kamu! ✨
-            </div>
-          </div>
-
-          {/* INTERACTIVE FAQ CHIPS */}
-          <div>
-            <div className="faq-title-label">💡 PILIHAN PERTANYAAN SERU UNTUK NANA:</div>
-            <div className="faq-chips-grid">
-              <button
-                className="faq-chip-btn"
-                onClick={() => {
-                  setDhaniInput("Kenapa Bumi jadi tempat paling istimewa di tata surya Mas?");
-                  askDhani("Kenapa Bumi jadi tempat paling istimewa di tata surya Mas?");
-                }}
-              >
-                🌍 Kenapa Bumi paling istimewa?
-              </button>
-              <button
-                className="faq-chip-btn"
-                onClick={() => {
-                  setDhaniInput("Cincin Saturnus itu terbuat dari apa sih Mas?");
-                  askDhani("Cincin Saturnus itu terbuat dari apa sih Mas?");
-                }}
-              >
-                👑 Cincin Saturnus dari apa?
-              </button>
-              <button
-                className="faq-chip-btn"
-                onClick={() => {
-                  setDhaniInput("Mas Dhani, kenapa kamu suka banget sama astronomi?");
-                  askDhani("Mas Dhani, kenapa kamu suka banget sama astronomi?");
-                }}
-              >
-                💖 Kenapa Mas suka astronomi?
-              </button>
-              <button
-                className="faq-chip-btn"
-                onClick={() => {
-                  setDhaniInput("Kalau kita liburan ke luar angkasa berdua, planet mana yang paling seru dikunjungi?");
-                  askDhani("Kalau kita liburan ke luar angkasa berdua, planet mana yang paling seru dikunjungi?");
-                }}
-              >
-                🚀 Rekomendasi liburan antariksa?
-              </button>
-              <button
-                className="faq-chip-btn"
-                onClick={() => {
-                  setDhaniInput("Kenapa Matahari bisa terus bersinar tanpa pernah padam?");
-                  askDhani("Kenapa Matahari bisa terus bersinar tanpa pernah padam?");
-                }}
-              >
-                ☀️ Kenapa Matahari nggak padam?
-              </button>
-              <button
-                className="faq-chip-btn"
-                onClick={() => {
-                  setDhaniInput(`Ceritain fakta paling keren dan romantis tentang planet ${activePlanetName} dong Mas!`);
-                  askDhani(`Ceritain fakta paling keren dan romantis tentang planet ${activePlanetName} dong Mas!`);
-                }}
-              >
-                🪐 Cerita seru tentang {activePlanetName}
-              </button>
-            </div>
-          </div>
-
-          {/* CUSTOM QUERY INPUT */}
-          <div className="cosmo-input-row">
-            <input
-              type="text"
-              className="cosmo-input-field"
-              placeholder="Ketik pertanyaan apa saja untuk Mas Dhani..."
-              value={dhaniInput}
-              onChange={(e) => setDhaniInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && askDhani()}
-            />
-            <button
-              className="cosmo-send-btn"
-              onClick={() => askDhani()}
-              disabled={dhaniLoading}
-              style={{ background: "linear-gradient(135deg, #f472b6, #38bdf8)" }}
-            >
-              {dhaniLoading ? "..." : "Tanya Mas"}
-            </button>
-          </div>
-
-          {/* MAS DHANI REPLY */}
-          {dhaniReply && (
-            <div className="masdhani-reply-bubble">
-              <div style={{ color: "#f472b6", fontWeight: 700, fontSize: "12px", marginBottom: "6px" }}>
-                💬 Mas Dhani:
-              </div>
-              {dhaniReply}
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* LOADER */}
       <div id="loader">
