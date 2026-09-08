@@ -66,7 +66,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Matahari menyumbang 99,86% massa seluruh tata surya. Reaksi fusi nuklir di intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan foton yang mencapai permukaan Bumi dalam 500 detik.",
     romanticNote:
-      "Seperti Matahari yang menghangatkan tanpa menuntut kembali, terima kasih sudah selalu membawa energi positif dan semangat yang menenangkan. Semoga harimu selalu dipenuhi kehangatan dan kejelasan arah.",
+      "Terima kasih sudah selalu menjadi sumber energi baik dan kehangatan dalam hari-hari mas. Di tengah segala rutinitas dan lelahnya beraktivitas, kabar dan senyumanmu selalu berhasil menghadirkan rasa tenang. Semoga harimu selalu dipenuhi kebaikan dan kelancaran yaa, Nana. ☀️🤍",
   },
   Merkurius: {
     size: 6.5,
@@ -84,7 +84,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Merkurius memiliki kecepatan orbit 47,4 km/detik. Tanpa atmosfer penahan panas yang tebal, planet ini memiliki gradien fluktuasi suhu permukaan paling ekstrem.",
     romanticNote:
-      "Di dunia yang sering kali berputar terlalu cepat, semoga kamu selalu punya ruang untuk jeda dan bernapas lega. Jangan lupa untuk menghargai setiap proses dan langkah kecil yang sudah kamu lalui.",
+      "Di tengah dunia yang sering bergerak serba cepat dan penuh tuntutan, mas harap kamu selalu ingat untuk mengambil jeda dan bernapas lega. Jangan terlalu keras pada dirimu sendiri yaa, setiap proses dan usaha yang kamu jalani sangat berharga. Mas akan selalu ada di sini mendukungmu. ✨",
   },
   Venus: {
     size: 9.2,
@@ -102,7 +102,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Venus memantulkan 75% sinar matahari karena lapisan awan asam sulfatnya. Venus juga berotasi secara retrograde dari timur ke barat secara perlahan.",
     romanticNote:
-      "Venus mungkin adalah objek paling bercahaya di langit senja, tetapi ketulusan hati dan senyumanmu yang ramah selalu punya tempat tersendiri. Tetaplah menjadi dirimu yang apa adanya.",
+      "Venus mungkin menjadi objek paling bercahaya di langit senja, tetapi ketulusan, kebaikan hati, dan caramu memperlakukan orang lain selalu punya tempat yang jauh lebih istimewa. Tetaplah menjadi Nana yang apa adanya, dengan segala ketulusan yang kamu miliki. 💖",
   },
   Bumi: {
     size: 10.0,
@@ -122,7 +122,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Bumi memiliki magnetosfer pelindung radiasi dan air cair di permukaan. Gravitasi Bulan setia menjaga kemiringan sumbu rotasi Bumi pada 23,5° agar iklim tetap stabil.",
     romanticNote:
-      "Dari seluruh luasnya semesta yang hening, Bumi adalah rumah yang ramah karena adanya kehidupan. Dipertemukan dan bisa berjalan beriringan denganmu adalah salah satu hal yang paling kusyukuri.",
+      "Dari luasnya semesta yang dingin dan tak terhingga, dipertemukan dan bisa saling menjaga denganmu adalah salah satu takdir terindah yang selalu mas syukuri setiap hari. Terima kasih sudah mau berproses, belajar, dan melangkah bersama. 🌍🫶",
   },
   Mars: {
     size: 7.5,
@@ -140,7 +140,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Mars memiliki Olympus Mons (21,9 km), gunung tertinggi di tata surya. Jejak geologis menunjukkan Mars pernah memiliki aliran sungai dan danau purba.",
     romanticNote:
-      "Setiap perjalanan dan impian baik selalu butuh ketabahan. Apa pun tantangan yang sedang kamu hadapi, percayalah bahwa kamu punya kekuatan dan ketangguhan yang luar biasa.",
+      "Setiap perjalanan dan impian baik selalu membutuhkan ketabahan. Apa pun tantangan atau hal berat yang sedang kamu hadapi, percayalah bahwa kamu memiliki ketangguhan hati yang luar biasa. Mas selalu bangga padamu dan siap mendampingi setiap langkahmu. 🚀",
   },
   Yupiter: {
     size: 16.0,
@@ -158,7 +158,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Jupiter memiliki massa lebih dari dua kali lipat gabungan seluruh planet lainnya. Medan gravitasinya yang kuat menyerap tabrakan komet berbahaya dari luar.",
     romanticNote:
-      "Yupiter menjadi pelindung setia yang menjaga keseimbangan tata surya. Aku ingin selalu menjadi sosok yang bisa kamu percaya, tempat yang aman untuk bercerita dan saling mendukung.",
+      "Sebagaimana Yupiter yang hadir menjaga keseimbangan tata surya, mas ingin selalu menjadi ruang yang aman dan nyaman untukmu—tempat kamu bisa menceritakan apa saja, menaruh lelah, dan selalu merasa dimengerti tanpa perlu merasa sendirian. 🪐",
   },
   Saturnus: {
     size: 13.5,
@@ -177,7 +177,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Cincin Saturnus membentang selebar 282.000 km namun tebalnya rata-rata hanya 10 meter. Tersusun atas 99% miliaran kristal es murni dengan Celah Cassini.",
     romanticNote:
-      "Keindahan Saturnus lahir dari keselarasan yang tertata rapi selama jutaan tahun. Ketenangan dan kebaikan hatimu selalu membawa rasa damai di tengah kesibukan sehari-hari.",
+      "Keindahan yang menawan lahir dari keselarasan dan kesabaran. Kehadiranmu membawa keteduhan dan harmoni tersendiri dalam hidup mas. Terima kasih atas setiap perhatian tulus dan kebaikan yang selalu kamu bawa ke dalam hari-hari kita. ✨🤍",
   },
   Uranus: {
     size: 11.0,
@@ -195,7 +195,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Uranus memiliki kemiringan poros rotasi ekstrem 97,8°. Metana di atmosfer atasnya menyerap cahaya merah dan menghasilkan rona biru kehijauan yang tenang.",
     romanticNote:
-      "Uranus berotasi dengan jalurnya sendiri yang unik tanpa perlu meniru yang lain. Begitu juga denganmu—keunikan cara berpikir dan sudut pandangmu adalah keistimewaan yang patut kamu banggakan.",
+      "Uranus mengajarkan bahwa memiliki poros dan cara tersendiri bukanlah kekurangan, melainkan keistimewaan. Sudut pandangmu yang unik, kehangatanmu, dan caramu menyayangi adalah hal-hal yang membuatmu begitu istimewa di mata mas. 💙",
   },
   Neptunus: {
     size: 10.5,
@@ -213,7 +213,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Neptunus memiliki kecepatan angin tercepat di tata surya yang mencapai 2.100 km/jam. Membutuhkan waktu 165 tahun Bumi untuk satu kali revolusi mengitari Matahari.",
     romanticNote:
-      "Bahkan di titik terjauh yang tenang dan dalam, selalu ada keteduhan yang menentramkan. Semoga di mana pun kamu berada, kamu selalu merasa dihargai, didukung, dan tak pernah merasa sendirian.",
+      "Bahkan di titik terjauh yang paling hening di tepian tata surya, rasa tenang dan teduh selalu hadir saat mengingatmu. Di mana pun kamu berada, semoga kamu selalu merasa dijaga dalam doa, dihargai, dan dicintai sepenuh hati. 🌌✨",
   },
 };
 
@@ -266,7 +266,7 @@ export default function Home() {
     {
       id: "initial-1",
       sender: "dhani",
-      text: "Halo Nana! ✨ Lagi ingin tahu atau eksplorasi apa hari ini seputar keajaiban semesta dan planet-planet kita? Tanyakan apa saja, Mas siap temani! 🪐🌟",
+      text: "Halo Nana sayang! ✨ Lagi ingin tahu atau eksplorasi apa hari ini seputar keajaiban semesta dan planet-planet kita? Mau tanya sains atau cerita apa saja, Mas siap temani yaa. 🪐🤍",
       time: "Sekarang",
     },
   ]);
@@ -533,7 +533,7 @@ export default function Home() {
       const data = await res.json();
       const replyText =
         data.reply ||
-        "Halo Nana sayang! Di antara miliaran bintang di galaksi, senyumanmu adalah hal paling indah di semesta ini. ✨💖";
+        "Halo Nana sayang. Di antara miliaran bintang di langit malam, hal yang paling bikin Mas bersyukur adalah bisa berjalan beriringan dan berbagi cerita sama kamu. ✨🤍";
 
       const dhaniMsg: ChatMessage = {
         id: `dhani-${Date.now()}`,
@@ -546,7 +546,7 @@ export default function Home() {
       const errorMsg: ChatMessage = {
         id: `dhani-${Date.now()}`,
         sender: "dhani",
-        text: "Halo Nana sayang! ✨ Mas Dhani selalu ada di sini nemenin kamu. Sinyal antariksa sempat berkedip, tapi tanyakan apa saja lagi ya, Mas siap jawab! 🪐💖",
+        text: "Halo Nana sayang, Mas Dhani selalu ada di sini nemenin kamu. Sinyal observatorium sempat berkedip sebentar tadi, tapi tanyakan apa saja lagi yaa, Mas siap temani. ✨🪐",
         time: timeStr,
       };
       setChatMessages((prev) => [...prev, errorMsg]);
@@ -1354,12 +1354,12 @@ export default function Home() {
 
           {/* Quick FAQ Chips */}
           <div className="chat-faq-container">
-            <div className="chat-faq-title">Pertanyaan Cepat untuk Nana:</div>
+            <div className="chat-faq-title">Pertanyaan Cepat untuk Mas Dhani:</div>
             <div className="chat-faq-scroll">
               <button
                 className="chat-faq-chip"
                 onClick={() =>
-                  askDhani(`Mas Dhani, ceritain rahasia paling romantis tentang planet ${activePlanetName} dong! ✨`)
+                  askDhani(`Mas Dhani, ceritain hal paling menarik dan menakjubkan tentang planet ${activePlanetName} dong! ✨`)
                 }
               >
                 🪐 Rahasia Planet {activePlanetName}
@@ -1367,26 +1367,26 @@ export default function Home() {
               <button
                 className="chat-faq-chip"
                 onClick={() =>
-                  askDhani("Mas Dhani, kenapa kamu selalu manggil aku dengan penuh kasih sayang?")
+                  askDhani("Mas Dhani, kenapa kamu selalu sabar dan perhatian nemenin aku?")
                 }
               >
-                💖 Kenapa Nana spesial?
+                💖 Ruang Cerita
               </button>
               <button
                 className="chat-faq-chip"
                 onClick={() =>
-                  askDhani(`Mas Dhani, apa pemandangan paling menakjubkan di planet ${activePlanetName}? ✨`)
+                  askDhani(`Mas, apa pemandangan paling indah kalau kita mengamati ${activePlanetName} dari dekat? ✨`)
                 }
               >
-                🌌 Pemandangan {activePlanetName}
+                🌌 Keindahan {activePlanetName}
               </button>
               <button
                 className="chat-faq-chip"
                 onClick={() =>
-                  askDhani(`Mas Dhani, kalau kita tinggal berdua di ${activePlanetName}, gimana ya?`)
+                  askDhani(`Mas Dhani, kalau kita menjelajah semesta ke ${activePlanetName}, apa hal pertama yang bakal kita pelajari? 🚀`)
                 }
               >
-                🚀 Hidup di {activePlanetName}
+                🚀 Eksplorasi {activePlanetName}
               </button>
             </div>
           </div>
@@ -1402,7 +1402,7 @@ export default function Home() {
             <input
               type="text"
               className="chat-input-box"
-              placeholder="Tulis pesan atau pertanyaan ke Mas Dhani..."
+              placeholder="Tulis pesan atau tanya apa aja ke Mas Dhani..."
               value={dhaniInput}
               onChange={(e) => setDhaniInput(e.target.value)}
               disabled={dhaniLoading}
