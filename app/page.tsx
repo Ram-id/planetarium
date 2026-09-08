@@ -521,12 +521,15 @@ export default function Home() {
       });
 
       const data = await res.json();
+      const botReply =
+        data.reply ||
+        data.answer ||
+        "Halo cantikku sayang, Mas Dhani selalu ada di sini nemenin kamu. Tanyakan apa saja lagi yaa, Mas siap temani eksplorasi semesta bareng kamu! ✨🪐";
+
       const botMsg: ChatMessage = {
         id: "msg-" + (Date.now() + 1),
         sender: "dhani",
-        text:
-          data.answer ||
-          "Dalem, sayangku! Mas selalu di sini mendengarkanmu. Ada hal lain yang mau kamu tanyakan seputar semesta atau harimu? ✨",
+        text: botReply,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
 

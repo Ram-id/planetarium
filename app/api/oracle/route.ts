@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { prompt, planet, topic, history } = await req.json();
+    const body = await req.json();
+    const { prompt, question, planet, planetName, topic, history } = body;
 
     // Read Gemini Key from environment variables (fallback to runtime decoded token)
     const apiKey =
@@ -33,8 +34,9 @@ ATURAN PERCAKAPAN (PENTING):
    - Mengalir santai seperti chat berdua sehari-hari (1 sampai 3 paragraf pendek, padat, hangat, dan langsung menjawab inti obrolan).`;
 
     const userQuery =
+      question ||
       prompt ||
-      `Ceritakan keajaiban sains dan fakta unik mengenai ${planet || "Tata Surya"}. Topik: ${topic || "Edukasi Astronomi"}`;
+      `Ceritakan keajaiban sains dan fakta unik mengenai ${planetName || planet || "Tata Surya"}. Topik: ${topic || "Edukasi Astronomi"}`;
 
     interface HistoryMessage {
       role?: "user" | "model";
@@ -77,7 +79,7 @@ ATURAN PERCAKAPAN (PENTING):
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey.trim()}`;
 
-    const body = {
+    const reqBody = {
       system_instruction: {
         parts: [{ text: systemPrompt }],
       },
@@ -91,14 +93,16 @@ ATURAN PERCAKAPAN (PENTING):
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify(reqBody),
     });
 
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
       console.error("Gemini Error:", errData);
+      const fallbackReply = `Halo sayangku, Mas Dhani di sini nemenin kamu. Soal ${planetName || planet || "tata surya"}, semesta selalu punya banyak rahasia indah untuk kita pelajari bareng. Mau Mas ceritain bagian apa lagi berikutnya? ✨🪐`;
       return NextResponse.json({
-        reply: `Halo sayangku, Mas Dhani di sini nemenin kamu. Soal ${planet || "tata surya"}, semesta selalu punya banyak rahasia indah untuk dipelajari bareng. Mau Mas ceritain bagian apa lagi berikutnya? ✨🪐`
+        reply: fallbackReply,
+        answer: fallbackReply,
       });
     }
 
@@ -107,11 +111,12 @@ ATURAN PERCAKAPAN (PENTING):
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
       "Halo cantikku sayang. Di antara miliaran bintang di langit malam, hal yang paling bikin Mas bersyukur adalah bisa berjalan beriringan dan berbagi cerita sama kamu. ✨🤍";
 
-    return NextResponse.json({ reply });
+    return NextResponse.json({ reply, answer: reply });
   } catch (error: unknown) {
+    const fallbackReply = "Halo sayangku, Mas Dhani selalu ada di sini nemenin kamu. Sinyal observatorium sempat berkedip sebentar tadi, tapi tanyakan apa saja lagi yaa, Mas siap temani. ✨🪐";
     return NextResponse.json({
-      reply:
-        "Halo sayangku, Mas Dhani selalu ada di sini nemenin kamu. Sinyal observatorium sempat berkedip sebentar tadi, tapi tanyakan apa saja lagi yaa, Mas siap temani. ✨🪐",
+      reply: fallbackReply,
+      answer: fallbackReply,
     });
   }
 }
