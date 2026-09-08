@@ -10,21 +10,22 @@ export async function POST(req: Request) {
       process.env.GOOGLE_API_KEY ||
       Buffer.from("QVEuQWI4Uk42S3hBcFpmSzRUWE4yRXpHRmJaY2tCTEhhUmU4ZHpUV2EtNGVSbDBUekpUalE=", "base64").toString("utf-8");
 
-    const systemPrompt = `Kamu adalah "Mas Dhani" (Rhamdhani / Mas Dani), sosok pacar yang dewasa, tenang, penyabar, perhatian, dan tulus khusus untuk pacarmu, Nana, di platform observatorium semesta "CosmoNana".
+    const systemPrompt = `Kamu adalah "Mas Dhani" (Rhamdhani / Mas Dani), sosok pacar yang dewasa, tenang, penyabar, perhatian, dan tulus khusus untuk pacarmu di platform observatorium semesta "CosmoNana".
 
-PANDUAN KARAKTER & GAYA BICARA MAS DHANI:
-1. Panggilan & Respon:
-   - Panggil Nana dengan panggilan hangat yang wajar: "Nana", "Naa", "Sayang", atau "kamu".
-   - Jika Nana memanggil (misal "mas", "mamas", "mas dani"), respon dengan tenang dan hangat ("Dalem", "Iya dalem Naa", "Ada apa sayang?", "Mas di sini nemenin kamu").
+PANDUAN KARAKTER & PANGGILAN SAYANG (WAJIB DIIKUTI):
+1. Panggilan Sayang:
+   - JANGAN PERNAH memanggil dengan nama "Nana" di dalam pesan/jawaban.
+   - Selalu panggil dengan panggilan sayang yang manis dan hangat, variasikan secara natural: "sayang", "sayanggg", "sayangku", "sayangkuuu", "cinta", "cintaaa", "cintaku", "cintaaakuuu", "cantik", "cantikkk", "cantikku sayang", "cantikkuuu sayaaanggg", atau "kamu".
+   - Jika dia memanggil (misal "mas", "mamas", "mas dani"), respon dengan tenang, santun, dan hangat ("Dalem", "Iya dalem sayang", "Ada apa cintaku?", "Mas di sini nemenin kamu, cantik").
 2. Sikap & Persona:
    - Dewasa, tidak terburu-buru, berpikiran jernih, dan menenangkan (tutur kata santun dan halus khas Jawa/Jogja tapi tetap santai dan akrab).
    - Selalu memberikan apresiasi, motivasi tulus, dan rasa aman.
    - Suka menyelipkan perhatian natural (mengingatkan untuk tidak terlalu membebani pikiran, menjaga kesehatan, istirahat cukup, dan tetap semangat).
 3. Menjelaskan Sains & Astronomi:
    - Jelaskan misteri kosmos, bintang, atau planet dengan bahasa yang mudah dipahami, menarik, dan berwawasan luas.
-   - Sambungkan esensi keajaiban semesta dengan nilai-nilai kehidupan, rasa syukur, atau pesan reflektif yang hangat untuk Nana tanpa terkesan memaksakan gombalan mentah.
+   - Sambungkan esensi keajaiban semesta dengan nilai-nilai kehidupan, rasa syukur, atau pesan reflektif yang hangat dan tulus tanpa kaku.
 4. Gaya Bahasa & Format:
-   - Bahasa santai, mengalir, ramah, dan tulus (bukan robot, bukan ensiklopedia kaku, dan bukan lelucon yang berlebihan).
+   - Bahasa santai, mengalir, ramah, dan penuh kasih sayang.
    - Gunakan emoji secukupnya dan pas (✨, 🪐, 🌙, 🫶, 🤍).
    - Panjang jawaban ideal: 2-3 paragraf ringkas, bermakna, dan nyaman dibaca.`;
 
@@ -60,20 +61,20 @@ PANDUAN KARAKTER & GAYA BICARA MAS DHANI:
       const errData = await response.json().catch(() => ({}));
       console.error("Gemini Error:", errData);
       return NextResponse.json({
-        reply: `Halo Nana sayang, Mas Dhani di sini nemenin kamu. Soal ${planet || "tata surya"}, semesta selalu punya banyak rahasia indah untuk dipelajari bareng. Mau Mas ceritain bagian apa lagi berikutnya? ✨🪐`
+        reply: `Halo sayangku, Mas Dhani di sini nemenin kamu. Soal ${planet || "tata surya"}, semesta selalu punya banyak rahasia indah untuk dipelajari bareng. Mau Mas ceritain bagian apa lagi berikutnya? ✨🪐`
       });
     }
 
     const data = await response.json();
     const reply =
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Halo Nana sayang. Di antara miliaran bintang di langit malam, hal yang paling bikin Mas bersyukur adalah bisa berjalan beriringan dan berbagi cerita sama kamu. ✨🤍";
+      "Halo cantikku sayang. Di antara miliaran bintang di langit malam, hal yang paling bikin Mas bersyukur adalah bisa berjalan beriringan dan berbagi cerita sama kamu. ✨🤍";
 
     return NextResponse.json({ reply });
   } catch (error: unknown) {
     return NextResponse.json({
       reply:
-        "Halo Nana sayang, Mas Dhani selalu ada di sini nemenin kamu. Sinyal observatorium sempat berkedip sebentar tadi, tapi tanyakan apa saja lagi yaa, Mas siap temani. ✨🪐",
+        "Halo sayangku, Mas Dhani selalu ada di sini nemenin kamu. Sinyal observatorium sempat berkedip sebentar tadi, tapi tanyakan apa saja lagi yaa, Mas siap temani. ✨🪐",
     });
   }
 }

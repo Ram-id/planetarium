@@ -66,7 +66,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Matahari menyumbang 99,86% massa seluruh tata surya. Reaksi fusi nuklir di intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan foton yang mencapai permukaan Bumi dalam 500 detik.",
     romanticNote:
-      "Terima kasih sudah selalu menjadi sumber energi baik dan kehangatan dalam hari-hari mas. Di tengah segala rutinitas dan lelahnya beraktivitas, kabar dan senyumanmu selalu berhasil menghadirkan rasa tenang. Semoga harimu selalu dipenuhi kebaikan dan kelancaran yaa, Nana. ☀️🤍",
+      "Terima kasih sudah selalu menjadi sumber energi baik dan kehangatan dalam hari-hari mas. Di tengah segala rutinitas dan lelahnya beraktivitas, kabar dan senyumanmu selalu berhasil menghadirkan rasa tenang. Semoga harimu selalu dipenuhi kebaikan dan kelancaran yaa, cantikku sayang. ☀️🤍",
   },
   Merkurius: {
     size: 6.5,
@@ -84,7 +84,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Merkurius memiliki kecepatan orbit 47,4 km/detik. Tanpa atmosfer penahan panas yang tebal, planet ini memiliki gradien fluktuasi suhu permukaan paling ekstrem.",
     romanticNote:
-      "Di tengah dunia yang sering bergerak serba cepat dan penuh tuntutan, mas harap kamu selalu ingat untuk mengambil jeda dan bernapas lega. Jangan terlalu keras pada dirimu sendiri yaa, setiap proses dan usaha yang kamu jalani sangat berharga. Mas akan selalu ada di sini mendukungmu. ✨",
+      "Di tengah dunia yang sering bergerak serba cepat dan penuh tuntutan, mas harap kamu selalu ingat untuk mengambil jeda dan bernapas lega yaa sayang. Jangan terlalu keras pada dirimu sendiri, setiap proses dan usaha yang kamu jalani sangat berharga. Mas akan selalu ada di sini mendukungmu. ✨",
   },
   Venus: {
     size: 9.2,
@@ -102,7 +102,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Venus memantulkan 75% sinar matahari karena lapisan awan asam sulfatnya. Venus juga berotasi secara retrograde dari timur ke barat secara perlahan.",
     romanticNote:
-      "Venus mungkin menjadi objek paling bercahaya di langit senja, tetapi ketulusan, kebaikan hati, dan caramu memperlakukan orang lain selalu punya tempat yang jauh lebih istimewa. Tetaplah menjadi Nana yang apa adanya, dengan segala ketulusan yang kamu miliki. 💖",
+      "Venus mungkin menjadi objek paling bercahaya di langit senja, tetapi ketulusan, kebaikan hati, dan caramu memperlakukan orang lain selalu punya tempat yang jauh lebih istimewa. Tetaplah menjadi dirimu yang apa adanya, dengan segala ketulusan yang kamu miliki, cintaku. 💖",
   },
   Bumi: {
     size: 10.0,
@@ -122,7 +122,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Bumi memiliki magnetosfer pelindung radiasi dan air cair di permukaan. Gravitasi Bulan setia menjaga kemiringan sumbu rotasi Bumi pada 23,5° agar iklim tetap stabil.",
     romanticNote:
-      "Dari luasnya semesta yang dingin dan tak terhingga, dipertemukan dan bisa saling menjaga denganmu adalah salah satu takdir terindah yang selalu mas syukuri setiap hari. Terima kasih sudah mau berproses, belajar, dan melangkah bersama. 🌍🫶",
+      "Dari luasnya semesta yang dingin dan tak terhingga, dipertemukan dan bisa saling menjaga denganmu adalah salah satu takdir terindah yang selalu mas syukuri setiap hari. Terima kasih sudah mau berproses, belajar, dan melangkah bersama, sayangku. 🌍🫶",
   },
   Mars: {
     size: 7.5,
@@ -140,7 +140,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Mars memiliki Olympus Mons (21,9 km), gunung tertinggi di tata surya. Jejak geologis menunjukkan Mars pernah memiliki aliran sungai dan danau purba.",
     romanticNote:
-      "Setiap perjalanan dan impian baik selalu membutuhkan ketabahan. Apa pun tantangan atau hal berat yang sedang kamu hadapi, percayalah bahwa kamu memiliki ketangguhan hati yang luar biasa. Mas selalu bangga padamu dan siap mendampingi setiap langkahmu. 🚀",
+      "Setiap perjalanan dan impian baik selalu membutuhkan ketabahan. Apa pun tantangan atau hal berat yang sedang kamu hadapi, percayalah bahwa kamu memiliki ketangguhan hati yang luar biasa, sayang. Mas selalu bangga padamu dan siap mendampingi setiap langkahmu. 🚀",
   },
   Yupiter: {
     size: 16.0,
@@ -158,7 +158,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Jupiter memiliki massa lebih dari dua kali lipat gabungan seluruh planet lainnya. Medan gravitasinya yang kuat menyerap tabrakan komet berbahaya dari luar.",
     romanticNote:
-      "Sebagaimana Yupiter yang hadir menjaga keseimbangan tata surya, mas ingin selalu menjadi ruang yang aman dan nyaman untukmu—tempat kamu bisa menceritakan apa saja, menaruh lelah, dan selalu merasa dimengerti tanpa perlu merasa sendirian. 🪐",
+      "Sebagaimana Yupiter yang hadir menjaga keseimbangan tata surya, mas ingin selalu menjadi ruang yang aman dan nyaman untukmu—tempat kamu bisa menceritakan apa saja, menaruh lelah, dan selalu merasa dimengerti tanpa perlu merasa sendirian, cintaku sayang. 🪐",
   },
   Saturnus: {
     size: 13.5,
@@ -177,7 +177,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Cincin Saturnus membentang selebar 282.000 km namun tebalnya rata-rata hanya 10 meter. Tersusun atas 99% miliaran kristal es murni dengan Celah Cassini.",
     romanticNote:
-      "Keindahan yang menawan lahir dari keselarasan dan kesabaran. Kehadiranmu membawa keteduhan dan harmoni tersendiri dalam hidup mas. Terima kasih atas setiap perhatian tulus dan kebaikan yang selalu kamu bawa ke dalam hari-hari kita. ✨🤍",
+      "Keindahan yang menawan lahir dari keselarasan dan kesabaran. Kehadiranmu membawa keteduhan dan harmoni tersendiri dalam hidup mas. Terima kasih atas setiap perhatian tulus dan kebaikan yang selalu kamu bawa ke dalam hari-hari kita, cantikku sayang. ✨🤍",
   },
   Uranus: {
     size: 11.0,
@@ -195,7 +195,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Uranus memiliki kemiringan poros rotasi ekstrem 97,8°. Metana di atmosfer atasnya menyerap cahaya merah dan menghasilkan rona biru kehijauan yang tenang.",
     romanticNote:
-      "Uranus mengajarkan bahwa memiliki poros dan cara tersendiri bukanlah kekurangan, melainkan keistimewaan. Sudut pandangmu yang unik, kehangatanmu, dan caramu menyayangi adalah hal-hal yang membuatmu begitu istimewa di mata mas. 💙",
+      "Uranus mengajarkan bahwa memiliki poros dan cara tersendiri bukanlah kekurangan, melainkan keistimewaan. Sudut pandangmu yang unik, kehangatanmu, dan caramu menyayangi adalah hal-hal yang membuatmu begitu istimewa di mata mas, sayangku. 💙",
   },
   Neptunus: {
     size: 10.5,
@@ -213,7 +213,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Neptunus memiliki kecepatan angin tercepat di tata surya yang mencapai 2.100 km/jam. Membutuhkan waktu 165 tahun Bumi untuk satu kali revolusi mengitari Matahari.",
     romanticNote:
-      "Bahkan di titik terjauh yang paling hening di tepian tata surya, rasa tenang dan teduh selalu hadir saat mengingatmu. Di mana pun kamu berada, semoga kamu selalu merasa dijaga dalam doa, dihargai, dan dicintai sepenuh hati. 🌌✨",
+      "Bahkan di titik terjauh yang paling hening di tepian tata surya, rasa tenang dan teduh selalu hadir saat mengingatmu. Di mana pun kamu berada, semoga kamu selalu merasa dijaga dalam doa, dihargai, dan dicintai sepenuh hati, cintaku sayang. 🌌✨",
   },
 };
 
@@ -266,7 +266,7 @@ export default function Home() {
     {
       id: "initial-1",
       sender: "dhani",
-      text: "Halo Nana sayang! ✨ Lagi ingin tahu atau eksplorasi apa hari ini seputar keajaiban semesta dan planet-planet kita? Mau tanya sains atau cerita apa saja, Mas siap temani yaa. 🪐🤍",
+      text: "Halo cantikku sayang! ✨ Lagi ingin tahu atau eksplorasi apa hari ini seputar keajaiban semesta dan planet-planet kita? Mau tanya sains atau cerita apa saja, Mas siap temani yaa. 🪐🤍",
       time: "Sekarang",
     },
   ]);
@@ -533,7 +533,7 @@ export default function Home() {
       const data = await res.json();
       const replyText =
         data.reply ||
-        "Halo Nana sayang. Di antara miliaran bintang di langit malam, hal yang paling bikin Mas bersyukur adalah bisa berjalan beriringan dan berbagi cerita sama kamu. ✨🤍";
+        "Halo cantikku sayang. Di antara miliaran bintang di langit malam, hal yang paling bikin Mas bersyukur adalah bisa berjalan beriringan dan berbagi cerita sama kamu. ✨🤍";
 
       const dhaniMsg: ChatMessage = {
         id: `dhani-${Date.now()}`,
@@ -546,7 +546,7 @@ export default function Home() {
       const errorMsg: ChatMessage = {
         id: `dhani-${Date.now()}`,
         sender: "dhani",
-        text: "Halo Nana sayang, Mas Dhani selalu ada di sini nemenin kamu. Sinyal observatorium sempat berkedip sebentar tadi, tapi tanyakan apa saja lagi yaa, Mas siap temani. ✨🪐",
+        text: "Halo sayangku, Mas Dhani selalu ada di sini nemenin kamu. Sinyal observatorium sempat berkedip sebentar tadi, tapi tanyakan apa saja lagi yaa, Mas siap temani. ✨🪐",
         time: timeStr,
       };
       setChatMessages((prev) => [...prev, errorMsg]);
@@ -1524,7 +1524,7 @@ export default function Home() {
           <div className="nana-note-wrapper">
             <div className="nana-note-card">
               <div className="nana-note-header">
-                <span className="nana-note-badge">💖 Catatan untuk Nana</span>
+                <span className="nana-note-badge">💖 Pesan untuk Sayang</span>
                 <span className="nana-note-tag">🪐 {activePlanetName}</span>
               </div>
               <div className="nana-note-quote">
