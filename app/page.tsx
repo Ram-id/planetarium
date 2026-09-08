@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
-import { CONSTELLATIONS, DEEP_SKY_OBJECTS, CelestialObject } from "../data/stellarium_data";
+import { CONSTELLATIONS, DEEP_SKY_OBJECTS, CelestialObject, Constellation } from "../data/stellarium_data";
 
 interface PlanetInfo {
   size: number;
@@ -278,6 +278,7 @@ export default function Home() {
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
+  const navigateToConstellationRef = useRef<(c: Constellation) => void>(() => {});
   const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
   const zoomInRef = useRef<() => void>(() => {});
   const zoomOutRef = useRef<() => void>(() => {});
@@ -522,49 +523,251 @@ export default function Home() {
       tex.needsUpdate = true;
       return tex;
     };
-    const starSpriteTex = createNebulaGlowTexture();
-
-    // 2. STELLARIUM 88 CONSTELLATION LINES & ASTERISMS
+    // 2. ULTRA-DETAILED STELLARIUM CONSTELLATIONS WITH DIFFRACTION SPIKES, ETHEREAL AURA & BILLBOARDS
     const constGroup = new THREE.Group();
+    const animatedStars: { sprite: THREE.Sprite; baseScale: number; phase: number; freq: number }[] = [];
+    const energyParticleSegments: { p1: THREE.Vector3; p2: THREE.Vector3; t: number; speed: number; mesh: THREE.Mesh }[] = [];
+
+    // Sparkle star texture with 4-point cross diffraction spikes and diamond core
+    const createSparkleStarTexture = () => {
+      const c = document.createElement("canvas");
+      c.width = 128;
+      c.height = 128;
+      const ctx = c.getContext("2d");
+      if (!ctx) return new THREE.Texture();
+      const cx = 64, cy = 64;
+
+      // Soft nebula glow
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 60);
+      grad.addColorStop(0, "rgba(255, 255, 255, 1.0)");
+      grad.addColorStop(0.12, "rgba(255, 255, 255, 0.95)");
+      grad.addColorStop(0.35, "rgba(186, 230, 253, 0.5)");
+      grad.addColorStop(0.7, "rgba(56, 189, 248, 0.12)");
+      grad.addColorStop(1.0, "rgba(0,0,0,0)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+
+      // Horizontal beam spike
+      const spikeH = ctx.createLinearGradient(0, cy, 128, cy);
+      spikeH.addColorStop(0, "rgba(255,255,255,0)");
+      spikeH.addColorStop(0.5, "rgba(255,255,255,0.95)");
+      spikeH.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = spikeH;
+      ctx.fillRect(0, cy - 1.5, 128, 3);
+
+      // Vertical beam spike
+      const spikeV = ctx.createLinearGradient(cx, 0, cx, 128);
+      spikeV.addColorStop(0, "rgba(255,255,255,0)");
+      spikeV.addColorStop(0.5, "rgba(255,255,255,0.95)");
+      spikeV.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = spikeV;
+      ctx.fillRect(cx - 1.5, 0, 3, 128);
+
+      // Diamond core
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.needsUpdate = true;
+      return tex;
+    };
+    const sparkleStarTex = createSparkleStarTexture();
+
+    // High-resolution canvas billboard text sprite for Constellation Badges
+    const createConstellationBadgeSprite = (name: string, indo: string, themeColor: string) => {
+      const c = document.createElement("canvas");
+      c.width = 512;
+      c.height = 160;
+      const ctx = c.getContext("2d");
+      if (!ctx) return new THREE.Sprite();
+
+      // Glass pill badge with border glow
+      ctx.fillStyle = "rgba(10, 18, 38, 0.85)";
+      ctx.strokeStyle = themeColor;
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.roundRect(30, 20, 452, 120, 26);
+      ctx.fill();
+      ctx.stroke();
+
+      // Title
+      ctx.font = "bold 34px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.shadowColor = themeColor;
+      ctx.shadowBlur = 14;
+      ctx.fillText(`✨ ${name.toUpperCase()} ✨`, 256, 72);
+
+      // Subtitle (Indonesian)
+      ctx.font = "600 21px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = themeColor;
+      ctx.shadowBlur = 0;
+      ctx.fillText(indo, 256, 112);
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.needsUpdate = true;
+      const mat = new THREE.SpriteMaterial({
+        map: tex,
+        transparent: true,
+        opacity: 0.88,
+        depthWrite: false,
+      });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(70, 22, 1);
+      return sprite;
+    };
+
+    // Compact star label sprite for major alpha stars
+    const createStarLabelSprite = (starName: string, color: string) => {
+      const c = document.createElement("canvas");
+      c.width = 256;
+      c.height = 64;
+      const ctx = c.getContext("2d");
+      if (!ctx) return new THREE.Sprite();
+
+      ctx.font = "bold 24px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = color;
+      ctx.textAlign = "center";
+      ctx.shadowColor = "#000000";
+      ctx.shadowBlur = 8;
+      ctx.fillText(starName, 128, 42);
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.needsUpdate = true;
+      const mat = new THREE.SpriteMaterial({
+        map: tex,
+        transparent: true,
+        opacity: 0.85,
+        depthWrite: false,
+      });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(28, 7, 1);
+      return sprite;
+    };
+
     CONSTELLATIONS.forEach((c) => {
+      const scale = 2.8;
+
+      // A. ETHEREAL SHADED AURA MESH (Mythological boundary polygon)
+      if (c.boundaryFaces && c.boundaryFaces.length > 0) {
+        const polyGeo = new THREE.BufferGeometry();
+        const positions: number[] = [];
+        c.stars.forEach((st) => {
+          positions.push(st[0] * scale, st[1] * scale, st[2] * scale);
+        });
+        polyGeo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+        const indices: number[] = [];
+        c.boundaryFaces.forEach(([a, b, d]) => {
+          indices.push(a, b, d);
+        });
+        polyGeo.setIndex(indices);
+        polyGeo.computeVertexNormals();
+
+        const polyMat = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(c.themeColor),
+          transparent: true,
+          opacity: 0.09,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        });
+        const polyMesh = new THREE.Mesh(polyGeo, polyMat);
+        constGroup.add(polyMesh);
+      }
+
+      // B. DUAL-LAYER GLOWING CONSTELLATION LINES + FLOWING PARTICLES
       const linePoints: THREE.Vector3[] = [];
       c.lines.forEach(([i1, i2]) => {
         const s1 = c.stars[i1];
         const s2 = c.stars[i2];
-        linePoints.push(new THREE.Vector3(s1[0] * 2.8, s1[1] * 2.8, s1[2] * 2.8));
-        linePoints.push(new THREE.Vector3(s2[0] * 2.8, s2[1] * 2.8, s2[2] * 2.8));
+        const v1 = new THREE.Vector3(s1[0] * scale, s1[1] * scale, s1[2] * scale);
+        const v2 = new THREE.Vector3(s2[0] * scale, s2[1] * scale, s2[2] * scale);
+        linePoints.push(v1, v2);
+
+        // Stardust energy particle flowing along this line segment
+        const particleGeo = new THREE.SphereGeometry(0.8, 6, 6);
+        const particleMat = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.85,
+          blending: THREE.AdditiveBlending,
+        });
+        const particleMesh = new THREE.Mesh(particleGeo, particleMat);
+        constGroup.add(particleMesh);
+        energyParticleSegments.push({
+          p1: v1,
+          p2: v2,
+          t: Math.random(),
+          speed: 0.15 + Math.random() * 0.25,
+          mesh: particleMesh,
+        });
       });
 
       const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
-      const lineMat = new THREE.LineBasicMaterial({
-        color: 0x38bdf8,
-        transparent: true,
-        opacity: 0.32,
-        blending: THREE.AdditiveBlending,
-      });
-      const lines = new THREE.LineSegments(lineGeo, lineMat);
-      constGroup.add(lines);
 
-      const starNodeGeo = new THREE.BufferGeometry();
-      const nodePositions = new Float32Array(c.stars.length * 3);
-      c.stars.forEach((s, idx) => {
-        nodePositions[idx * 3] = s[0] * 2.8;
-        nodePositions[idx * 3 + 1] = s[1] * 2.8;
-        nodePositions[idx * 3 + 2] = s[2] * 2.8;
-      });
-      starNodeGeo.setAttribute("position", new THREE.BufferAttribute(nodePositions, 3));
-      const starNodeMat = new THREE.PointsMaterial({
-        size: 5.5,
-        map: starSpriteTex,
-        color: 0xfef08a,
+      // Outer Neon Glow Line
+      const outerGlowMat = new THREE.LineBasicMaterial({
+        color: new THREE.Color(c.themeColor),
         transparent: true,
-        opacity: 0.92,
+        opacity: 0.65,
         blending: THREE.AdditiveBlending,
-        depthWrite: false,
       });
-      const starNodes = new THREE.Points(starNodeGeo, starNodeMat);
-      constGroup.add(starNodes);
+      const outerLines = new THREE.LineSegments(lineGeo, outerGlowMat);
+      constGroup.add(outerLines);
+
+      // Inner Core Laser Beam
+      const innerCoreMat = new THREE.LineBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.88,
+        blending: THREE.AdditiveBlending,
+      });
+      const innerLines = new THREE.LineSegments(lineGeo, innerCoreMat);
+      constGroup.add(innerLines);
+
+      // C. INDIVIDUAL HIGH-FIDELITY STAR SPRITES WITH ASTROPHYSICAL COLORS & TWINKLE
+      c.starDetails.forEach((st) => {
+        const spriteMat = new THREE.SpriteMaterial({
+          map: sparkleStarTex,
+          color: new THREE.Color(st.color),
+          transparent: true,
+          opacity: 0.95,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        });
+        const sprite = new THREE.Sprite(spriteMat);
+        const baseSize = st.size * 12.0;
+        sprite.scale.set(baseSize, baseSize, 1);
+        sprite.position.set(st.pos[0] * scale, st.pos[1] * scale, st.pos[2] * scale);
+        constGroup.add(sprite);
+
+        animatedStars.push({
+          sprite,
+          baseScale: baseSize,
+          phase: Math.random() * Math.PI * 2,
+          freq: 2.0 + Math.random() * 2.5,
+        });
+
+        // If Alpha Star or major named star, attach sleek text label
+        if (st.isAlpha) {
+          const starLabel = createStarLabelSprite(st.name, st.color);
+          starLabel.position.set(
+            st.pos[0] * scale,
+            st.pos[1] * scale + (baseSize * 0.55 + 5),
+            st.pos[2] * scale
+          );
+          constGroup.add(starLabel);
+        }
+      });
+
+      // D. 3D BILLBOARD CONSTELLATION NAME BADGE
+      const badge = createConstellationBadgeSprite(c.name, c.indonesian, c.themeColor);
+      badge.position.set(c.center[0] * scale, c.center[1] * scale, c.center[2] * scale);
+      constGroup.add(badge);
     });
+
     scene.add(constGroup);
     constellationGroupRef.current = constGroup;
 
@@ -745,6 +948,29 @@ export default function Home() {
     }
     navigateToPlanetRef.current = navigateToPlanet;
 
+    function navigateToConstellation(c: Constellation) {
+      playSfx("target");
+      const targetPos = new THREE.Vector3(c.center[0] * 2.8, c.center[1] * 2.8, c.center[2] * 2.8);
+      const camPos = targetPos.clone().multiplyScalar(0.48);
+
+      gsap.to(controls.target, {
+        x: targetPos.x,
+        y: targetPos.y,
+        z: targetPos.z,
+        duration: 1.8,
+        ease: "power3.inOut",
+      });
+
+      gsap.to(camera.position, {
+        x: camPos.x,
+        y: camPos.y + 35,
+        z: camPos.z,
+        duration: 1.8,
+        ease: "power3.inOut",
+      });
+    }
+    navigateToConstellationRef.current = navigateToConstellation;
+
     zoomInRef.current = () => {
       playSfx("click");
       const dir = new THREE.Vector3().subVectors(controls.target, camera.position).normalize();
@@ -801,6 +1027,18 @@ export default function Home() {
         skyDomeMeshRef.current.rotation.y = t * 0.0004;
       }
       constGroup.rotation.y = t * 0.0006;
+
+      // Constellation stars gentle shimmer & twinkling
+      animatedStars.forEach((item) => {
+        const factor = 1.0 + 0.22 * Math.sin(t * item.freq + item.phase);
+        item.sprite.scale.set(item.baseScale * factor, item.baseScale * factor, 1);
+      });
+
+      // Flowing cosmic energy particles along constellation lines
+      energyParticleSegments.forEach((seg) => {
+        seg.t = (seg.t + 0.003 * seg.speed * speedFactor) % 1.0;
+        seg.mesh.position.lerpVectors(seg.p1, seg.p2, seg.t);
+      });
 
       activeSatellites.forEach((sat) => {
         const u = sat.userData;
@@ -1355,14 +1593,57 @@ export default function Home() {
         {activeTab === "constellations" && (
           <div>
             <p style={{ fontSize: "12.5px", color: "var(--accent-cyan)", marginBottom: "12px", fontWeight: 600 }}>
-              🔭 Katalog Rasi Bintang Resmi (IAU Sky Cultures):
+              🔭 Katalog Rasi Bintang Resmi (Stellarium Sky Cultures):
             </p>
 
             <div className="constellation-list">
               {CONSTELLATIONS.map((c) => (
-                <div key={c.id} className="const-item-card">
-                  <div className="const-item-title">✨ {c.name} ({c.indonesian})</div>
+                <div key={c.id} className="const-item-card" style={{ borderColor: `${c.themeColor}55` }}>
+                  <div className="const-item-header">
+                    <div className="const-item-title" style={{ color: "#ffffff" }}>
+                      ✨ {c.name} <span style={{ color: c.themeColor, fontSize: "11px", fontWeight: 500 }}>• {c.english}</span>
+                    </div>
+                    <span
+                      className="const-indo-badge"
+                      style={{
+                        background: `${c.themeColor}22`,
+                        color: c.themeColor,
+                        borderColor: `${c.themeColor}66`,
+                      }}
+                    >
+                      {c.indonesian}
+                    </span>
+                  </div>
+
                   <div className="const-item-meaning">{c.meaning}</div>
+                  <div className="const-item-lore">📜 <em>{c.lore}</em></div>
+
+                  <div className="const-stars-row">
+                    <span className="const-stars-lbl">Bintang Terang:</span>
+                    {c.starDetails.map((st) => (
+                      <span
+                        key={st.name}
+                        className="const-star-pill"
+                        style={{ borderLeft: `3px solid ${st.color}`, color: st.color }}
+                      >
+                        {st.name} {st.isAlpha ? "★" : ""}
+                      </span>
+                    ))}
+                  </div>
+
+                  <button
+                    className="const-fly-btn"
+                    style={{
+                      background: `linear-gradient(135deg, ${c.themeColor}33, ${c.themeColor}11)`,
+                      borderColor: c.themeColor,
+                    }}
+                    onClick={() => {
+                      playSfx("target");
+                      navigateToConstellationRef.current(c);
+                    }}
+                  >
+                    🔭 Arahkan Pandangan ke Rasi {c.name}
+                  </button>
                 </div>
               ))}
             </div>
