@@ -2087,7 +2087,7 @@ html, body {
 .lantern-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 2000;
   background: rgba(3, 6, 17, 0.88);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
@@ -2297,7 +2297,7 @@ html, body {
 .lantern-view-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 110;
+  z-index: 2100;
   background: rgba(3, 6, 17, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

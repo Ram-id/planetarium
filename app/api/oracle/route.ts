@@ -80,7 +80,13 @@ ATURAN UTAMA GAYA CHAT (SANGAT PENTING):
       });
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey.trim()}`;
+    const candidateModels = [
+      "gemini-2.5-flash-lite",
+      "gemini-flash-lite-latest",
+      "gemini-3.5-flash-lite",
+      "gemini-3.5-flash",
+      "gemini-2.5-flash",
+    ];
 
     const reqBody = {
       system_instruction: {
@@ -88,33 +94,40 @@ ATURAN UTAMA GAYA CHAT (SANGAT PENTING):
       },
       contents: contents,
       generationConfig: {
-        temperature: 0.8,
-        maxOutputTokens: 1200,
+        temperature: 0.85,
+        maxOutputTokens: 1000,
       },
     };
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(reqBody),
-    });
+    let replyText = "";
 
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      console.error("Gemini Error:", errData);
-      const fallbackReply = `Halo sayangku, Mas Dhani di sini nemenin kamu. Soal ${planetName || planet || "tata surya"}, semesta selalu punya banyak rahasia indah untuk kita pelajari bareng. Mau Mas ceritain bagian apa lagi berikutnya? ✨🪐`;
-      return NextResponse.json({
-        reply: fallbackReply,
-        answer: fallbackReply,
-      });
+    for (const model of candidateModels) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(reqBody),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const generated = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (generated && typeof generated === "string" && generated.trim().length > 0) {
+            replyText = generated.trim();
+            break;
+          }
+        }
+      } catch {
+        // try next candidate model
+      }
     }
 
-    const data = await response.json();
-    const reply =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Halo cantikku sayang. Di antara miliaran bintang di langit malam, hal yang paling bikin Mas bersyukur adalah bisa berjalan beriringan dan berbagi cerita sama kamu. ✨🤍";
+    if (!replyText) {
+      replyText = `Hehe iyaa sayanggg... Di antara miliaran bintang di angkasa, hal yang paling bikin Mas bersyukur adalah bisa nemenin dan dengerin cerita kamu setiap hari. Ada yang mau kamu tanyakan lagi tentang ${planetName || planet || "semesta kita"}? ✨🤍`;
+    }
 
-    return NextResponse.json({ reply, answer: reply });
+    return NextResponse.json({ reply: replyText, answer: replyText });
   } catch (error: unknown) {
     const fallbackReply = "Halo sayangku, Mas Dhani selalu ada di sini nemenin kamu. Sinyal observatorium sempat berkedip sebentar tadi, tapi tanyakan apa saja lagi yaa, Mas siap temani. ✨🪐";
     return NextResponse.json({

@@ -2726,7 +2726,15 @@ export default function Home() {
       <canvas id="webgl-canvas" ref={canvasRef}></canvas>
 
       {/* SOLAR SYSTEM SCOPE LIVE ORRERY MODAL */}
-      <div className={`orrery-modal-backdrop ${showOrreryModal ? "show" : ""}`}>
+      <div
+        className={`orrery-modal-backdrop ${showOrreryModal ? "show" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSfx("click");
+            setShowOrreryModal(false);
+          }
+        }}
+      >
         <div className="orrery-modal-window">
           <div className="orrery-modal-header">
             <div className="orrery-modal-title">
@@ -2758,7 +2766,15 @@ export default function Home() {
       </div>
 
       {/* TANYA MAS DHANI CHAT MODAL (WHATSAPP/MESSENGER BUBBLE STYLE) */}
-      <div className={`chat-modal-backdrop ${showDhaniModal ? "show" : ""}`}>
+      <div
+        className={`chat-modal-backdrop ${showDhaniModal ? "show" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSfx("click");
+            setShowDhaniModal(false);
+          }
+        }}
+      >
         <div className="chat-messenger-window">
           {/* Chat Header */}
           <div className="chat-header">
@@ -2898,7 +2914,15 @@ export default function Home() {
       {/* ======================================================== */}
       {/* DEDICATED LANTERN SANCTUARY ROOM (RUANG LAMPION HARAPAN) */}
       {/* ======================================================== */}
-      <div className={`sanctuary-modal-backdrop ${showLanternSanctuary ? "show" : ""}`}>
+      <div
+        className={`sanctuary-modal-backdrop ${showLanternSanctuary ? "show" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSfx("click");
+            setShowLanternSanctuary(false);
+          }
+        }}
+      >
         <div className="sanctuary-room-window">
           {/* Sanctuary Header */}
           <div className="sanctuary-header">
@@ -3088,7 +3112,15 @@ export default function Home() {
       </div>
 
       {/* FEATURE 1: COSMIC SKY LANTERNS MODAL (TULIS & TERBANGKAN LAMPION) */}
-      <div className={`lantern-modal-backdrop ${showLanternModal ? "show" : ""}`}>
+      <div
+        className={`lantern-modal-backdrop ${showLanternModal ? "show" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSfx("click");
+            setShowLanternModal(false);
+          }
+        }}
+      >
         <div className="lantern-modal-window">
           <div className="lantern-modal-header">
             <div className="lantern-modal-title">
@@ -3174,7 +3206,15 @@ export default function Home() {
       </div>
 
       {/* FEATURE 1: VIEW A FLOATING SKY LANTERN MODAL */}
-      <div className={`lantern-view-modal-backdrop ${showLanternViewModal && selectedLantern ? "show" : ""}`}>
+      <div
+        className={`lantern-view-modal-backdrop ${showLanternViewModal && selectedLantern ? "show" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSfx("click");
+            setShowLanternViewModal(false);
+          }
+        }}
+      >
         {selectedLantern && (
           <div className="lantern-view-card">
             <div className="lantern-glow-badge-row">
@@ -3241,7 +3281,15 @@ export default function Home() {
       </div>
 
       {/* FEATURE 2: COSMIC POLAROID SNAPSHOT STUDIO */}
-      <div className={`polaroid-modal-backdrop ${showPolaroidModal ? "show" : ""}`}>
+      <div
+        className={`polaroid-modal-backdrop ${showPolaroidModal ? "show" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSfx("click");
+            setShowPolaroidModal(false);
+          }
+        }}
+      >
         <div className="polaroid-modal-window">
           <div className="wish-modal-header">
             <div className="wish-modal-title">
@@ -3333,7 +3381,15 @@ export default function Home() {
       </div>
 
       {/* FEATURE 3: TIME CAPSULE & LOVE QUIZ */}
-      <div className={`capsule-modal-backdrop ${showCapsuleModal ? "show" : ""}`}>
+      <div
+        className={`capsule-modal-backdrop ${showCapsuleModal ? "show" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSfx("click");
+            setShowCapsuleModal(false);
+          }
+        }}
+      >
         <div className="capsule-modal-window">
           <div className="wish-modal-header">
             <div className="wish-modal-title">
@@ -3500,7 +3556,15 @@ export default function Home() {
       </div>
 
       {/* FEATURE 4: RETRO COSMIC ROCKET MINI-GAME */}
-      <div className={`game-modal-backdrop ${showGameModal ? "show" : ""}`}>
+      <div
+        className={`game-modal-backdrop ${showGameModal ? "show" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSfx("click");
+            setShowGameModal(false);
+          }
+        }}
+      >
         <div className="game-modal-window">
           <div className="game-hud-bar">
             <div className="game-stat">
