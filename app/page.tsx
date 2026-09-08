@@ -445,6 +445,10 @@ export default function Home() {
       opacity: 0.88,
     });
     texLoader.load("/textures/milkyway_stellarium.jpg", (tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.generateMipmaps = true;
       skyDomeMat.map = tex;
       skyDomeMat.needsUpdate = true;
     });
