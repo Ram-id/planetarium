@@ -79,18 +79,6 @@ const PLANET_ICONS: Record<PlanetName, string> = {
   Neptunus: "♆",
 };
 
-const PLANET_GLOW: Record<PlanetName, { color: number; intensity: number; power: number }> = {
-  Matahari: { color: 0xff8811, intensity: 2.2, power: 2.0 },
-  Merkurius: { color: 0x94a3b8, intensity: 0.6, power: 3.2 },
-  Venus: { color: 0xf59e0b, intensity: 1.4, power: 2.5 },
-  Bumi: { color: 0x38bdf8, intensity: 1.6, power: 2.4 },
-  Mars: { color: 0xf97316, intensity: 1.1, power: 2.8 },
-  Yupiter: { color: 0xfbbf24, intensity: 1.3, power: 2.5 },
-  Saturnus: { color: 0xfde047, intensity: 1.2, power: 2.6 },
-  Uranus: { color: 0x06b6d4, intensity: 1.5, power: 2.3 },
-  Neptunus: { color: 0x3b82f6, intensity: 1.7, power: 2.2 },
-};
-
 const DATA: Record<PlanetName, PlanetInfo> = {
   Matahari: {
     size: 28.0,
@@ -748,54 +736,13 @@ export default function Home() {
     asteroidInstanced.instanceMatrix.needsUpdate = true;
     scene.add(asteroidInstanced);
 
-    // Helper: Atmospheric Fresnel Inverted-Rim Shader
-    function createAtmosphereMaterial(colorHex: number, intensity: number = 1.3, power: number = 2.6) {
-      return new THREE.ShaderMaterial({
-        uniforms: {
-          glowColor: { value: new THREE.Color(colorHex) },
-          intensity: { value: intensity },
-          power: { value: power },
-        },
-        vertexShader: `
-          varying vec3 vNormal;
-          varying vec3 vPosition;
-          void main() {
-            vNormal = normalize(normalMatrix * normal);
-            vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: `
-          uniform vec3 glowColor;
-          uniform float intensity;
-          uniform float power;
-          varying vec3 vNormal;
-          varying vec3 vPosition;
-          void main() {
-            vec3 viewDir = normalize(-vPosition);
-            float rim = 1.0 - max(0.0, dot(vNormal, viewDir));
-            float alpha = pow(rim, power) * intensity;
-            gl_FragColor = vec4(glowColor, alpha);
-          }
-        `,
-        blending: THREE.AdditiveBlending,
-        side: THREE.BackSide,
-        transparent: true,
-        depthWrite: false,
-      });
-    }
-
-    // 6. SOLAR SYSTEM ARCHITECTURE (All 8 Planets + Sun + Moon + Saturn Rings + Glow Halos)
+    // 6. SOLAR SYSTEM ARCHITECTURE (All 8 Planets + Sun + Moon + Saturn Rings)
     const planetGroupMap: Record<string, THREE.Group> = {};
     const planetBodyMap: Record<string, THREE.Group> = {};
     const planetSphereMap: Record<string, THREE.Mesh> = {};
     const orbitLineMap: Record<string, THREE.Line> = {};
-    const orbitPulseMap: Record<string, THREE.Mesh> = {};
     const clickablePlanetMeshes: THREE.Object3D[] = [];
     const planetAngles: Record<string, number> = {};
-
-    let sunCoronaMat: THREE.ShaderMaterial | null = null;
-    let earthCloudMesh: THREE.Mesh | null = null;
 
     ORDER.forEach((name) => {
       const d = DATA[name];
@@ -806,7 +753,7 @@ export default function Home() {
       scene.add(pivotGrp);
       planetGroupMap[name] = pivotGrp;
 
-      // Draw High-Resolution Glowing Keplerian Orbit Ring in 3D Space
+      // Draw Clean Keplerian Orbit Ring in 3D Space
       if (d.orbitRadius > 0) {
         const orbitCurve = new THREE.EllipseCurve(
           0,
@@ -830,17 +777,6 @@ export default function Home() {
         const orbitLine = new THREE.Line(orbitGeo, orbitMat);
         pivotGrp.add(orbitLine);
         orbitLineMap[name] = orbitLine;
-
-        // Glowing Orbital Energy Pulse Bead along the track
-        const pulseGeo = new THREE.SphereGeometry(1.1, 16, 16);
-        const pulseMat = new THREE.MeshBasicMaterial({
-          color: d.color || 0x38bdf8,
-          transparent: true,
-          opacity: 0.85,
-        });
-        const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
-        pivotGrp.add(pulseMesh);
-        orbitPulseMap[name] = pulseMesh;
       }
 
       // Planet Body Group (Translates along orbit or linear position)
@@ -863,7 +799,7 @@ export default function Home() {
         sphereMat = new THREE.MeshStandardMaterial({
           color: 0xffeedd,
           emissive: 0xffaa22,
-          emissiveIntensity: 2.0,
+          emissiveIntensity: 1.8,
           roughness: 0.15,
         });
         texLoader.load(`/textures/${d.tex}`, (tex) => {
@@ -871,80 +807,6 @@ export default function Home() {
           (sphereMat as THREE.MeshStandardMaterial).emissiveMap = tex;
           sphereMat.needsUpdate = true;
         });
-
-        // Pulsing Solar Corona Glow Shell
-        const coronaGeo = new THREE.SphereGeometry(d.size * 1.18, 64, 64);
-        sunCoronaMat = new THREE.ShaderMaterial({
-          uniforms: {
-            time: { value: 0 },
-            coronaColor: { value: new THREE.Color(0xff7700) },
-            coreColor: { value: new THREE.Color(0xfff3cc) },
-          },
-          vertexShader: `
-            varying vec3 vNormal;
-            varying vec3 vPosition;
-            void main() {
-              vNormal = normalize(normalMatrix * normal);
-              vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-          `,
-          fragmentShader: `
-            uniform float time;
-            uniform vec3 coronaColor;
-            uniform vec3 coreColor;
-            varying vec3 vNormal;
-            varying vec3 vPosition;
-            void main() {
-              vec3 viewDir = normalize(-vPosition);
-              float rim = 1.0 - max(0.0, dot(vNormal, viewDir));
-              float pulse = 0.88 + 0.12 * sin(time * 2.5);
-              float alpha = pow(rim, 2.2) * 1.8 * pulse;
-              vec3 col = mix(coronaColor, coreColor, pow(rim, 4.0));
-              gl_FragColor = vec4(col, alpha);
-            }
-          `,
-          blending: THREE.AdditiveBlending,
-          side: THREE.BackSide,
-          transparent: true,
-          depthWrite: false,
-        });
-        const coronaMesh = new THREE.Mesh(coronaGeo, sunCoronaMat);
-        bodyGrp.add(coronaMesh);
-
-        // Outer Soft Solar Flare Aura
-        const outerAuraGeo = new THREE.SphereGeometry(d.size * 1.48, 48, 48);
-        const outerAuraMat = new THREE.ShaderMaterial({
-          uniforms: {
-            auraColor: { value: new THREE.Color(0xff4400) },
-          },
-          vertexShader: `
-            varying vec3 vNormal;
-            varying vec3 vPosition;
-            void main() {
-              vNormal = normalize(normalMatrix * normal);
-              vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-          `,
-          fragmentShader: `
-            uniform vec3 auraColor;
-            varying vec3 vNormal;
-            varying vec3 vPosition;
-            void main() {
-              vec3 viewDir = normalize(-vPosition);
-              float rim = 1.0 - max(0.0, dot(vNormal, viewDir));
-              float alpha = pow(rim, 3.2) * 0.85;
-              gl_FragColor = vec4(auraColor, alpha);
-            }
-          `,
-          blending: THREE.AdditiveBlending,
-          side: THREE.BackSide,
-          transparent: true,
-          depthWrite: false,
-        });
-        const outerAuraMesh = new THREE.Mesh(outerAuraGeo, outerAuraMat);
-        bodyGrp.add(outerAuraMesh);
       } else {
         sphereMat = new THREE.MeshStandardMaterial({
           color: d.color,
@@ -955,13 +817,6 @@ export default function Home() {
           (sphereMat as THREE.MeshStandardMaterial).map = tex;
           sphereMat.needsUpdate = true;
         });
-
-        // Atmospheric Halo Glow Shell
-        const glowCfg = PLANET_GLOW[name] || { color: 0x38bdf8, intensity: 1.2, power: 2.5 };
-        const haloGeo = new THREE.SphereGeometry(d.size * 1.15, 48, 48);
-        const haloMat = createAtmosphereMaterial(glowCfg.color, glowCfg.intensity, glowCfg.power);
-        const haloMesh = new THREE.Mesh(haloGeo, haloMat);
-        bodyGrp.add(haloMesh);
       }
 
       const sphere = new THREE.Mesh(sphereGeo, sphereMat);
@@ -973,25 +828,6 @@ export default function Home() {
       bodyGrp.add(sphere);
       planetSphereMap[name] = sphere;
       clickablePlanetMeshes.push(sphere);
-
-      // Earth Cloud Layer
-      if (name === "Bumi") {
-        const cloudGeo = new THREE.SphereGeometry(d.size * 1.018, 64, 64);
-        const cloudMat = new THREE.MeshStandardMaterial({
-          color: 0xffffff,
-          transparent: true,
-          opacity: 0.35,
-          roughness: 0.8,
-          blending: THREE.AdditiveBlending,
-        });
-        texLoader.load(`/textures/${d.tex}`, (tex) => {
-          cloudMat.map = tex;
-          cloudMat.needsUpdate = true;
-        });
-        earthCloudMesh = new THREE.Mesh(cloudGeo, cloudMat);
-        earthCloudMesh.rotation.z = THREE.MathUtils.degToRad(-d.axialTilt);
-        bodyGrp.add(earthCloudMesh);
-      }
 
       // Moon for Earth
       if (d.moon) {
@@ -1184,12 +1020,9 @@ export default function Home() {
       setLayoutMode(mode);
 
       if (mode === "linear") {
-        // Hide orbital rings, pulse beads, and asteroid belt
+        // Hide orbital rings and asteroid belt
         Object.values(orbitLineMap).forEach((line) => {
           line.visible = false;
-        });
-        Object.values(orbitPulseMap).forEach((pulse) => {
-          pulse.visible = false;
         });
         if (asteroidInstanced) asteroidInstanced.visible = false;
 
@@ -1225,12 +1058,9 @@ export default function Home() {
           ease: "power3.inOut",
         });
       } else {
-        // Orbit mode: restore orbital lines, pulse beads, and asteroid belt
+        // Orbit mode: restore orbital lines and asteroid belt
         Object.values(orbitLineMap).forEach((line) => {
           line.visible = true;
-        });
-        Object.values(orbitPulseMap).forEach((pulse) => {
-          pulse.visible = true;
         });
         if (asteroidInstanced) asteroidInstanced.visible = true;
 
@@ -1418,11 +1248,6 @@ export default function Home() {
       const speedFactor = timeMultiplierRef.current;
       const t = clock.getElapsedTime();
 
-      // Sun Corona Shader pulse animation
-      if (sunCoronaMat) {
-        sunCoronaMat.uniforms.time.value = t;
-      }
-
       // Milky Way slow cosmic rotation
       if (skyDomeMeshRef.current) {
         skyDomeMeshRef.current.rotation.y = t * 0.0003;
@@ -1461,28 +1286,12 @@ export default function Home() {
             0,
             Math.sin(curAng) * d.orbitRadius
           );
-
-          // Orbit Pulse Bead glide
-          const pulseMesh = orbitPulseMap[name];
-          if (pulseMesh) {
-            const pulseAng = curAng + Math.PI * 0.35;
-            pulseMesh.position.set(
-              Math.cos(pulseAng) * d.orbitRadius,
-              0,
-              Math.sin(pulseAng) * d.orbitRadius
-            );
-          }
         }
 
         // Axial Spin (Rotasi pada poros)
         if (sphere) {
           const spinSpeed = (24.0 / d.rotationHours) * 0.02 * (speedFactor === 0 ? 0.005 : speedFactor);
           sphere.rotation.y += spinSpeed;
-        }
-
-        // Earth Clouds dynamic offset rotation
-        if (name === "Bumi" && earthCloudMesh) {
-          earthCloudMesh.rotation.y += 0.02 * (speedFactor === 0 ? 0.006 : speedFactor) * 1.15;
         }
 
         // Moon Orbiting Earth
