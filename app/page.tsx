@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
-import { CONSTELLATIONS, DEEP_SKY_OBJECTS, CelestialObject, Constellation } from "../data/stellarium_data";
 
 interface PlanetInfo {
   size: number;
@@ -67,7 +66,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Matahari menyumbang 99,86% massa seluruh tata surya. Reaksi fusi nuklir di intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan foton yang mencapai permukaan Bumi dalam 500 detik.",
     romanticNote:
-      "Sebagaimana Matahari yang menjadi jangkar bagi seluruh semesta, hadirmu senantiasa memberi kehangatan, semangat, dan arah yang jernih di setiap hariku.",
+      "Seperti Matahari yang menghangatkan tanpa menuntut kembali, terima kasih sudah selalu membawa energi positif dan semangat yang menenangkan. Semoga harimu selalu dipenuhi kehangatan dan kejelasan arah.",
   },
   Merkurius: {
     size: 6.5,
@@ -85,7 +84,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Merkurius memiliki kecepatan orbit 47,4 km/detik. Tanpa atmosfer penahan panas yang tebal, planet ini memiliki gradien fluktuasi suhu permukaan paling ekstrem.",
     romanticNote:
-      "Di planet dengan laju waktu tercepat ini, aku tersadar betapa berharganya setiap momen. Waktu selalu berlalu begitu cepat saat kita berbagi cerita dan tawa.",
+      "Di dunia yang sering kali berputar terlalu cepat, semoga kamu selalu punya ruang untuk jeda dan bernapas lega. Jangan lupa untuk menghargai setiap proses dan langkah kecil yang sudah kamu lalui.",
   },
   Venus: {
     size: 9.2,
@@ -103,7 +102,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Venus memantulkan 75% sinar matahari karena lapisan awan asam sulfatnya. Venus juga berotasi secara retrograde dari timur ke barat secara perlahan.",
     romanticNote:
-      "Venus dijuluki sebagai objek paling berkilau di langit malam. Namun bagiku, senyuman tulus dan binar ceriamu adalah pemandangan paling indah di semesta ini.",
+      "Venus mungkin adalah objek paling bercahaya di langit senja, tetapi ketulusan hati dan senyumanmu yang ramah selalu punya tempat tersendiri. Tetaplah menjadi dirimu yang apa adanya.",
   },
   Bumi: {
     size: 10.0,
@@ -123,7 +122,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Bumi memiliki magnetosfer pelindung radiasi dan air cair di permukaan. Gravitasi Bulan setia menjaga kemiringan sumbu rotasi Bumi pada 23,5° agar iklim tetap stabil.",
     romanticNote:
-      "Di antara miliaran kemungkinan di planet biru yang indah ini, dipertemukan dan berjalan beriringan denganmu adalah keajaiban terindah yang selalu kusyukuri.",
+      "Dari seluruh luasnya semesta yang hening, Bumi adalah rumah yang ramah karena adanya kehidupan. Dipertemukan dan bisa berjalan beriringan denganmu adalah salah satu hal yang paling kusyukuri.",
   },
   Mars: {
     size: 7.5,
@@ -141,7 +140,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Mars memiliki Olympus Mons (21,9 km), gunung tertinggi di tata surya. Jejak geologis menunjukkan Mars pernah memiliki aliran sungai dan danau purba.",
     romanticNote:
-      "Warna merah Mars melambangkan keteguhan dan daya juang. Aku akan selalu ada di sampingmu untuk mendukung setiap mimpi dan langkah baik yang kamu perjuangkan.",
+      "Setiap perjalanan dan impian baik selalu butuh ketabahan. Apa pun tantangan yang sedang kamu hadapi, percayalah bahwa kamu punya kekuatan dan ketangguhan yang luar biasa.",
   },
   Yupiter: {
     size: 16.0,
@@ -159,7 +158,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Jupiter memiliki massa lebih dari dua kali lipat gabungan seluruh planet lainnya. Medan gravitasinya yang kuat menyerap tabrakan komet berbahaya dari luar.",
     romanticNote:
-      "Sebagaimana Jupiter yang setia melindungi orbit sekelilingnya, aku ingin selalu menjadi sosok yang menjaga, mendengarkan, dan membuatmu merasa aman seutuhnya.",
+      "Yupiter menjadi pelindung setia yang menjaga keseimbangan tata surya. Aku ingin selalu menjadi sosok yang bisa kamu percaya, tempat yang aman untuk bercerita dan saling mendukung.",
   },
   Saturnus: {
     size: 13.5,
@@ -178,7 +177,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Cincin Saturnus membentang selebar 282.000 km namun tebalnya rata-rata hanya 10 meter. Tersusun atas 99% miliaran kristal es murni dengan Celah Cassini.",
     romanticNote:
-      "Cincin Saturnus yang melingkar anggun adalah simbol keselarasan dan keharmonisan. Bersamamu, hal-hal sederhana selalu terasa begitu indah dan bermakna.",
+      "Keindahan Saturnus lahir dari keselarasan yang tertata rapi selama jutaan tahun. Ketenangan dan kebaikan hatimu selalu membawa rasa damai di tengah kesibukan sehari-hari.",
   },
   Uranus: {
     size: 11.0,
@@ -196,7 +195,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Uranus memiliki kemiringan poros rotasi ekstrem 97,8°. Metana di atmosfer atasnya menyerap cahaya merah dan menghasilkan rona biru kehijauan yang tenang.",
     romanticNote:
-      "Keunikan Uranus mengingatkanku pada pribadimu yang selalu membawa keceriaan, tawa manis, dan warna-warni menyenangkan dalam hidupku.",
+      "Uranus berotasi dengan jalurnya sendiri yang unik tanpa perlu meniru yang lain. Begitu juga denganmu—keunikan cara berpikir dan sudut pandangmu adalah keistimewaan yang patut kamu banggakan.",
   },
   Neptunus: {
     size: 10.5,
@@ -214,7 +213,7 @@ const DATA: Record<PlanetName, PlanetInfo> = {
     scienceFact:
       "Neptunus memiliki kecepatan angin tercepat di tata surya yang mencapai 2.100 km/jam. Membutuhkan waktu 165 tahun Bumi untuk satu kali revolusi mengitari Matahari.",
     romanticNote:
-      "Berada di batas terjauh tata surya ini membuktikan bahwa sejauh apa pun jarak dan waktu, doa baik dan rasa sayangku untukmu tak akan pernah pudar.",
+      "Bahkan di titik terjauh yang tenang dan dalam, selalu ada keteduhan yang menentramkan. Semoga di mana pun kamu berada, kamu selalu merasa dihargai, didukung, dan tak pernah merasa sendirian.",
   },
 };
 
@@ -236,14 +235,18 @@ export default function Home() {
 
   const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Bumi");
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"science" | "lab" | "constellations" | "love">("science");
+  const [activeTab, setActiveTab] = useState<"science" | "lab" | "love">("science");
   const [userWeight, setUserWeight] = useState<number>(45);
   const [userAge, setUserAge] = useState<number>(20);
   
-  const [showConstellations, setShowConstellations] = useState<boolean>(true);
   const [showMilkyWay, setShowMilkyWay] = useState<boolean>(true);
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
-  const [selectedCelestial, setSelectedCelestial] = useState<CelestialObject | null>(null);
+
+  // Ambient Soundscape state & refs
+  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+  const ambientOscillatorsRef = useRef<OscillatorNode[]>([]);
+  const ambientGainRef = useRef<GainNode | null>(null);
+  const chordIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Solar System Scope Orrery Modal state
   const [showOrreryModal, setShowOrreryModal] = useState(false);
@@ -263,7 +266,7 @@ export default function Home() {
     {
       id: "initial-1",
       sender: "dhani",
-      text: "Halo Nana sayang! ✨ Lagi pengen tahu atau nanya apa hari ini seputar semesta, rasi bintang, atau harimu? Mas Dhani siap temani dan jawab apa pun buat kamu! 🪐💖",
+      text: "Halo Nana! ✨ Lagi ingin tahu atau eksplorasi apa hari ini seputar keajaiban semesta dan planet-planet kita? Tanyakan apa saja, Mas siap temani! 🪐🌟",
       time: "Sekarang",
     },
   ]);
@@ -278,14 +281,12 @@ export default function Home() {
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
-  const navigateToConstellationRef = useRef<(c: Constellation) => void>(() => {});
   const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
   const zoomInRef = useRef<() => void>(() => {});
   const zoomOutRef = useRef<() => void>(() => {});
   const resetViewRef = useRef<() => void>(() => {});
 
   const timeMultiplierRef = useRef<number>(1);
-  const constellationGroupRef = useRef<THREE.Group | null>(null);
   const skyDomeMeshRef = useRef<THREE.Mesh | null>(null);
 
   useEffect(() => {
@@ -293,12 +294,147 @@ export default function Home() {
   }, [timeMultiplier]);
 
   useEffect(() => {
-    if (constellationGroupRef.current) constellationGroupRef.current.visible = showConstellations;
-  }, [showConstellations]);
-
-  useEffect(() => {
     if (skyDomeMeshRef.current) skyDomeMeshRef.current.visible = showMilkyWay;
   }, [showMilkyWay]);
+
+  // PROCEDURAL AMBIENT DEEP SPACE SOUNDSCAPE (Brian Eno / Interstellar Style)
+  const startAmbientSoundscape = () => {
+    try {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new AudioCtx();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === "suspended") ctx.resume();
+
+      if (ambientGainRef.current) {
+        ambientGainRef.current.gain.setValueAtTime(ambientGainRef.current.gain.value, ctx.currentTime);
+        ambientGainRef.current.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 1.5);
+        setIsAudioPlaying(true);
+        return;
+      }
+
+      // Master ambient gain node with smooth fade-in
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
+      masterGain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 2.5);
+      masterGain.connect(ctx.destination);
+      ambientGainRef.current = masterGain;
+
+      // Warm lowpass filter for deep space tone
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(450, ctx.currentTime);
+      filter.connect(masterGain);
+
+      // Deep space drone oscillators (warm sine & triangle waves)
+      const droneFreqs = [55.0, 82.41, 110.0, 164.81];
+      const oscs: OscillatorNode[] = [];
+
+      droneFreqs.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const oscGain = ctx.createGain();
+        osc.type = i % 2 === 0 ? "sine" : "triangle";
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        osc.detune.setValueAtTime((i - 1.5) * 3.5, ctx.currentTime);
+        oscGain.gain.setValueAtTime(0.07 / (i + 1), ctx.currentTime);
+        osc.connect(oscGain);
+        oscGain.connect(filter);
+        osc.start();
+        oscs.push(osc);
+      });
+
+      // Dreamy space chord pad progression (Amaj7 -> F#m7 -> Dmaj9 -> Esus4)
+      const chordProgression = [
+        [220, 277.18, 329.63, 415.30], // Amaj7
+        [185.00, 220.00, 277.18, 329.63], // F#m7
+        [146.83, 220.00, 277.18, 369.99], // Dmaj9
+        [164.81, 220.00, 246.94, 329.63], // Esus4
+      ];
+
+      let chordIdx = 0;
+      const playNextChord = () => {
+        if (!audioCtxRef.current || audioCtxRef.current.state === "closed") return;
+        const now = ctx.currentTime;
+        const currentChord = chordProgression[chordIdx % chordProgression.length];
+        chordIdx++;
+
+        currentChord.forEach((f) => {
+          const chordOsc = ctx.createOscillator();
+          const chordGain = ctx.createGain();
+          chordOsc.type = "sine";
+          chordOsc.frequency.setValueAtTime(f, now);
+          chordGain.gain.setValueAtTime(0.001, now);
+          chordGain.gain.linearRampToValueAtTime(0.035, now + 3.0);
+          chordGain.gain.exponentialRampToValueAtTime(0.001, now + 9.5);
+
+          chordOsc.connect(chordGain);
+          chordGain.connect(filter);
+          chordOsc.start(now);
+          chordOsc.stop(now + 10.0);
+        });
+      };
+
+      playNextChord();
+      chordIntervalRef.current = setInterval(playNextChord, 8500);
+
+      ambientOscillatorsRef.current = oscs;
+      setIsAudioPlaying(true);
+    } catch {}
+  };
+
+  const stopAmbientSoundscape = () => {
+    try {
+      if (ambientGainRef.current && audioCtxRef.current) {
+        const ctx = audioCtxRef.current;
+        ambientGainRef.current.gain.setValueAtTime(ambientGainRef.current.gain.value, ctx.currentTime);
+        ambientGainRef.current.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
+      }
+      setTimeout(() => {
+        ambientOscillatorsRef.current.forEach((osc) => {
+          try {
+            osc.stop();
+            osc.disconnect();
+          } catch {}
+        });
+        ambientOscillatorsRef.current = [];
+        if (chordIntervalRef.current) {
+          clearInterval(chordIntervalRef.current);
+          chordIntervalRef.current = null;
+        }
+        ambientGainRef.current = null;
+      }, 1300);
+      setIsAudioPlaying(false);
+    } catch {}
+  };
+
+  const toggleAmbientAudio = () => {
+    playSfx("click");
+    if (isAudioPlaying) {
+      stopAmbientSoundscape();
+    } else {
+      startAmbientSoundscape();
+    }
+  };
+
+  // Auto-init soundscape on first user gesture
+  useEffect(() => {
+    const handleFirstUserGesture = () => {
+      if (!isAudioPlaying) {
+        startAmbientSoundscape();
+      }
+      window.removeEventListener("click", handleFirstUserGesture);
+      window.removeEventListener("keydown", handleFirstUserGesture);
+    };
+    window.addEventListener("click", handleFirstUserGesture);
+    window.addEventListener("keydown", handleFirstUserGesture);
+    return () => {
+      window.removeEventListener("click", handleFirstUserGesture);
+      window.removeEventListener("keydown", handleFirstUserGesture);
+    };
+  }, []);
 
   const playSfx = (type: "whoosh" | "click" | "satellite" | "target") => {
     try {
@@ -523,76 +659,6 @@ export default function Home() {
       tex.needsUpdate = true;
       return tex;
     };
-    // 2. AUTHENTIC STELLARIUM CONSTELLATION LINES & STAR NODES (Seamlessly blended with Milky Way)
-    const constGroup = new THREE.Group();
-
-    // Soft starlight point texture
-    const createStarlightNodeTexture = () => {
-      const c = document.createElement("canvas");
-      c.width = 64;
-      c.height = 64;
-      const ctx = c.getContext("2d");
-      if (!ctx) return new THREE.Texture();
-      const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 30);
-      grad.addColorStop(0, "rgba(255, 255, 255, 1.0)");
-      grad.addColorStop(0.25, "rgba(186, 230, 253, 0.85)");
-      grad.addColorStop(0.6, "rgba(56, 189, 248, 0.25)");
-      grad.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 64, 64);
-      const tex = new THREE.CanvasTexture(c);
-      tex.needsUpdate = true;
-      return tex;
-    };
-    const starlightNodeTex = createStarlightNodeTexture();
-
-    CONSTELLATIONS.forEach((c) => {
-      const scale = 2.8;
-
-      // Clean, subtle starlight lines (Stellarium authentic look)
-      const linePoints: THREE.Vector3[] = [];
-      c.lines.forEach(([i1, i2]) => {
-        const s1 = c.stars[i1];
-        const s2 = c.stars[i2];
-        linePoints.push(new THREE.Vector3(s1[0] * scale, s1[1] * scale, s1[2] * scale));
-        linePoints.push(new THREE.Vector3(s2[0] * scale, s2[1] * scale, s2[2] * scale));
-      });
-
-      const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
-      const lineMat = new THREE.LineBasicMaterial({
-        color: 0x38bdf8,
-        transparent: true,
-        opacity: 0.35,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      });
-      const lines = new THREE.LineSegments(lineGeo, lineMat);
-      constGroup.add(lines);
-
-      // Star nodes with soft natural glow
-      const starNodeGeo = new THREE.BufferGeometry();
-      const nodePositions = new Float32Array(c.stars.length * 3);
-      c.stars.forEach((s, idx) => {
-        nodePositions[idx * 3] = s[0] * scale;
-        nodePositions[idx * 3 + 1] = s[1] * scale;
-        nodePositions[idx * 3 + 2] = s[2] * scale;
-      });
-      starNodeGeo.setAttribute("position", new THREE.BufferAttribute(nodePositions, 3));
-      const starNodeMat = new THREE.PointsMaterial({
-        size: 5.5,
-        map: starlightNodeTex,
-        color: 0xfef08a,
-        transparent: true,
-        opacity: 0.9,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      });
-      const starNodes = new THREE.Points(starNodeGeo, starNodeMat);
-      constGroup.add(starNodes);
-    });
-
-    scene.add(constGroup);
-    constellationGroupRef.current = constGroup;
 
     // 4. FULL LIVING SOLAR SYSTEM (All planets present in 3D space!)
     const planetMeshes: Record<string, THREE.Group> = {};
@@ -762,29 +828,6 @@ export default function Home() {
     }
     navigateToPlanetRef.current = navigateToPlanet;
 
-    function navigateToConstellation(c: Constellation) {
-      playSfx("target");
-      const targetPos = new THREE.Vector3(c.center[0] * 2.8, c.center[1] * 2.8, c.center[2] * 2.8);
-      const camPos = targetPos.clone().multiplyScalar(0.48);
-
-      gsap.to(controls.target, {
-        x: targetPos.x,
-        y: targetPos.y,
-        z: targetPos.z,
-        duration: 1.8,
-        ease: "power3.inOut",
-      });
-
-      gsap.to(camera.position, {
-        x: camPos.x,
-        y: camPos.y + 35,
-        z: camPos.z,
-        duration: 1.8,
-        ease: "power3.inOut",
-      });
-    }
-    navigateToConstellationRef.current = navigateToConstellation;
-
     zoomInRef.current = () => {
       playSfx("click");
       const dir = new THREE.Vector3().subVectors(controls.target, camera.position).normalize();
@@ -898,7 +941,6 @@ export default function Home() {
       if (skyDomeMeshRef.current) {
         skyDomeMeshRef.current.rotation.y = t * 0.0004;
       }
-      constGroup.rotation.y = t * 0.0006;
 
       activeSatellites.forEach((sat) => {
         const u = sat.userData;
@@ -986,14 +1028,14 @@ export default function Home() {
             Planets
           </button>
           <button
-            className={`nav-link-btn ${drawerOpen && activeTab === "constellations" ? "active" : ""}`}
+            className={`nav-link-btn ${drawerOpen && activeTab === "science" ? "active" : ""}`}
             onClick={() => {
               playSfx("click");
-              setActiveTab("constellations");
+              setActiveTab("science");
               setDrawerOpen(true);
             }}
           >
-            Constellations ({CONSTELLATIONS.length})
+            Science Facts
           </button>
           <button
             className={`nav-link-btn ${drawerOpen && activeTab === "lab" ? "active" : ""}`}
@@ -1006,16 +1048,6 @@ export default function Home() {
             Lab & Gravity
           </button>
           <button
-            className={`nav-link-btn ${drawerOpen && activeTab === "science" ? "active" : ""}`}
-            onClick={() => {
-              playSfx("click");
-              setActiveTab("science");
-              setDrawerOpen(true);
-            }}
-          >
-            Science Facts
-          </button>
-          <button
             className={`nav-link-btn ${drawerOpen && activeTab === "love" ? "active" : ""}`}
             onClick={() => {
               playSfx("click");
@@ -1023,11 +1055,28 @@ export default function Home() {
               setDrawerOpen(true);
             }}
           >
-            Notes for Nana
+            💖 Notes for Nana
           </button>
         </div>
 
         <div className="nav-right-cluster">
+          {/* AMBIENT SOUNDSCAPE TOGGLE */}
+          <button
+            className={`audio-toggle-btn ${isAudioPlaying ? "playing" : ""}`}
+            onClick={toggleAmbientAudio}
+            title={isAudioPlaying ? "Matikan Musik Luar Angkasa" : "Putar Musik Luar Angkasa"}
+          >
+            <span className="audio-icon">{isAudioPlaying ? "🎵" : "🔇"}</span>
+            <span className="audio-label">{isAudioPlaying ? "Soundscape On" : "Soundscape Off"}</span>
+            {isAudioPlaying && (
+              <span className="soundwave-anim">
+                <span className="bar"></span>
+                <span className="bar"></span>
+                <span className="bar"></span>
+              </span>
+            )}
+          </button>
+
           {/* SOLAR SYSTEM SCOPE LIVE ORRERY BUTTON */}
           <button
             className="view-mode-pill"
@@ -1141,17 +1190,6 @@ export default function Home() {
 
       {/* STELLARIUM DOCK */}
       <div className={`stellarium-dock ${drawerOpen ? "hidden-dock" : ""}`}>
-        <button
-          className={`dock-btn ${showConstellations ? "active" : ""}`}
-          onClick={() => {
-            playSfx("click");
-            setShowConstellations(!showConstellations);
-          }}
-          title="Toggle Garis Rasi Bintang"
-        >
-          ✨ Constellations
-        </button>
-
         <button
           className={`dock-btn ${showMilkyWay ? "active" : ""}`}
           onClick={() => {
@@ -1337,10 +1375,10 @@ export default function Home() {
               <button
                 className="chat-faq-chip"
                 onClick={() =>
-                  askDhani("Mas Dhani, rasi bintang apa yang paling cocok buat nemenin malam kita?")
+                  askDhani(`Mas Dhani, apa pemandangan paling menakjubkan di planet ${activePlanetName}? ✨`)
                 }
               >
-                ✨ Rekomendasi Rasi Bintang
+                🌌 Pemandangan {activePlanetName}
               </button>
               <button
                 className="chat-faq-chip"
@@ -1399,15 +1437,6 @@ export default function Home() {
               Fakta Sains
             </button>
             <button
-              className={`drawer-tab-btn ${activeTab === "constellations" ? "active" : ""}`}
-              onClick={() => {
-                playSfx("click");
-                setActiveTab("constellations");
-              }}
-            >
-              ✨ Rasi Bintang
-            </button>
-            <button
               className={`drawer-tab-btn ${activeTab === "lab" ? "active" : ""}`}
               onClick={() => {
                 playSfx("click");
@@ -1423,7 +1452,7 @@ export default function Home() {
                 setActiveTab("love");
               }}
             >
-              Catatan Manis
+              💖 Pesan untuk Nana
             </button>
           </div>
         </div>
@@ -1451,66 +1480,6 @@ export default function Home() {
 
             <div className="drawer-desc-box">
               {currentPlanet.scienceFact}
-            </div>
-          </div>
-        )}
-
-        {activeTab === "constellations" && (
-          <div>
-            <p style={{ fontSize: "12.5px", color: "var(--accent-cyan)", marginBottom: "12px", fontWeight: 600 }}>
-              🔭 Katalog Rasi Bintang Resmi (Stellarium Sky Cultures):
-            </p>
-
-            <div className="constellation-list">
-              {CONSTELLATIONS.map((c) => (
-                <div key={c.id} className="const-item-card" style={{ borderColor: `${c.themeColor}55` }}>
-                  <div className="const-item-header">
-                    <div className="const-item-title" style={{ color: "#ffffff" }}>
-                      ✨ {c.name} <span style={{ color: c.themeColor, fontSize: "11px", fontWeight: 500 }}>• {c.english}</span>
-                    </div>
-                    <span
-                      className="const-indo-badge"
-                      style={{
-                        background: `${c.themeColor}22`,
-                        color: c.themeColor,
-                        borderColor: `${c.themeColor}66`,
-                      }}
-                    >
-                      {c.indonesian}
-                    </span>
-                  </div>
-
-                  <div className="const-item-meaning">{c.meaning}</div>
-                  <div className="const-item-lore">📜 <em>{c.lore}</em></div>
-
-                  <div className="const-stars-row">
-                    <span className="const-stars-lbl">Bintang Terang:</span>
-                    {c.starDetails.map((st) => (
-                      <span
-                        key={st.name}
-                        className="const-star-pill"
-                        style={{ borderLeft: `3px solid ${st.color}`, color: st.color }}
-                      >
-                        {st.name} {st.isAlpha ? "★" : ""}
-                      </span>
-                    ))}
-                  </div>
-
-                  <button
-                    className="const-fly-btn"
-                    style={{
-                      background: `linear-gradient(135deg, ${c.themeColor}33, ${c.themeColor}11)`,
-                      borderColor: c.themeColor,
-                    }}
-                    onClick={() => {
-                      playSfx("target");
-                      navigateToConstellationRef.current(c);
-                    }}
-                  >
-                    🔭 Arahkan Pandangan ke Rasi {c.name}
-                  </button>
-                </div>
-              ))}
             </div>
           </div>
         )}
@@ -1552,8 +1521,20 @@ export default function Home() {
         )}
 
         {activeTab === "love" && (
-          <div className="drawer-desc-box" style={{ fontStyle: "italic", borderLeft: "3px solid #f6cd7c" }}>
-            {currentPlanet.romanticNote}
+          <div className="nana-note-wrapper">
+            <div className="nana-note-card">
+              <div className="nana-note-header">
+                <span className="nana-note-badge">💖 Catatan untuk Nana</span>
+                <span className="nana-note-tag">🪐 {activePlanetName}</span>
+              </div>
+              <div className="nana-note-quote">
+                &ldquo;{currentPlanet.romanticNote}&rdquo;
+              </div>
+              <div className="nana-note-footer">
+                <span className="nana-note-sign">— Mas Dhani</span>
+                <span className="nana-note-date">✨ Di Bawah Langit Semesta</span>
+              </div>
+            </div>
           </div>
         )}
 
