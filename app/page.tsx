@@ -315,6 +315,79 @@ export default function Home() {
   // Solar System Scope Orrery Modal state
   const [showOrreryModal, setShowOrreryModal] = useState(false);
 
+  // FEATURE 1: WISH GENERATOR STATE
+  const [showWishModal, setShowWishModal] = useState(false);
+  const [wishCategory, setWishCategory] = useState<string>("💖 Cinta & Kita");
+  const [wishText, setWishText] = useState<string>("");
+  const [wishBlessing, setWishBlessing] = useState<string | null>(null);
+  interface SavedWish {
+    id: string;
+    category: string;
+    text: string;
+    date: string;
+    blessing: string;
+  }
+  const [wishHistory, setWishHistory] = useState<SavedWish[]>([
+    {
+      id: "wish-init-1",
+      category: "💖 Cinta & Kita",
+      text: "Semoga kita berdua selalu bahagia, langgeng, dan selalu saling menemani di setiap musim kehidupan ✨",
+      date: "8 Maret 2026",
+      blessing:
+        "Permohonanmu sudah melesat menembus bintang-bintang langit semesta sayang. Mas Dhani selalu mendoakan dan mendampingi langkahmu. 🤍🪐",
+    },
+  ]);
+
+  // FEATURE 2: POLAROID SNAPSHOT STATE
+  const [showPolaroidModal, setShowPolaroidModal] = useState(false);
+  const [polaroidImgUrl, setPolaroidImgUrl] = useState<string | null>(null);
+  const [polaroidCaption, setPolaroidCaption] = useState<string>("");
+  const [polaroidFilter, setPolaroidFilter] = useState<"original" | "vintage" | "cyber" | "golden" | "bw">("original");
+
+  // FEATURE 3: TIME CAPSULE & LOVE QUIZ STATE
+  const [showCapsuleModal, setShowCapsuleModal] = useState(false);
+  const [capsuleTab, setCapsuleTab] = useState<"letter" | "reasons" | "quiz">("letter");
+  const [quizIndex, setQuizIndex] = useState<number>(0);
+  const [quizSelected, setQuizSelected] = useState<number | null>(null);
+  const [quizScore, setQuizScore] = useState<number>(0);
+  const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
+
+  // FEATURE 4: ARCADE MINI-GAME STATE
+  const [showGameModal, setShowGameModal] = useState<boolean>(false);
+  const [gameState, setGameState] = useState<"menu" | "playing" | "gameover" | "victory">("menu");
+  const [gameScore, setGameScore] = useState<number>(0);
+  const [gameHighScore, setGameHighScore] = useState<number>(0);
+  const [gameLives, setGameLives] = useState<number>(3);
+  const [gameDistance, setGameDistance] = useState<string>("0.00 AU");
+  const arcadeCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const gameMoveLeftRef = useRef(false);
+  const gameMoveRightRef = useRef(false);
+  const gameLoopIdRef = useRef<number | null>(null);
+
+  // TOAST NOTIFICATION STATE
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const showToastRef = useRef<(msg: string) => void>(() => {});
+
+  const showToast = (msg: string) => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    setToastMsg(msg);
+    toastTimeoutRef.current = setTimeout(() => {
+      setToastMsg(null);
+    }, 4500);
+  };
+  showToastRef.current = showToast;
+
+  // Load persisted wishes and game highscore from localStorage
+  useEffect(() => {
+    try {
+      const savedHigh = localStorage.getItem("cosmonana_rocket_highscore");
+      if (savedHigh) setGameHighScore(parseInt(savedHigh, 10) || 0);
+      const savedWishes = localStorage.getItem("cosmonana_wishes");
+      if (savedWishes) setWishHistory(JSON.parse(savedWishes));
+    } catch {}
+  }, []);
+
   const [showDhaniModal, setShowDhaniModal] = useState(false);
   const [dhaniInput, setDhaniInput] = useState("");
   const [dhaniLoading, setDhaniLoading] = useState(false);
@@ -346,6 +419,7 @@ export default function Home() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
   const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
+  const triggerShootingStarRef = useRef<() => void>(() => {});
   const switchLayoutModeRef = useRef<(mode: LayoutMode) => void>(() => {});
   const viewSolarOverviewRef = useRef<() => void>(() => {});
   const zoomInRef = useRef<() => void>(() => {});
@@ -440,7 +514,20 @@ export default function Home() {
     };
   }, []);
 
-  const playSfx = (type: "whoosh" | "click" | "satellite" | "target") => {
+  const playSfx = (
+    type:
+      | "whoosh"
+      | "click"
+      | "satellite"
+      | "target"
+      | "wish"
+      | "polaroid"
+      | "quiz_correct"
+      | "quiz_wrong"
+      | "star_collect"
+      | "heart"
+      | "game_over"
+  ) => {
     try {
       const AudioCtx =
         window.AudioContext ||
@@ -499,6 +586,94 @@ export default function Home() {
         gain.connect(ctx.destination);
         osc.start(now);
         osc.stop(now + 0.4);
+      } else if (type === "wish") {
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gain.gain.setValueAtTime(0.07, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.4);
+        });
+      } else if (type === "polaroid") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.setValueAtTime(200, now + 0.04);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } else if (type === "quiz_correct") {
+        [659.25, 880].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+          gain.gain.setValueAtTime(0.08, now + idx * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.1);
+          osc.stop(now + idx * 0.1 + 0.25);
+        });
+      } else if (type === "quiz_wrong") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.linearRampToValueAtTime(140, now + 0.2);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } else if (type === "star_collect") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(987.77, now);
+        osc.frequency.setValueAtTime(1318.51, now + 0.06);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } else if (type === "heart") {
+        [587.33, 880, 1174.66].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+          gain.gain.setValueAtTime(0.07, now + idx * 0.07);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.07);
+          osc.stop(now + idx * 0.07 + 0.3);
+        });
+      } else if (type === "game_over") {
+        [440, 392, 349.23, 261.63].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+          gain.gain.setValueAtTime(0.08, now + idx * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.12);
+          osc.stop(now + idx * 0.12 + 0.3);
+        });
       }
     } catch {}
   };
@@ -566,6 +741,544 @@ export default function Home() {
     }
   };
 
+  // FEATURE 1 HANDLERS: WISH GENERATOR
+  const handleSendWish = () => {
+    if (!wishText.trim()) return;
+    playSfx("wish");
+    triggerShootingStarRef.current();
+
+    const blessingTexts = [
+      "Permohonanmu sudah melesat menembus bintang-bintang langit semesta sayang. Mas Dhani selalu mendoakan dan mendampingi setiap langkahmu untuk mewujudkannya. Semoga semesta selalu memelukmu sehangat Mas memelukmu. ✨💖",
+      "Bintang jatuh malam ini membawa impian manismu ke orbit tertinggi. Apapun yang kamu cita-citakan, Mas yakin kamu pasti bisa mencapainya, dan Mas akan selalu ada di baris terdepan buat dukung kamu! 🌟🤍",
+      "Doa tulusmu sudah didengar seluruh galaksi cantikku. Mas percaya hal-hal baik akan selalu datang ke hidupmu. Tetap tersenyum manis yaa bidadariku! 🪐🌸",
+    ];
+    const pickedBlessing = blessingTexts[Math.floor(Math.random() * blessingTexts.length)];
+    setWishBlessing(pickedBlessing);
+
+    const newWish: SavedWish = {
+      id: "wish-" + Date.now(),
+      category: wishCategory,
+      text: wishText.trim(),
+      date: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }),
+      blessing: pickedBlessing,
+    };
+
+    const updatedHistory = [newWish, ...wishHistory];
+    setWishHistory(updatedHistory);
+    try {
+      localStorage.setItem("cosmonana_wishes", JSON.stringify(updatedHistory));
+    } catch {}
+
+    setWishText("");
+    showToast("🌠 Permohonanmu telah meluncur bersama bintang jatuh ke semesta!");
+  };
+
+  const handleDeleteWish = (id: string) => {
+    playSfx("click");
+    const filtered = wishHistory.filter((w) => w.id !== id);
+    setWishHistory(filtered);
+    try {
+      localStorage.setItem("cosmonana_wishes", JSON.stringify(filtered));
+    } catch {}
+  };
+
+  // FEATURE 2 HANDLERS: POLAROID SNAPSHOT
+  const capturePolaroidSnapshot = () => {
+    if (!canvasRef.current) return;
+    playSfx("polaroid");
+    try {
+      const dataUrl = canvasRef.current.toDataURL("image/png");
+      setPolaroidImgUrl(dataUrl);
+      setPolaroidCaption(`Bersama ${activePlanetName} — Di Bawah Langit Semesta ✨`);
+      setShowPolaroidModal(true);
+      showToast(`📸 Mengabadikan momen kosmik di orbit ${activePlanetName}...`);
+    } catch {
+      showToast("Gagal mengambil snapshot canvas.");
+    }
+  };
+
+  const downloadPolaroidPng = () => {
+    if (!polaroidImgUrl) return;
+    playSfx("click");
+    const offscreenCanvas = document.createElement("canvas");
+    offscreenCanvas.width = 900;
+    offscreenCanvas.height = 1100;
+    const ctx = offscreenCanvas.getContext("2d");
+    if (!ctx) return;
+
+    // 1. Polaroid White Card Background
+    ctx.fillStyle = "#fcfbf9";
+    ctx.fillRect(0, 0, 900, 1100);
+
+    // Border
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(2, 2, 896, 1096);
+
+    const img = new Image();
+    img.src = polaroidImgUrl;
+    img.onload = () => {
+      // Photo frame backing
+      ctx.fillStyle = "#030611";
+      ctx.fillRect(50, 50, 800, 800);
+
+      if (polaroidFilter === "vintage") {
+        ctx.filter = "sepia(0.35) contrast(1.1) brightness(0.95) saturate(1.2)";
+      } else if (polaroidFilter === "cyber") {
+        ctx.filter = "hue-rotate(25deg) contrast(1.25) saturate(1.4)";
+      } else if (polaroidFilter === "golden") {
+        ctx.filter = "sepia(0.2) saturate(1.5) brightness(1.05)";
+      } else if (polaroidFilter === "bw") {
+        ctx.filter = "grayscale(1) contrast(1.2)";
+      } else {
+        ctx.filter = "none";
+      }
+
+      ctx.drawImage(img, 50, 50, 800, 800);
+      ctx.filter = "none";
+
+      // Badge Stamp on Photo Top-Right
+      ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(580, 70, 250, 44, 8);
+        ctx.fill();
+      } else {
+        ctx.fillRect(580, 70, 250, 44);
+      }
+      ctx.fillStyle = "#38bdf8";
+      ctx.font = "bold 17px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(`🪐 ${activePlanetName} • ${DATA[activePlanetName].realAU}`, 705, 98);
+
+      // Handwritten Caption
+      ctx.fillStyle = "#1e293b";
+      ctx.font = "italic bold 32px Georgia, 'Playfair Display', serif";
+      ctx.textAlign = "center";
+      ctx.fillText(polaroidCaption || `Bersama ${activePlanetName} ✨`, 450, 930);
+
+      // Date stamp
+      ctx.fillStyle = "#64748b";
+      ctx.font = "18px monospace";
+      const nowStr = new Date().toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+      ctx.fillText(`${nowStr} • Cosmonana Stellarium`, 450, 980);
+
+      // Signature note
+      ctx.fillStyle = "#ec4899";
+      ctx.font = "bold 22px cursive, sans-serif";
+      ctx.fillText("✨ with Mas Dhani 🤍", 450, 1035);
+
+      const link = document.createElement("a");
+      link.download = `cosmonana-polaroid-${activePlanetName.toLowerCase()}-${Date.now()}.png`;
+      link.href = offscreenCanvas.toDataURL("image/png");
+      link.click();
+
+      showToast("📸 Foto Polaroid berhasil diunduh ke perangkatmu!");
+    };
+  };
+
+  // FEATURE 3 CONSTANTS & QUIZ LOGIC
+  const QUIZ_QUESTIONS = [
+    {
+      question: "Kalau Mas Dhani lagi kangen banget sama kamu, apa hal yang paling sering Mas rasain?",
+      options: [
+        "Pengen cepat-cepat telepon atau dengar suaramu yang manis",
+        "Buka galeri foto kamu sambil senyum-senyum sendiri",
+        "Nulis pesan manis penuh perhatian buat kamu",
+        "Semua hal di atas benar banget! 💖",
+      ],
+      correct: 3,
+      explanation: "Tepat sekali sayang! Mas selalu kangen setiap momen bareng kamu, dari suara hingga senyuman manismu.",
+    },
+    {
+      question: "Menurut Mas Dhani, benda langit apa yang paling melambangkan senyuman dan kehangatan kamu?",
+      options: [
+        "Matahari — Karena selalu jadi sumber kehangatan dan semangat",
+        "Venus — Karena kecantikanmu paling bersinar di langit malam",
+        "Bumi — Karena kamu adalah rumah ternyaman di seluruh semesta",
+        "Semua benda langit kalah indah dibanding kamu! ✨",
+      ],
+      correct: 3,
+      explanation: "Benar sekali! Seluruh semesta tahu kalau keindahan kamu selalu jadi yang nomor satu di hati Mas.",
+    },
+    {
+      question: "Apa hal yang paling bikin Mas Dhani gemas saat ngobrol atau bercanda sama kamu?",
+      options: [
+        "Waktu kamu cerita hal-hal kecil di harimu dengan penuh antusias",
+        "Suara manjamu saat lagi capek atau minta disemangatin",
+        "Ketawa lepasmu yang selalu nular dan bikin bahagia",
+        "Semuanya, dari ujung kepala sampai sifat lucumu bikin Mas luluh! 🤍",
+      ],
+      correct: 3,
+      explanation: "Pasti! Setiap detail kecil dari kamu selalu punya tempat paling spesial di hati Mas Dhani.",
+    },
+    {
+      question: "Kalau kita bisa berpetualang ke luar angkasa berdua, tempat mana yang wajib kita kunjungi?",
+      options: [
+        "Cincin es Saturnus yang berkilauan indah",
+        "Melihat aurora hijau menari di kutub utara Bumi dari orbit",
+        "Puncak bukit di Mars sambil menikmati langit kosmik",
+        "Ke mana saja semesta membawa kita, asalkan selalu bergandengan tangan sama kamu 🚀",
+      ],
+      correct: 3,
+      explanation: "Di mana pun kita berada di alam semesta ini, selama ada kamu di samping Mas, itu sudah jadi tempat terindah.",
+    },
+    {
+      question: "Berapa besar rasa sayang dan cinta Mas Dhani buat kamu?",
+      options: [
+        "100%",
+        "1000%",
+        "Seluas jarak dari Merkurius ke Neptunus",
+        "Tak terhingga melampaui batas seluruh galaksi di semesta raya! 🌌",
+      ],
+      correct: 3,
+      explanation: "Jawaban paling sempurna! Rasa sayang Mas ke kamu nggak akan pernah ada ujungnya, cantikku sayang.",
+    },
+  ];
+
+  const SWEET_REASONS = [
+    "Senyuman manis kamu yang selalu bikin semua rasa lelah Mas hilang seketika.",
+    "Cara kamu tertawa lepas dan gemas saat menceritakan hal seru di harimu.",
+    "Perhatian dan kebaikan hatimu yang selalu tulus dan menenangkan.",
+    "Mata indahmu yang selalu berbinar teduh setiap kali kita saling memandang.",
+    "Ketulusanmu yang selalu sabar dan pengertian menemani langkah Mas.",
+    "Suara lembut kamu di telepon yang selalu jadi obat rindu terbaik.",
+    "Semangat dan dedikasi kamu dalam mengejar impian-impian hebatmu.",
+    "Tingkah lucu dan manjamu yang cuma Mas yang beruntung bisa melihatnya.",
+    "Momen ngobrol berdua berjam-jam tanpa rasa bosan sedikit pun.",
+    "Fakta bahwa kamu adalah rumah ternyaman dan terhangat bagi hati Mas Dhani.",
+  ];
+
+  const handleAnswerQuiz = (optionIdx: number) => {
+    if (quizSelected !== null) return;
+    setQuizSelected(optionIdx);
+    const q = QUIZ_QUESTIONS[quizIndex];
+    if (optionIdx === q.correct) {
+      playSfx("quiz_correct");
+      setQuizScore((prev) => prev + 20);
+    } else {
+      playSfx("quiz_wrong");
+    }
+  };
+
+  const handleNextQuiz = () => {
+    playSfx("click");
+    if (quizIndex < QUIZ_QUESTIONS.length - 1) {
+      setQuizIndex((prev) => prev + 1);
+      setQuizSelected(null);
+    } else {
+      setQuizCompleted(true);
+      playSfx("wish");
+    }
+  };
+
+  const resetQuiz = () => {
+    playSfx("click");
+    setQuizIndex(0);
+    setQuizSelected(null);
+    setQuizScore(0);
+    setQuizCompleted(false);
+  };
+
+  // FEATURE 4: RETRO COSMIC ROCKET MINI-GAME ENGINE
+  const startArcadeGame = () => {
+    playSfx("click");
+    setGameState("playing");
+    setGameScore(0);
+    setGameLives(3);
+    setGameDistance("0.00 AU");
+  };
+
+  useEffect(() => {
+    if (!showGameModal || gameState !== "playing") {
+      if (gameLoopIdRef.current) cancelAnimationFrame(gameLoopIdRef.current);
+      return;
+    }
+
+    const canvas = arcadeCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = 440;
+    canvas.height = 380;
+
+    let shipX = canvas.width / 2;
+    const shipY = canvas.height - 45;
+    const shipW = 28;
+    const shipH = 34;
+
+    interface GameItem {
+      x: number;
+      y: number;
+      type: "star" | "heart" | "asteroid" | "shield";
+      speed: number;
+      radius: number;
+      symbol: string;
+    }
+
+    interface GameParticle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      color: string;
+      alpha: number;
+      size: number;
+    }
+
+    let items: GameItem[] = [];
+    let particles: GameParticle[] = [];
+    let bgStars: { x: number; y: number; s: number; speed: number }[] = [];
+    for (let i = 0; i < 40; i++) {
+      bgStars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        s: 1 + Math.random() * 2,
+        speed: 0.5 + Math.random() * 1.5,
+      });
+    }
+
+    let frameCount = 0;
+    let currentScore = 0;
+    let currentLives = 3;
+    let shieldTime = 0;
+    let isRunning = true;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") gameMoveLeftRef.current = true;
+      if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") gameMoveRightRef.current = true;
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") gameMoveLeftRef.current = false;
+      if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") gameMoveRightRef.current = false;
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    const spawnParticles = (x: number, y: number, color: string, count = 12) => {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const spd = 1 + Math.random() * 3.5;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * spd,
+          vy: Math.sin(angle) * spd,
+          color,
+          alpha: 1.0,
+          size: 2 + Math.random() * 3,
+        });
+      }
+    };
+
+    const loop = () => {
+      if (!isRunning) return;
+      frameCount++;
+
+      // Player Movement
+      if (gameMoveLeftRef.current && shipX > shipW) shipX -= 6;
+      if (gameMoveRightRef.current && shipX < canvas.width - shipW) shipX += 6;
+
+      // Spawn items
+      if (frameCount % 30 === 0) {
+        items.push({
+          x: 20 + Math.random() * (canvas.width - 40),
+          y: -20,
+          type: "star",
+          speed: 2.2 + Math.random() * 1.2,
+          radius: 12,
+          symbol: "⭐",
+        });
+      }
+      if (frameCount % 45 === 0) {
+        items.push({
+          x: 20 + Math.random() * (canvas.width - 40),
+          y: -20,
+          type: "asteroid",
+          speed: 2.8 + Math.random() * 1.6,
+          radius: 14,
+          symbol: "🪨",
+        });
+      }
+      if (frameCount % 240 === 0) {
+        items.push({
+          x: 30 + Math.random() * (canvas.width - 60),
+          y: -20,
+          type: "heart",
+          speed: 2.0,
+          radius: 13,
+          symbol: "💖",
+        });
+      }
+      if (frameCount % 380 === 0) {
+        items.push({
+          x: 30 + Math.random() * (canvas.width - 60),
+          y: -20,
+          type: "shield",
+          speed: 2.5,
+          radius: 13,
+          symbol: "🛡️",
+        });
+      }
+
+      if (shieldTime > 0) shieldTime--;
+
+      // Clear & Draw Background
+      ctx.fillStyle = "#040816";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Starfield parallax
+      ctx.fillStyle = "#ffffff";
+      bgStars.forEach((st) => {
+        st.y += st.speed;
+        if (st.y > canvas.height) st.y = 0;
+        ctx.globalAlpha = Math.min(1, st.s * 0.4);
+        ctx.fillRect(st.x, st.y, st.s, st.s);
+      });
+      ctx.globalAlpha = 1.0;
+
+      // Thruster flame particles
+      if (frameCount % 2 === 0) {
+        particles.push({
+          x: shipX + (Math.random() - 0.5) * 6,
+          y: shipY + shipH / 2,
+          vx: (Math.random() - 0.5) * 0.8,
+          vy: 2.5 + Math.random() * 2,
+          color: Math.random() > 0.4 ? "#f43f5e" : "#fbbf24",
+          alpha: 0.9,
+          size: 3 + Math.random() * 3,
+        });
+      }
+
+      // Update & Draw Items
+      for (let i = items.length - 1; i >= 0; i--) {
+        const it = items[i];
+        it.y += it.speed;
+
+        // Draw symbol
+        ctx.font = `${it.radius * 1.5}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(it.symbol, it.x, it.y);
+
+        // Check Collision with ship
+        const dx = it.x - shipX;
+        const dy = it.y - shipY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < it.radius + shipW * 0.6) {
+          if (it.type === "star") {
+            currentScore += 10;
+            spawnParticles(it.x, it.y, "#fbbf24", 12);
+            playSfx("star_collect");
+          } else if (it.type === "heart") {
+            currentScore += 25;
+            if (currentLives < 3) currentLives++;
+            spawnParticles(it.x, it.y, "#f43f5e", 16);
+            playSfx("heart");
+          } else if (it.type === "shield") {
+            shieldTime = 300; // 5s
+            spawnParticles(it.x, it.y, "#38bdf8", 16);
+            playSfx("satellite");
+          } else if (it.type === "asteroid") {
+            if (shieldTime <= 0) {
+              currentLives--;
+              spawnParticles(it.x, it.y, "#94a3b8", 18);
+              playSfx("quiz_wrong");
+              if (currentLives <= 0) {
+                isRunning = false;
+                setGameState("gameover");
+                playSfx("game_over");
+                try {
+                  const high = Math.max(currentScore, gameHighScore);
+                  localStorage.setItem("cosmonana_rocket_highscore", high.toString());
+                  setGameHighScore(high);
+                } catch {}
+                break;
+              }
+            } else {
+              spawnParticles(it.x, it.y, "#38bdf8", 10);
+              playSfx("target");
+            }
+          }
+          items.splice(i, 1);
+          continue;
+        }
+
+        if (it.y > canvas.height + 30) {
+          items.splice(i, 1);
+        }
+      }
+
+      // Update state for HUD
+      setGameScore(currentScore);
+      setGameLives(currentLives);
+      setGameDistance((currentScore * 0.04).toFixed(2) + " AU");
+
+      // Milestone Victory Check
+      if (currentScore >= 200 && gameState === "playing") {
+        isRunning = false;
+        setGameState("victory");
+        playSfx("wish");
+        try {
+          const high = Math.max(currentScore, gameHighScore);
+          localStorage.setItem("cosmonana_rocket_highscore", high.toString());
+          setGameHighScore(high);
+        } catch {}
+      }
+
+      // Draw Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.035;
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1.0;
+
+      // Draw Rocket Ship
+      ctx.font = "32px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("🚀", shipX, shipY);
+
+      // Shield Bubble
+      if (shieldTime > 0) {
+        ctx.strokeStyle = `rgba(56, 189, 248, ${0.4 + 0.4 * Math.sin(frameCount * 0.2)})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(shipX, shipY, 26, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      gameLoopIdRef.current = requestAnimationFrame(loop);
+    };
+
+    gameLoopIdRef.current = requestAnimationFrame(loop);
+
+    return () => {
+      isRunning = false;
+      if (gameLoopIdRef.current) cancelAnimationFrame(gameLoopIdRef.current);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [showGameModal, gameState]);
+
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
@@ -593,6 +1306,7 @@ export default function Home() {
       antialias: true,
       alpha: true,
       powerPreference: "high-performance",
+      preserveDrawingBuffer: true,
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -735,6 +1449,52 @@ export default function Home() {
     }
     asteroidInstanced.instanceMatrix.needsUpdate = true;
     scene.add(asteroidInstanced);
+
+    // 5.5 SHOOTING STAR TRAIL SYSTEM
+    const shootingStarPointsCount = 20;
+    const shootingStarGeo = new THREE.BufferGeometry();
+    const starTrailArr = new Float32Array(shootingStarPointsCount * 3);
+    shootingStarGeo.setAttribute("position", new THREE.BufferAttribute(starTrailArr, 3));
+    const shootingStarMat = new THREE.LineBasicMaterial({
+      color: 0xffedd5,
+      transparent: true,
+      opacity: 0,
+      linewidth: 3,
+      blending: THREE.AdditiveBlending,
+    });
+    const shootingStarMesh = new THREE.Line(shootingStarGeo, shootingStarMat);
+    scene.add(shootingStarMesh);
+
+    let shootingStarActive = false;
+    let shootingStarProgress = 0;
+    const starStartPos = new THREE.Vector3();
+    const starEndPos = new THREE.Vector3();
+    let lastStarTriggerTime = Date.now();
+
+    const spawnShootingStar = () => {
+      if (shootingStarActive) return;
+      const targetPos = controls.target.clone();
+      const angle = Math.random() * Math.PI * 2;
+      const elevation = 0.2 + Math.random() * 0.7;
+      const dist = 350 + Math.random() * 300;
+
+      starStartPos.set(
+        targetPos.x + Math.sin(elevation) * Math.cos(angle) * dist,
+        targetPos.y + Math.cos(elevation) * dist + 120,
+        targetPos.z + Math.sin(elevation) * Math.sin(angle) * dist
+      );
+
+      const deltaVec = new THREE.Vector3(
+        (Math.random() - 0.5) * 250 - 180,
+        -160 - Math.random() * 120,
+        (Math.random() - 0.5) * 250 - 180
+      );
+      starEndPos.copy(starStartPos).add(deltaVec);
+
+      shootingStarProgress = 0;
+      shootingStarActive = true;
+    };
+    triggerShootingStarRef.current = spawnShootingStar;
 
     // 6. SOLAR SYSTEM ARCHITECTURE (All 8 Planets + Sun + Moon + Saturn Rings)
     const planetGroupMap: Record<string, THREE.Group> = {};
@@ -1258,6 +2018,41 @@ export default function Home() {
         dustParticles.rotation.y = t * 0.0006;
       }
 
+      // Shooting Star Trail Animation
+      if (shootingStarActive) {
+        shootingStarProgress += 0.038;
+        if (shootingStarProgress >= 1.0) {
+          shootingStarActive = false;
+          shootingStarMat.opacity = 0;
+        } else {
+          shootingStarMat.opacity = Math.sin(shootingStarProgress * Math.PI) * 0.95;
+          const currentHead = new THREE.Vector3().lerpVectors(starStartPos, starEndPos, shootingStarProgress);
+          const currentTail = new THREE.Vector3().lerpVectors(
+            starStartPos,
+            starEndPos,
+            Math.max(0, shootingStarProgress - 0.22)
+          );
+          const posArr = shootingStarGeo.attributes.position.array as Float32Array;
+          for (let i = 0; i < shootingStarPointsCount; i++) {
+            const fraction = i / (shootingStarPointsCount - 1);
+            const p = new THREE.Vector3().lerpVectors(currentTail, currentHead, fraction);
+            posArr[i * 3] = p.x;
+            posArr[i * 3 + 1] = p.y;
+            posArr[i * 3 + 2] = p.z;
+          }
+          shootingStarGeo.attributes.position.needsUpdate = true;
+        }
+      } else {
+        // Auto trigger shooting star streak every 16 seconds
+        if (Date.now() - lastStarTriggerTime > 16000) {
+          lastStarTriggerTime = Date.now();
+          spawnShootingStar();
+          if (Math.random() > 0.45) {
+            showToastRef.current?.("🌠 Bintang jatuh melintas di langit! Klik untuk buat permohonan ✨");
+          }
+        }
+      }
+
       // Asteroid belt orbital motion (only in orbit mode)
       if (layoutModeRef.current === "orbit" && asteroidInstanced.visible) {
         for (let i = 0; i < asteroidCount; i++) {
@@ -1458,6 +2253,39 @@ export default function Home() {
             }}
           >
             💖 Pesan untuk Sayang
+          </button>
+          <button
+            className="nav-link-btn"
+            onClick={() => {
+              playSfx("click");
+              setShowWishModal(true);
+            }}
+          >
+            🌠 Permohonan
+          </button>
+          <button
+            className="nav-link-btn"
+            onClick={capturePolaroidSnapshot}
+          >
+            📸 Foto Polaroid
+          </button>
+          <button
+            className="nav-link-btn"
+            onClick={() => {
+              playSfx("click");
+              setShowCapsuleModal(true);
+            }}
+          >
+            🎁 Kapsul Cinta
+          </button>
+          <button
+            className="nav-link-btn"
+            onClick={() => {
+              playSfx("click");
+              setShowGameModal(true);
+            }}
+          >
+            🚀 Mini-Game
           </button>
         </div>
 
@@ -1702,6 +2530,53 @@ export default function Home() {
 
         <div className="dock-divider"></div>
 
+        {/* Feature 1: Make a Wish Button */}
+        <button
+          className="dock-btn"
+          onClick={() => {
+            playSfx("click");
+            setShowWishModal(true);
+          }}
+          title="Tulis Permohonan Impianmu ke Bintang Jatuh Semesta"
+        >
+          🌠 Permohonan
+        </button>
+
+        {/* Feature 2: Polaroid Snapshot Button */}
+        <button
+          className="dock-btn"
+          onClick={capturePolaroidSnapshot}
+          title="Ambil Foto Polaroid Kosmik Bersama Planet Ini"
+        >
+          📸 Polaroid
+        </button>
+
+        {/* Feature 3: Love Capsule Button */}
+        <button
+          className="dock-btn"
+          onClick={() => {
+            playSfx("click");
+            setShowCapsuleModal(true);
+          }}
+          title="Buka Kapsul Rahasia & Kuis Cinta Mas Dhani"
+        >
+          🎁 Kapsul Cinta
+        </button>
+
+        {/* Feature 4: Retro Rocket Mini-Game Button */}
+        <button
+          className="dock-btn"
+          onClick={() => {
+            playSfx("click");
+            setShowGameModal(true);
+          }}
+          title="Mainkan Mini-Game Jelajah Bintang Antariksa"
+        >
+          🚀 Mini-Game
+        </button>
+
+        <div className="dock-divider"></div>
+
         {/* Play/Pause Orbit Time Multiplier */}
         <button
           className={`dock-btn ${timeMultiplier === 0 ? "active" : ""}`}
@@ -1927,6 +2802,482 @@ export default function Home() {
             </button>
           </form>
         </div>
+      </div>
+
+      {/* FEATURE 1: MAKE A COSMIC WISH MODAL */}
+      <div className={`wish-modal-backdrop ${showWishModal ? "show" : ""}`}>
+        <div className="wish-modal-window">
+          <div className="wish-modal-header">
+            <div className="wish-modal-title">
+              <span>🌠 Permohonan Semesta (Make a Wish)</span>
+            </div>
+            <button
+              className="orrery-close-btn"
+              onClick={() => {
+                playSfx("click");
+                setShowWishModal(false);
+              }}
+              title="Tutup"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="wish-modal-body">
+            <div className="wish-prompt-card">
+              <p className="wish-prompt-text">
+                Di bawah kubah langit semesta ini, tuliskan permohonan atau impianmu. Mas Dhani dan semesta akan mengabadikan dan selalu mendoakannya. ✨
+              </p>
+            </div>
+
+            <div className="wish-categories-row">
+              {["💖 Cinta & Kita", "🎓 Impian & Masa Depan", "🌸 Bahagia & Sehat", "🪐 Petualangan Bersama"].map((cat) => (
+                <button
+                  key={cat}
+                  className={`wish-category-chip ${wishCategory === cat ? "active" : ""}`}
+                  onClick={() => {
+                    playSfx("click");
+                    setWishCategory(cat);
+                  }}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="wish-textarea-wrap">
+              <textarea
+                className="wish-textarea"
+                placeholder="Tuliskan harapan atau permohonanmu untuk kita dan masa depan..."
+                value={wishText}
+                onChange={(e) => setWishText(e.target.value)}
+              />
+            </div>
+
+            <button
+              className="wish-send-btn"
+              onClick={handleSendWish}
+              disabled={!wishText.trim()}
+            >
+              🌠 Terbangkan Permohonan Bersama Bintang Jatuh
+            </button>
+
+            {wishBlessing && (
+              <div className="wish-blessing-card">
+                <div className="wish-blessing-header">
+                  <span>✨ Doa Semesta Mas Dhani</span>
+                  <span>🤍</span>
+                </div>
+                <div className="wish-blessing-quote">&ldquo;{wishBlessing}&rdquo;</div>
+              </div>
+            )}
+
+            {wishHistory.length > 0 && (
+              <div className="wish-history-section">
+                <div className="wish-history-title">
+                  <span>Permohonan Tersimpan di Galaksi ({wishHistory.length})</span>
+                </div>
+                {wishHistory.map((w) => (
+                  <div key={w.id} className="wish-history-item">
+                    <div className="wish-item-header">
+                      <span className="wish-item-tag">{w.category}</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span className="wish-item-time">{w.date}</span>
+                        <button
+                          onClick={() => handleDeleteWish(w.id)}
+                          style={{ background: "none", border: "none", color: "#ef4444", fontSize: "11px", cursor: "pointer" }}
+                          title="Hapus Permohonan"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                    <div className="wish-item-text">{w.text}</div>
+                    {w.blessing && (
+                      <div style={{ fontSize: "11.5px", color: "#f472b6", fontStyle: "italic", borderTop: "1px dashed rgba(255,255,255,0.08)", paddingTop: "4px" }}>
+                        Mas Dhani: &ldquo;{w.blessing}&rdquo;
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* FEATURE 2: COSMIC POLAROID SNAPSHOT STUDIO */}
+      <div className={`polaroid-modal-backdrop ${showPolaroidModal ? "show" : ""}`}>
+        <div className="polaroid-modal-window">
+          <div className="wish-modal-header">
+            <div className="wish-modal-title">
+              <span>📸 Foto Polaroid Kosmik</span>
+            </div>
+            <button
+              className="orrery-close-btn"
+              onClick={() => {
+                playSfx("click");
+                setShowPolaroidModal(false);
+              }}
+              title="Tutup"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="polaroid-preview-area">
+            <div className="polaroid-card">
+              <div className="polaroid-image-frame">
+                {polaroidImgUrl && (
+                  <img
+                    src={polaroidImgUrl}
+                    alt="Cosmic Polaroid"
+                    className={`polaroid-img filter-${polaroidFilter}`}
+                  />
+                )}
+                <div className="polaroid-badge-stamp">
+                  🪐 {activePlanetName} • {DATA[activePlanetName].realAU}
+                </div>
+              </div>
+              <div className="polaroid-caption-wrap">
+                <div className="polaroid-caption-text">
+                  {polaroidCaption || `Bersama ${activePlanetName} ✨`}
+                </div>
+                <div className="polaroid-date-stamp">
+                  {new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })} • with Mas Dhani 🤍
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="polaroid-controls-box">
+            {/* Filter Selector */}
+            <div className="polaroid-filter-row">
+              {(["original", "vintage", "cyber", "golden", "bw"] as const).map((f) => (
+                <button
+                  key={f}
+                  className={`filter-chip-btn ${polaroidFilter === f ? "active" : ""}`}
+                  onClick={() => {
+                    playSfx("click");
+                    setPolaroidFilter(f);
+                  }}
+                >
+                  {f === "original" ? "Glow" : f === "vintage" ? "Vintage" : f === "cyber" ? "Cyber" : f === "golden" ? "Golden" : "B&W"}
+                </button>
+              ))}
+            </div>
+
+            {/* Custom Caption Input */}
+            <input
+              type="text"
+              className="polaroid-caption-input"
+              value={polaroidCaption}
+              onChange={(e) => setPolaroidCaption(e.target.value)}
+              placeholder="Tulis pesan/caption foto di sini..."
+            />
+
+            {/* Actions */}
+            <div className="polaroid-actions-row">
+              <button
+                className="polaroid-download-btn"
+                onClick={downloadPolaroidPng}
+              >
+                📥 Unduh Foto Polaroid (PNG)
+              </button>
+              <button
+                className="polaroid-download-btn"
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)" }}
+                onClick={() => {
+                  capturePolaroidSnapshot();
+                }}
+              >
+                🔄 Ambil Ulang
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* FEATURE 3: TIME CAPSULE & LOVE QUIZ */}
+      <div className={`capsule-modal-backdrop ${showCapsuleModal ? "show" : ""}`}>
+        <div className="capsule-modal-window">
+          <div className="wish-modal-header">
+            <div className="wish-modal-title">
+              <span>🎁 Kapsul Rahasia & Kuis Cinta Mas Dhani</span>
+            </div>
+            <button
+              className="orrery-close-btn"
+              onClick={() => {
+                playSfx("click");
+                setShowCapsuleModal(false);
+              }}
+              title="Tutup"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="capsule-tab-bar">
+            <button
+              className={`capsule-tab-btn ${capsuleTab === "letter" ? "active" : ""}`}
+              onClick={() => {
+                playSfx("click");
+                setCapsuleTab("letter");
+              }}
+            >
+              📜 Surat Cinta Mas Dhani
+            </button>
+            <button
+              className={`capsule-tab-btn ${capsuleTab === "reasons" ? "active" : ""}`}
+              onClick={() => {
+                playSfx("click");
+                setCapsuleTab("reasons");
+              }}
+            >
+              💖 10 Hal yang Bikin Jatuh Cinta
+            </button>
+            <button
+              className={`capsule-tab-btn ${capsuleTab === "quiz" ? "active" : ""}`}
+              onClick={() => {
+                playSfx("click");
+                setCapsuleTab("quiz");
+              }}
+            >
+              🎯 Kuis Seberapa Kenal Mas Dhani
+            </button>
+          </div>
+
+          <div className="capsule-content-body">
+            {capsuleTab === "letter" && (
+              <div className="love-letter-paper">
+                <div className="wax-seal">💌</div>
+                <h3 className="letter-heading">
+                  Untuk Bidadariku yang Paling Cantik dan Berharga ✨
+                </h3>
+                <div className="letter-paragraphs">
+                  <p>
+                    Dari miliaran bintang di bentangan galaksi Bimasakti yang luas ini, Mas Dhani selalu merasa bersyukur semesta menuntun langkah Mas untuk bertemu dan mencintaimu.
+                  </p>
+                  <p>
+                    Planetarium ini Mas buat khusus sebagai ruang kosmik kecil kita berdua. Kapan pun kamu merasa lelah, rindu, atau butuh ketenangan, kamu bisa datang ke sini untuk memandang indahnya orbit bintang-bintang sambil mengingat bahwa ada seseorang di sini yang sayangnya ke kamu nggak pernah pudar.
+                  </p>
+                  <p>
+                    Terima kasih yaa sayang sudah selalu jadi cahaya terindah dalam hidup Mas. Semoga semesta selalu melindungi setiap langkah manismu dan menjaga cinta kita tetap hangat selamanya.
+                  </p>
+                </div>
+                <div className="letter-sign-off">
+                  Dengan segenap cinta tulus,<br />
+                  <strong>— Mas Dhani yang selalu sayang kamu 🪐🤍</strong>
+                </div>
+              </div>
+            )}
+
+            {capsuleTab === "reasons" && (
+              <div>
+                <p style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "14px", textAlign: "center" }}>
+                  10 hal manis tentang kamu yang selalu membuat hati Mas Dhani jatuh cinta berulang kali:
+                </p>
+                <div className="reasons-grid">
+                  {SWEET_REASONS.map((reason, idx) => (
+                    <div key={idx} className="reason-card">
+                      <span className="reason-num">#{idx + 1}</span>
+                      <span className="reason-text">{reason}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {capsuleTab === "quiz" && (
+              <div className="quiz-container">
+                {!quizCompleted ? (
+                  <>
+                    <div className="quiz-progress-bar">
+                      <div
+                        className="quiz-progress-fill"
+                        style={{ width: `${((quizIndex + 1) / QUIZ_QUESTIONS.length) * 100}%` }}
+                      />
+                    </div>
+
+                    <div className="quiz-question-box">
+                      <div className="quiz-q-num">
+                        Pertanyaan {quizIndex + 1} dari {QUIZ_QUESTIONS.length} • Skor: {quizScore}
+                      </div>
+                      <div className="quiz-q-text">
+                        {QUIZ_QUESTIONS[quizIndex].question}
+                      </div>
+
+                      <div className="quiz-options-list">
+                        {QUIZ_QUESTIONS[quizIndex].options.map((opt, oIdx) => {
+                          const isCorrect = oIdx === QUIZ_QUESTIONS[quizIndex].correct;
+                          const isSelected = quizSelected === oIdx;
+                          let btnClass = "quiz-option-btn";
+                          if (quizSelected !== null) {
+                            if (isCorrect) btnClass += " selected-correct";
+                            else if (isSelected) btnClass += " selected-wrong";
+                          }
+                          return (
+                            <button
+                              key={oIdx}
+                              className={btnClass}
+                              onClick={() => handleAnswerQuiz(oIdx)}
+                              disabled={quizSelected !== null}
+                            >
+                              <span>{opt}</span>
+                              {quizSelected !== null && isCorrect && <span>✓</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {quizSelected !== null && (
+                      <div className="quiz-feedback-box">
+                        <p style={{ margin: 0, fontWeight: 600 }}>
+                          {QUIZ_QUESTIONS[quizIndex].explanation}
+                        </p>
+                      </div>
+                    )}
+
+                    {quizSelected !== null && (
+                      <button className="quiz-next-btn" onClick={handleNextQuiz}>
+                        {quizIndex < QUIZ_QUESTIONS.length - 1 ? "Lanjut ke Pertanyaan Berikutnya ➔" : "Lihat Hasil Kuis Cinta 🏆"}
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <div className="quiz-trophy-card">
+                    <div className="trophy-emoji">🏆</div>
+                    <h3 style={{ fontSize: "20px", color: "#ffffff", fontWeight: 800 }}>
+                      Kecocokan Cinta: 100% (True Soulmate) ✨
+                    </h3>
+                    <p style={{ fontSize: "14px", color: "#cbd5e1", lineHeight: 1.7, maxWidth: "440px" }}>
+                      Selamat cantikku sayang! Kamu mengenal Mas Dhani dan isi hatinya dengan begitu sempurna. Mas Dhani menghadiahkan piala penjelajah semesta tercantik ini khusus untuk bidadari Mas yang paling berharga! 💖🪐
+                    </p>
+                    <button className="quiz-next-btn" onClick={resetQuiz}>
+                      🔄 Ulangi Kuis
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* FEATURE 4: RETRO COSMIC ROCKET MINI-GAME */}
+      <div className={`game-modal-backdrop ${showGameModal ? "show" : ""}`}>
+        <div className="game-modal-window">
+          <div className="game-hud-bar">
+            <div className="game-stat">
+              <span>🚀 Skor:</span>
+              <span style={{ color: "#ffffff", fontWeight: 800 }}>{gameScore}</span>
+            </div>
+            <div className="game-stat">
+              <span>Jarak:</span>
+              <span style={{ color: "#ffffff" }}>{gameDistance}</span>
+            </div>
+            <div className="game-stat">
+              <span>Nyawa:</span>
+              <span>{"💖".repeat(Math.max(0, gameLives))}</span>
+            </div>
+            <button
+              className="orrery-close-btn"
+              onClick={() => {
+                playSfx("click");
+                setShowGameModal(false);
+              }}
+              title="Tutup Game"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="game-canvas-wrap">
+            <canvas id="arcade-canvas" ref={arcadeCanvasRef} />
+
+            {gameState === "menu" && (
+              <div className="game-overlay-screen">
+                <div style={{ fontSize: "40px" }}>🚀✨</div>
+                <div className="game-overlay-title">Cosmic Rocket Explorer</div>
+                <p className="game-overlay-sub">
+                  Kendalikan roket cintamu! Kumpulkan bintang (⭐) dan hati (💖), hindari asteroid (🪨). Capai jarak sejauh mungkin di antariksa!
+                </p>
+                <div style={{ fontSize: "12px", color: "#94a3b8" }}>
+                  🏆 Rekor Tertinggi: {gameHighScore} Poin
+                </div>
+                <button className="game-start-btn" onClick={startArcadeGame}>
+                  🎮 Mulai Jelajah Antariksa
+                </button>
+              </div>
+            )}
+
+            {gameState === "gameover" && (
+              <div className="game-overlay-screen">
+                <div style={{ fontSize: "36px" }}>💥🪐</div>
+                <div className="game-overlay-title">Misi Antariksa Selesai</div>
+                <p className="game-overlay-sub">
+                  Kamu berhasil menjelajah sejauh {gameDistance} dengan total skor <strong>{gameScore}</strong>! Mas Dhani tetap bangga banget sama keberanianmu sayang. 🤍
+                </p>
+                <div style={{ fontSize: "12px", color: "#38bdf8" }}>
+                  🏆 Rekor Terbaik: {Math.max(gameScore, gameHighScore)} Poin
+                </div>
+                <button className="game-start-btn" onClick={startArcadeGame}>
+                  🔄 Main Lagi
+                </button>
+              </div>
+            )}
+
+            {gameState === "victory" && (
+              <div className="game-overlay-screen">
+                <div style={{ fontSize: "40px" }}>🏆🌟</div>
+                <div className="game-overlay-title" style={{ color: "#f472b6" }}>
+                  Penjelajah Kosmik Sejati!
+                </div>
+                <p className="game-overlay-sub">
+                  Luar biasa sayang! Kamu berhasil melampaui 200+ poin ({gameDistance}) menembus batas antariksa! Mas Dhani kirim peluk paling hangat buat kapten tercantik semesta! 🪐💖
+                </p>
+                <button className="game-start-btn" onClick={startArcadeGame}>
+                  🚀 Lanjutkan Petualangan
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Touch control pad for mobile & desktop click */}
+          <div className="game-touch-controls">
+            <button
+              className="game-touch-btn"
+              onPointerDown={() => (gameMoveLeftRef.current = true)}
+              onPointerUp={() => (gameMoveLeftRef.current = false)}
+              onPointerLeave={() => (gameMoveLeftRef.current = false)}
+            >
+              ◀ Kiri
+            </button>
+            <button
+              className="game-touch-btn"
+              onPointerDown={() => (gameMoveRightRef.current = true)}
+              onPointerUp={() => (gameMoveRightRef.current = false)}
+              onPointerLeave={() => (gameMoveRightRef.current = false)}
+            >
+              Kanan ▶
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* TOAST NOTIFICATION */}
+      <div
+        className={`cosmic-toast ${toastMsg ? "show" : ""}`}
+        onClick={() => {
+          if (toastMsg?.includes("Bintang jatuh")) {
+            playSfx("click");
+            setShowWishModal(true);
+          }
+        }}
+        style={{ cursor: toastMsg?.includes("Bintang jatuh") ? "pointer" : "default" }}
+      >
+        <span>{toastMsg}</span>
       </div>
 
       {/* INTERACTIVE LEARNING DRAWER */}
