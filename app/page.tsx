@@ -7,6 +7,7 @@ import gsap from "gsap";
 
 interface PlanetInfo {
   size: number;
+  orbitRadius: number;
   tex: string;
   img?: string;
   color: number;
@@ -19,6 +20,10 @@ interface PlanetInfo {
   distance: string;
   temp: string;
   orbitDays: number;
+  rotationHours: number;
+  axialTilt: number;
+  inclination: number;
+  realAU: string;
   gravityFactor: number;
   heroDesc: string;
   scienceFact: string;
@@ -50,183 +55,216 @@ const ORDER: PlanetName[] = [
 
 const DATA: Record<PlanetName, PlanetInfo> = {
   Matahari: {
-    size: 22.0,
+    size: 28.0,
+    orbitRadius: 0,
     tex: "sun.jpg",
-    color: 0xffdd88,
+    color: 0xffeedd,
     emissive: 0xffaa22,
     indexStr: "STAR // 00",
-    type: "Bintang Induk Tata Surya",
-    diameter: "1.392.700 km",
-    distance: "Pusat Tata Surya",
-    temp: "5.500 °C",
+    type: "Bintang Induk Tata Surya (Tipe Spektrum G2V)",
+    diameter: "1.392.700 km (109.2x Bumi)",
+    distance: "Pusat Tata Surya (0.000 AU)",
+    temp: "5.500 °C (Permukaan) / 15.000.000 °C (Inti)",
     orbitDays: 230000000 * 365,
+    rotationHours: 600,
+    axialTilt: 7.25,
+    inclination: 0.0,
+    realAU: "0.000 AU",
     gravityFactor: 27.9,
     heroDesc:
       "Sumber gravitasi dan cahaya utama yang menghangatkan seluruh orbit kosmik di sekelilingnya.",
     scienceFact:
-      "Matahari menyumbang 99,86% massa seluruh tata surya. Reaksi fusi nuklir di intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan foton yang mencapai permukaan Bumi dalam 500 detik.",
+      "Matahari menyumbang 99,86% massa seluruh tata surya. Reaksi fusi nuklir di intinya mengubah 600 juta ton hidrogen menjadi helium setiap detik, memancarkan foton yang mencapai permukaan Bumi dalam 500 detik (8,3 menit cahaya).",
     romanticNote:
       "Terima kasih sudah selalu menjadi sumber energi baik dan kehangatan dalam hari-hari mas. Di tengah segala rutinitas dan lelahnya beraktivitas, kabar dan senyumanmu selalu berhasil menghadirkan rasa tenang. Semoga harimu selalu dipenuhi kebaikan dan kelancaran yaa, cantikku sayang. ☀️🤍",
   },
   Merkurius: {
-    size: 6.5,
+    size: 2.8,
+    orbitRadius: 58.0,
     tex: "mercury.jpg",
     color: 0x9a938c,
     indexStr: "PLANET // 01",
-    type: "Planet Terestrial Terdekat",
-    diameter: "4.879 km",
-    distance: "57,9 Juta km",
-    temp: "-180°C / +430°C",
-    orbitDays: 88,
+    type: "Planet Terestrial Terdekat ke Matahari",
+    diameter: "4.879 km (0.383x Bumi)",
+    distance: "57,9 Juta km (0.387 AU)",
+    temp: "-180 °C (Malam) / +430 °C (Siang)",
+    orbitDays: 87.97,
+    rotationHours: 1407.6,
+    axialTilt: 0.034,
+    inclination: 7.0,
+    realAU: "0.387 AU",
     gravityFactor: 0.38,
     heroDesc:
       "Pelari tercepat di tata surya yang menempuh orbit mengitari Matahari hanya dalam 88 hari.",
     scienceFact:
-      "Merkurius memiliki kecepatan orbit 47,4 km/detik. Tanpa atmosfer penahan panas yang tebal, planet ini memiliki gradien fluktuasi suhu permukaan paling ekstrem.",
+      "Merkurius memiliki kecepatan orbit rata-rata 47,4 km/detik. Tanpa atmosfer penahan panas yang tebal, gradien suhunya paling ekstrem di tata surya. Resonansi spin-orbit 3:2 membuat 1 hari di Merkurius setara dengan 176 hari Bumi.",
     romanticNote:
       "Di tengah dunia yang sering bergerak serba cepat dan penuh tuntutan, mas harap kamu selalu ingat untuk mengambil jeda dan bernapas lega yaa sayang. Jangan terlalu keras pada dirimu sendiri, setiap proses dan usaha yang kamu jalani sangat berharga. Mas akan selalu ada di sini mendukungmu. ✨",
   },
   Venus: {
-    size: 9.2,
+    size: 6.6,
+    orbitRadius: 92.0,
     tex: "venus.jpg",
     color: 0xd8b98a,
     indexStr: "PLANET // 02",
-    type: "Bintang Kejora Bercahaya",
-    diameter: "12.104 km",
-    distance: "108,2 Juta km",
-    temp: "465 °C",
-    orbitDays: 225,
+    type: "Planet Terpanas Berotasi Retrograde",
+    diameter: "12.104 km (0.949x Bumi)",
+    distance: "108,2 Juta km (0.723 AU)",
+    temp: "465 °C (Efek Rumah Kaca Ekstrem)",
+    orbitDays: 224.7,
+    rotationHours: -5832.5,
+    axialTilt: 177.36,
+    inclination: 3.39,
+    realAU: "0.723 AU",
     gravityFactor: 0.91,
     heroDesc:
-      "Permata bercahaya paling terang di langit malam dengan lapisan awan atmosfer pemantul cahaya.",
+      "Permata bercahaya paling terang di langit malam dengan lapisan awan asam sulfat pemantul cahaya.",
     scienceFact:
-      "Venus memantulkan 75% sinar matahari karena lapisan awan asam sulfatnya. Venus juga berotasi secara retrograde dari timur ke barat secara perlahan.",
+      "Venus memiliki efek rumah kaca tak terkendali dengan tekanan atmosfer 92 kali lipat Bumi. Venus berotasi secara retrograde (searah jarum jam) sangat lambat, sehingga matahari terbit di barat dan terbenam di timur.",
     romanticNote:
       "Venus mungkin menjadi objek paling bercahaya di langit senja, tetapi ketulusan, kebaikan hati, dan caramu memperlakukan orang lain selalu punya tempat yang jauh lebih istimewa. Tetaplah menjadi dirimu yang apa adanya, dengan segala ketulusan yang kamu miliki, cintaku. 💖",
   },
   Bumi: {
-    size: 10.0,
+    size: 7.0,
+    orbitRadius: 135.0,
     tex: "earth.jpg",
     img: "earth_spaceedu.png",
     color: 0x3f6fae,
     moon: true,
     indexStr: "PLANET // 03",
-    type: "Oasis Biosfer & Kehidupan",
-    diameter: "12.742 km",
-    distance: "149,6 Juta km (1.0 AU)",
-    temp: "15 °C Rata-rata",
+    type: "Oasis Biosfer & Rumah Kehidupan",
+    diameter: "12.742 km (1.000x Bumi)",
+    distance: "149,6 Juta km (1.000 AU)",
+    temp: "15 °C (Rata-rata Permukaan)",
     orbitDays: 365.25,
+    rotationHours: 24.0,
+    axialTilt: 23.44,
+    inclination: 0.0,
+    realAU: "1.000 AU",
     gravityFactor: 1.0,
     heroDesc:
-      "Satu-satunya rumah kehidupan dengan samudra biru cair stabil dan atmosfer pelindung yang sempurna.",
+      "Satu-satunya rumah kehidupan dengan samudra cair stabil, magnetosfer pelindung, dan biosfer kaya oksigen.",
     scienceFact:
-      "Bumi memiliki magnetosfer pelindung radiasi dan air cair di permukaan. Gravitasi Bulan setia menjaga kemiringan sumbu rotasi Bumi pada 23,5° agar iklim tetap stabil.",
+      "Kemiringan sumbu rotasi Bumi 23,44° menghasilkan siklus 4 musim teratur. Gravitasi Bulan (berjarak 384.400 km) menstabilkan sumbu rotasi Bumi sehingga iklim tetap bersahabat bagi kehidupan selama miliaran tahun.",
     romanticNote:
       "Dari luasnya semesta yang dingin dan tak terhingga, dipertemukan dan bisa saling menjaga denganmu adalah salah satu takdir terindah yang selalu mas syukuri setiap hari. Terima kasih sudah mau berproses, belajar, dan melangkah bersama, sayangku. 🌍🫶",
   },
   Mars: {
-    size: 7.5,
+    size: 3.8,
+    orbitRadius: 185.0,
     tex: "mars.jpg",
     color: 0xb1543a,
     indexStr: "PLANET // 04",
-    type: "Planet Merah Penjelajah",
-    diameter: "6.779 km",
-    distance: "227,9 Juta km",
-    temp: "-60 °C Rata-rata",
-    orbitDays: 687,
+    type: "Planet Merah Gurun Besi Oksida",
+    diameter: "6.779 km (0.532x Bumi)",
+    distance: "227,9 Juta km (1.524 AU)",
+    temp: "-60 °C Rata-rata (-125 °C s/d +20 °C)",
+    orbitDays: 686.98,
+    rotationHours: 24.62,
+    axialTilt: 25.19,
+    inclination: 1.85,
+    realAU: "1.524 AU",
     gravityFactor: 0.38,
     heroDesc:
-      "Dunia merah berpasir kaya besi oksida yang menaungi gunung berapi tertinggi di tata surya.",
+      "Dunia merah berpasir kaya besi oksida yang menaungi gunung berapi tertinggi dan ngarai terdalam di tata surya.",
     scienceFact:
-      "Mars memiliki Olympus Mons (21,9 km), gunung tertinggi di tata surya. Jejak geologis menunjukkan Mars pernah memiliki aliran sungai dan danau purba.",
+      "Mars memiliki Olympus Mons (tinggi 21,9 km, 2,5 kali Everest) dan ngarai Valles Marineris sepanjang 4.000 km. Satu hari di Mars (Sol) berlangsung 24 jam 37 menit, sangat mirip dengan Bumi.",
     romanticNote:
       "Setiap perjalanan dan impian baik selalu membutuhkan ketabahan. Apa pun tantangan atau hal berat yang sedang kamu hadapi, percayalah bahwa kamu memiliki ketangguhan hati yang luar biasa, sayang. Mas selalu bangga padamu dan siap mendampingi setiap langkahmu. 🚀",
   },
   Yupiter: {
-    size: 16.0,
+    size: 18.5,
+    orbitRadius: 360.0,
     tex: "jupiter.jpg",
     color: 0xcaa87a,
     indexStr: "PLANET // 05",
-    type: "Raksasa Gas Terbesar",
-    diameter: "139.820 km",
-    distance: "778,5 Juta km",
-    temp: "-110 °C",
-    orbitDays: 4333,
+    type: "Raksasa Gas & Perisai Gravitasi Tata Surya",
+    diameter: "139.820 km (10.97x Bumi)",
+    distance: "778,5 Juta km (5.204 AU)",
+    temp: "-110 °C (Puncak Awan)",
+    orbitDays: 4332.59,
+    rotationHours: 9.93,
+    axialTilt: 3.13,
+    inclination: 1.3,
+    realAU: "5.204 AU",
     gravityFactor: 2.34,
     heroDesc:
-      "Raksasa pelindung tata surya dengan badai Great Red Spot dan gravitasi perisai komet yang megah.",
+      "Raksasa gas bergaris megah dengan badai abadi Great Red Spot dan 95 satelit alami penjaga orbit.",
     scienceFact:
-      "Jupiter memiliki massa lebih dari dua kali lipat gabungan seluruh planet lainnya. Medan gravitasinya yang kuat menyerap tabrakan komet berbahaya dari luar.",
+      "Jupiter memiliki massa 318 kali Bumi (2,5 kali massa seluruh planet lain digabungkan). Rotasinya yang secepat 9,9 jam menghasilkan gaya sentrifugal tinggi dan badai Great Red Spot yang telah berkecamuk lebih dari 350 tahun.",
     romanticNote:
       "Sebagaimana Yupiter yang hadir menjaga keseimbangan tata surya, mas ingin selalu menjadi ruang yang aman dan nyaman untukmu—tempat kamu bisa menceritakan apa saja, menaruh lelah, dan selalu merasa dimengerti tanpa perlu merasa sendirian, cintaku sayang. 🪐",
   },
   Saturnus: {
-    size: 13.5,
+    size: 15.5,
+    orbitRadius: 500.0,
     tex: "saturn.jpg",
     color: 0xd9c39a,
     ring: true,
     indexStr: "PLANET // 06",
-    type: "Permata Bermahkota Cincin",
-    diameter: "116.460 km",
-    distance: "1,43 Miliar km",
+    type: "Raksasa Bermahkota Cincin Es Spektakuler",
+    diameter: "116.460 km (9.14x Bumi)",
+    distance: "1,43 Miliar km (9.582 AU)",
     temp: "-140 °C",
-    orbitDays: 10759,
+    orbitDays: 10759.22,
+    rotationHours: 10.7,
+    axialTilt: 26.73,
+    inclination: 2.49,
+    realAU: "9.582 AU",
     gravityFactor: 1.06,
     heroDesc:
-      "Objek paling menawan dengan sistem cincin es spektakuler yang membentang ratusan ribu kilometer.",
+      "Permata tata surya dengan sistem cincin kristal es selebar 282.000 km yang memukau dan anggun.",
     scienceFact:
-      "Cincin Saturnus membentang selebar 282.000 km namun tebalnya rata-rata hanya 10 meter. Tersusun atas 99% miliaran kristal es murni dengan Celah Cassini.",
+      "Saturnus adalah satu-satunya planet yang massa jenisnya lebih rendah dari air (0,687 g/cm³). Cincinnya terdiri dari 99% pecahan es murni dengan ketebalan vertikal hanya sekitar 10 meter.",
     romanticNote:
       "Keindahan yang menawan lahir dari keselarasan dan kesabaran. Kehadiranmu membawa keteduhan dan harmoni tersendiri dalam hidup mas. Terima kasih atas setiap perhatian tulus dan kebaikan yang selalu kamu bawa ke dalam hari-hari kita, cantikku sayang. ✨🤍",
   },
   Uranus: {
-    size: 11.0,
+    size: 10.0,
+    orbitRadius: 650.0,
     tex: "uranus.jpg",
     color: 0x9fd0d6,
     indexStr: "PLANET // 07",
-    type: "Raksasa Es Berotasi Miring",
-    diameter: "50.724 km",
-    distance: "2,87 Miliar km",
-    temp: "-224 °C",
-    orbitDays: 30687,
+    type: "Raksasa Es Berotasi Menggelinding Miring",
+    diameter: "50.724 km (3.98x Bumi)",
+    distance: "2,87 Miliar km (19.201 AU)",
+    temp: "-224 °C (Atmosfer Terdingin)",
+    orbitDays: 30687.15,
+    rotationHours: -17.24,
+    axialTilt: 97.77,
+    inclination: 0.77,
+    realAU: "19.201 AU",
     gravityFactor: 0.92,
     heroDesc:
-      "Raksasa es toska unik yang berotasi menggelinding miring pada bidang orbitnya.",
+      "Raksasa es berwarna sian toska yang mengorbit dengan posisi poros rebah miring menggelinding.",
     scienceFact:
-      "Uranus memiliki kemiringan poros rotasi ekstrem 97,8°. Metana di atmosfer atasnya menyerap cahaya merah dan menghasilkan rona biru kehijauan yang tenang.",
+      "Dengan kemiringan poros 97,77°, Uranus menggelinding di sepanjang orbitnya, menyebabkan setiap kutub mengalami 42 tahun siang konstan diikuti 42 tahun malam konstan. Metana di atmosfernya menyerap spektrum merah.",
     romanticNote:
       "Uranus mengajarkan bahwa memiliki poros dan cara tersendiri bukanlah kekurangan, melainkan keistimewaan. Sudut pandangmu yang unik, kehangatanmu, dan caramu menyayangi adalah hal-hal yang membuatmu begitu istimewa di mata mas, sayangku. 💙",
   },
   Neptunus: {
-    size: 10.5,
+    size: 9.6,
+    orbitRadius: 800.0,
     tex: "neptune.jpg",
     color: 0x3d5ce0,
     indexStr: "PLANET // 08",
-    type: "Dunia Azure Angin Supersonik",
-    diameter: "49.244 km",
-    distance: "4,50 Miliar km",
+    type: "Raksasa Es Biru Samudra & Angin Supersonik",
+    diameter: "49.244 km (3.86x Bumi)",
+    distance: "4,50 Miliar km (30.047 AU)",
     temp: "-218 °C",
-    orbitDays: 60190,
+    orbitDays: 60190.03,
+    rotationHours: 16.11,
+    axialTilt: 28.32,
+    inclination: 1.77,
+    realAU: "30.047 AU",
     gravityFactor: 1.19,
     heroDesc:
-      "Planet terjauh di tepian tata surya dengan warna biru samudra kosmik dan badai angin supersonik.",
+      "Planet terjauh di tepian tata surya dengan warna biru azure pekat dan badai angin supersonik.",
     scienceFact:
-      "Neptunus memiliki kecepatan angin tercepat di tata surya yang mencapai 2.100 km/jam. Membutuhkan waktu 165 tahun Bumi untuk satu kali revolusi mengitari Matahari.",
+      "Neptunus ditemukan melalui prediksi matematika gravitasi sebelum diamati teleskop. Memiliki kecepatan angin tercepat di tata surya mencapai 2.100 km/jam. Memerlukan 164,8 tahun Bumi untuk satu kali revolusi lengkap mengitari Matahari.",
     romanticNote:
       "Bahkan di titik terjauh yang paling hening di tepian tata surya, rasa tenang dan teduh selalu hadir saat mengingatmu. Di mana pun kamu berada, semoga kamu selalu merasa dijaga dalam doa, dihargai, dan dicintai sepenuh hati, cintaku sayang. 🌌✨",
   },
-};
-
-const PLANET_COORDS: Record<PlanetName, [number, number, number]> = {
-  Matahari: [0, 0, 0],
-  Merkurius: [70, 0, 0],
-  Venus: [140, 0, 0],
-  Bumi: [220, 0, 0],
-  Mars: [310, 0, 0],
-  Yupiter: [430, 0, 0],
-  Saturnus: [570, 0, 0],
-  Uranus: [710, 0, 0],
-  Neptunus: [850, 0, 0],
 };
 
 export default function Home() {
@@ -235,15 +273,14 @@ export default function Home() {
 
   const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Bumi");
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"science" | "lab" | "map" | "love">("science");
+  const [activeTab, setActiveTab] = useState<"science" | "lab" | "love">("science");
   const [userWeight, setUserWeight] = useState<number>(45);
   const [userAge, setUserAge] = useState<number>(20);
-  
+
   const [showMilkyWay, setShowMilkyWay] = useState<boolean>(true);
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
-  const [showPingToast, setShowPingToast] = useState<boolean>(false);
 
-  // Background Music state & refs (New Audio Track)
+  // Background Music state & refs (User Uploaded Soundtrack)
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
   const bgmAudioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -284,14 +321,6 @@ export default function Home() {
   const zoomInRef = useRef<() => void>(() => {});
   const zoomOutRef = useRef<() => void>(() => {});
   const resetViewRef = useRef<() => void>(() => {});
-  const focusOnRouteRef = useRef<() => void>(() => {});
-
-  const earthPulseRef = useRef<{
-    mesh: THREE.Mesh;
-    curve: THREE.QuadraticBezierCurve3;
-    jogjaRing: THREE.Mesh;
-    bogorRing: THREE.Mesh;
-  } | null>(null);
 
   const timeMultiplierRef = useRef<number>(1);
   const skyDomeMeshRef = useRef<THREE.Mesh | null>(null);
@@ -410,103 +439,111 @@ export default function Home() {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "triangle";
-        osc.frequency.setValueAtTime(1200, now);
-        osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
-        gain.gain.setValueAtTime(0.08, now);
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+        gain.gain.setValueAtTime(0.07, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(now);
         osc.stop(now + 0.15);
       } else if (type === "satellite") {
-        [659.25, 830.61, 1046.5].forEach((freq, i) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, now + i * 0.07);
-          gain.gain.setValueAtTime(0.09, now + i * 0.07);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.3);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + i * 0.07);
-          osc.stop(now + i * 0.07 + 0.3);
-        });
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.linearRampToValueAtTime(1200, now + 0.4);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
       }
     } catch {}
   };
 
-  const askDhani = async (customPrompt?: string) => {
-    const query = customPrompt || dhaniInput;
-    if (!query.trim()) return;
+  // SEND MESSAGE TO TANYA MAS DHANI
+  const askDhani = async (presetText?: string) => {
+    const textToSend = (presetText || dhaniInput).trim();
+    if (!textToSend || dhaniLoading) return;
 
-    const now = new Date();
-    const timeStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
-
-    // Append user outgoing message
+    playSfx("click");
     const userMsg: ChatMessage = {
-      id: `user-${Date.now()}`,
+      id: "msg-" + Date.now(),
       sender: "nana",
-      text: query,
-      time: timeStr,
+      text: textToSend,
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     };
 
-    const nextHistory = [...chatMessages, userMsg];
-    setChatMessages(nextHistory);
-    setDhaniInput("");
+    setChatMessages((prev) => [...prev, userMsg]);
+    if (!presetText) setDhaniInput("");
     setDhaniLoading(true);
-    playSfx("click");
 
     try {
+      const historyPayload = chatMessages
+        .concat(userMsg)
+        .slice(-10)
+        .map((m) => ({
+          role: m.sender === "nana" ? "user" : "model",
+          text: m.text,
+        }));
+
       const res = await fetch("/api/oracle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: query,
-          planet: activePlanetName,
-          topic: activeTab === "science" ? "Fakta Sains & Anatomi Planet" : "Refleksi Manis & Keajaiban Semesta",
-          history: nextHistory.slice(-8).map((m) => ({
-            role: m.sender === "nana" ? "user" : "model",
-            sender: m.sender,
-            text: m.text,
-          })),
+          question: textToSend,
+          planetName: activePlanetName,
+          history: historyPayload,
         }),
       });
-      const data = await res.json();
-      const replyText =
-        data.reply ||
-        "Halo cantikku sayang. Di antara miliaran bintang di langit malam, hal yang paling bikin Mas bersyukur adalah bisa berjalan beriringan dan berbagi cerita sama kamu. ✨🤍";
 
-      const dhaniMsg: ChatMessage = {
-        id: `dhani-${Date.now()}`,
+      const data = await res.json();
+      const botMsg: ChatMessage = {
+        id: "msg-" + (Date.now() + 1),
         sender: "dhani",
-        text: replyText,
-        time: timeStr,
+        text:
+          data.answer ||
+          "Dalem, sayangku! Mas selalu di sini mendengarkanmu. Ada hal lain yang mau kamu tanyakan seputar semesta atau harimu? ✨",
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
-      setChatMessages((prev) => [...prev, dhaniMsg]);
+
+      setChatMessages((prev) => [...prev, botMsg]);
     } catch {
-      const errorMsg: ChatMessage = {
-        id: `dhani-${Date.now()}`,
+      const errMsg: ChatMessage = {
+        id: "msg-" + (Date.now() + 1),
         sender: "dhani",
-        text: "Halo sayangku, Mas Dhani selalu ada di sini nemenin kamu. Sinyal observatorium sempat berkedip sebentar tadi, tapi tanyakan apa saja lagi yaa, Mas siap temani. ✨🪐",
-        time: timeStr,
+        text: "Koneksi ke orbit mas sempat terputus sebentar sayang, tapi rasa sayang mas tetap utuh. Coba kirim lagi yaa cantik! 💖",
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
-      setChatMessages((prev) => [...prev, errorMsg]);
+      setChatMessages((prev) => [...prev, errMsg]);
     } finally {
       setDhaniLoading(false);
     }
   };
 
   useEffect(() => {
-    if (initialized.current || !canvasRef.current) return;
+    if (initialized.current) return;
     initialized.current = true;
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 9500);
+    if (!canvasRef.current) return;
 
-    const earthPos = PLANET_COORDS["Bumi"];
+    // 1. SCENE SETUP
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      8000
+    );
+
     const earthR = DATA["Bumi"].size;
-    
-    camera.position.set(earthPos[0], earthPos[1] + earthR * 0.32, earthPos[2] + earthR * 1.52);
+    const earthOrbitR = DATA["Bumi"].orbitRadius;
+
+    // Camera starts focused on Earth in its authentic orbit
+    camera.position.set(earthOrbitR, earthR * 0.45, earthR * 2.2);
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
@@ -519,27 +556,28 @@ export default function Home() {
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
+    controls.dampingFactor = 0.06;
     controls.enablePan = true;
     controls.enableZoom = true;
     controls.zoomSpeed = 1.2;
     controls.rotateSpeed = 0.8;
     controls.minDistance = 2.0;
-    controls.maxDistance = 2200;
-    controls.target.set(earthPos[0], earthPos[1] - earthR * 0.72, earthPos[2]);
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.25;
+    controls.maxDistance = 3500;
+    controls.target.set(earthOrbitR, 0, 0);
 
-    const ambient = new THREE.AmbientLight(0xffffff, 1.6);
-    scene.add(ambient);
+    // 2. CENTRAL SOLAR LIGHTING (Physical Source of Illumination from Sun)
+    const sunPointLight = new THREE.PointLight(0xfffaed, 4.5, 3000, 0.4);
+    sunPointLight.position.set(0, 0, 0);
+    scene.add(sunPointLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 4.0);
-    keyLight.position.set(earthPos[0], earthPos[1] + 35, earthPos[2] + 40);
-    scene.add(keyLight);
+    // Subtle deep-space ambient light
+    const ambientLight = new THREE.AmbientLight(0x1a263e, 0.45);
+    scene.add(ambientLight);
 
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 2.5);
-    rimLight.position.set(earthPos[0], earthPos[1] - 15, earthPos[2] - 30);
-    scene.add(rimLight);
+    // Keylight helper for active inspection
+    const inspectLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    inspectLight.position.set(earthOrbitR + 20, 20, 30);
+    scene.add(inspectLight);
 
     const loaderEl = document.getElementById("loader");
     const loaderFill = document.getElementById("loader-fill");
@@ -563,12 +601,12 @@ export default function Home() {
     }
     const fallbackTimeout = setTimeout(revealGate, 3000);
 
-    // 1. AUTHENTIC 360° MILKY WAY & CELESTIAL SKY DOME (Using User's Uploaded Texture)
+    // 3. AUTHENTIC 360° MILKY WAY & CELESTIAL SKY DOME
     const skyDomeGeo = new THREE.SphereGeometry(3600, 64, 64);
     const skyDomeMat = new THREE.MeshBasicMaterial({
       side: THREE.BackSide,
       transparent: true,
-      opacity: 0.88,
+      opacity: 0.9,
     });
     texLoader.load("/textures/milkyway_stellarium.jpg", (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace;
@@ -579,48 +617,96 @@ export default function Home() {
       skyDomeMat.needsUpdate = true;
     });
     const skyDome = new THREE.Mesh(skyDomeGeo, skyDomeMat);
+    // Authentic galactic plane tilt ~60 degrees relative to ecliptic
+    skyDome.rotation.z = THREE.MathUtils.degToRad(60.2);
+    skyDome.rotation.x = THREE.MathUtils.degToRad(27.4);
     scene.add(skyDome);
     skyDomeMeshRef.current = skyDome;
 
-    // HELPER: SOFT RADIAL GLOW PARTICLE SPRITE
-    const createNebulaGlowTexture = () => {
-      const c = document.createElement("canvas");
-      c.width = 64;
-      c.height = 64;
-      const ctx = c.getContext("2d");
-      if (!ctx) return new THREE.Texture();
-      const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-      grad.addColorStop(0, "rgba(255, 255, 255, 1.0)");
-      grad.addColorStop(0.25, "rgba(147, 197, 253, 0.7)");
-      grad.addColorStop(0.6, "rgba(56, 189, 248, 0.15)");
-      grad.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 64, 64);
-      const tex = new THREE.CanvasTexture(c);
-      tex.needsUpdate = true;
-      return tex;
-    };
+    // 4. ASTEROID BELT (Sabuk Asteroid Mars - Yupiter at 2.2 - 3.2 AU)
+    const asteroidCount = 750;
+    const asteroidGeo = new THREE.DodecahedronGeometry(0.7, 1);
+    const asteroidMat = new THREE.MeshStandardMaterial({
+      color: 0x8c827a,
+      roughness: 0.85,
+      metalness: 0.15,
+    });
+    const asteroidInstanced = new THREE.InstancedMesh(asteroidGeo, asteroidMat, asteroidCount);
+    const dummyObj = new THREE.Object3D();
+    const asteroidData: { radius: number; angle: number; speed: number; yOffset: number }[] = [];
 
-    // HELPER: LAT/LON TO 3D CARTESIAN ON SPHERE
-    const getEarthVector3 = (lat: number, lon: number, radius: number) => {
-      const phi = THREE.MathUtils.degToRad(lat);
-      const theta = THREE.MathUtils.degToRad(lon);
-      const x = radius * Math.cos(phi) * Math.sin(theta);
-      const y = radius * Math.sin(phi);
-      const z = radius * Math.cos(phi) * Math.cos(theta);
-      return new THREE.Vector3(x, y, z);
-    };
+    for (let i = 0; i < asteroidCount; i++) {
+      const radius = 230 + Math.random() * 60; // Between Mars (185) and Jupiter (360)
+      const angle = Math.random() * Math.PI * 2;
+      const speed = (0.6 + Math.random() * 0.4) * 0.007;
+      const yOffset = (Math.random() - 0.5) * 9.0;
+      const scale = 0.35 + Math.random() * 0.9;
 
-    // 4. FULL LIVING SOLAR SYSTEM (All planets present in 3D space!)
-    const planetMeshes: Record<string, THREE.Group> = {};
+      asteroidData.push({ radius, angle, speed, yOffset });
+      dummyObj.position.set(Math.cos(angle) * radius, yOffset, Math.sin(angle) * radius);
+      dummyObj.scale.set(scale, scale, scale);
+      dummyObj.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+      dummyObj.updateMatrix();
+      asteroidInstanced.setMatrixAt(i, dummyObj.matrix);
+    }
+    asteroidInstanced.instanceMatrix.needsUpdate = true;
+    scene.add(asteroidInstanced);
+
+    // 5. SOLAR SYSTEM ARCHITECTURE (All 8 Planets + Sun + Moon + Saturn Rings)
+    const planetGroupMap: Record<string, THREE.Group> = {};
+    const planetBodyMap: Record<string, THREE.Group> = {};
+    const planetSphereMap: Record<string, THREE.Mesh> = {};
     const clickablePlanetMeshes: THREE.Object3D[] = [];
+    const planetAngles: Record<string, number> = {};
 
     ORDER.forEach((name) => {
       const d = DATA[name];
-      const pos = PLANET_COORDS[name];
-      const grp = new THREE.Group();
-      grp.position.set(pos[0], pos[1], pos[2]);
 
+      // Orbit plane pivot group (tilted by real orbital inclination)
+      const pivotGrp = new THREE.Group();
+      pivotGrp.rotation.x = THREE.MathUtils.degToRad(d.inclination);
+      scene.add(pivotGrp);
+      planetGroupMap[name] = pivotGrp;
+
+      // Draw Glowing Keplerian Orbit Ring in 3D Space
+      if (d.orbitRadius > 0) {
+        const orbitCurve = new THREE.EllipseCurve(
+          0,
+          0,
+          d.orbitRadius,
+          d.orbitRadius,
+          0,
+          2 * Math.PI,
+          false,
+          0
+        );
+        const orbitPts = orbitCurve.getPoints(128);
+        const orbitGeo = new THREE.BufferGeometry().setFromPoints(
+          orbitPts.map((p) => new THREE.Vector3(p.x, 0, p.y))
+        );
+        const orbitMat = new THREE.LineBasicMaterial({
+          color: 0x38bdf8,
+          transparent: true,
+          opacity: 0.16,
+        });
+        const orbitLine = new THREE.Line(orbitGeo, orbitMat);
+        pivotGrp.add(orbitLine);
+      }
+
+      // Planet Body Group (Translates along the orbit)
+      const bodyGrp = new THREE.Group();
+      // Initial spread angle along orbit
+      const initAngle = (ORDER.indexOf(name) * Math.PI * 2) / 9;
+      planetAngles[name] = initAngle;
+      bodyGrp.position.set(
+        Math.cos(initAngle) * d.orbitRadius,
+        0,
+        Math.sin(initAngle) * d.orbitRadius
+      );
+      pivotGrp.add(bodyGrp);
+      planetBodyMap[name] = bodyGrp;
+
+      // Planet Sphere Geometry
       const sphereGeo = new THREE.SphereGeometry(d.size, 64, 64);
       let sphereMat: THREE.Material;
 
@@ -628,8 +714,8 @@ export default function Home() {
         sphereMat = new THREE.MeshStandardMaterial({
           color: 0xffeedd,
           emissive: 0xffaa22,
-          emissiveIntensity: 1.5,
-          roughness: 0.2,
+          emissiveIntensity: 1.8,
+          roughness: 0.15,
         });
         texLoader.load(`/textures/${d.tex}`, (tex) => {
           (sphereMat as THREE.MeshStandardMaterial).map = tex;
@@ -639,8 +725,8 @@ export default function Home() {
       } else {
         sphereMat = new THREE.MeshStandardMaterial({
           color: d.color,
-          roughness: 0.55,
-          metalness: 0.1,
+          roughness: 0.6,
+          metalness: 0.08,
         });
         texLoader.load(`/textures/${d.tex}`, (tex) => {
           (sphereMat as THREE.MeshStandardMaterial).map = tex;
@@ -650,126 +736,35 @@ export default function Home() {
 
       const sphere = new THREE.Mesh(sphereGeo, sphereMat);
       sphere.userData = { planetName: name };
-      grp.add(sphere);
+
+      // Apply authentic real-world axial tilt (obliquity)
+      sphere.rotation.z = THREE.MathUtils.degToRad(-d.axialTilt);
+
+      bodyGrp.add(sphere);
+      planetSphereMap[name] = sphere;
       clickablePlanetMeshes.push(sphere);
 
-      // 3D PETA RUTE JOGJA ⇄ BOGOR PADA BUMI
-      if (name === "Bumi") {
-        const earthRouteGroup = new THREE.Group();
-        const R = d.size;
-
-        const pJogja = getEarthVector3(-7.797, 110.37, R + 0.05);
-        const pBogor = getEarthVector3(-6.595, 106.816, R + 0.05);
-
-        // Elevated arc midpoint
-        const midPoint = new THREE.Vector3()
-          .addVectors(pJogja, pBogor)
-          .multiplyScalar(0.5)
-          .normalize()
-          .multiplyScalar(R + 0.95);
-
-        const arcCurve = new THREE.QuadraticBezierCurve3(pJogja, midPoint, pBogor);
-
-        // Glowing Neon Tube
-        const tubeGeo = new THREE.TubeGeometry(arcCurve, 40, 0.08, 8, false);
-        const tubeMat = new THREE.MeshBasicMaterial({
-          color: 0xec4899,
-          transparent: true,
-          opacity: 0.9,
-        });
-        const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
-        earthRouteGroup.add(tubeMesh);
-
-        // Core cyan laser line
-        const linePoints = arcCurve.getPoints(50);
-        const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
-        const lineMat = new THREE.LineBasicMaterial({
-          color: 0x38bdf8,
-          linewidth: 2,
-        });
-        const lineMesh = new THREE.Line(lineGeo, lineMat);
-        earthRouteGroup.add(lineMesh);
-
-        // Jogja Marker (Mas Dhani - Cyan)
-        const jogjaPin = new THREE.Group();
-        jogjaPin.position.copy(pJogja);
-        const jogjaCore = new THREE.Mesh(
-          new THREE.SphereGeometry(0.18, 16, 16),
-          new THREE.MeshBasicMaterial({ color: 0x38bdf8 })
-        );
-        const jogjaRing = new THREE.Mesh(
-          new THREE.RingGeometry(0.18, 0.38, 16),
-          new THREE.MeshBasicMaterial({
-            color: 0x38bdf8,
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: 0.8,
-          })
-        );
-        jogjaRing.lookAt(pJogja.clone().multiplyScalar(2));
-        jogjaPin.add(jogjaCore);
-        jogjaPin.add(jogjaRing);
-        earthRouteGroup.add(jogjaPin);
-
-        // Bogor Marker (Sayangku - Rose/Gold)
-        const bogorPin = new THREE.Group();
-        bogorPin.position.copy(pBogor);
-        const bogorCore = new THREE.Mesh(
-          new THREE.SphereGeometry(0.18, 16, 16),
-          new THREE.MeshBasicMaterial({ color: 0xf472b6 })
-        );
-        const bogorRing = new THREE.Mesh(
-          new THREE.RingGeometry(0.18, 0.38, 16),
-          new THREE.MeshBasicMaterial({
-            color: 0xf472b6,
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: 0.8,
-          })
-        );
-        bogorRing.lookAt(pBogor.clone().multiplyScalar(2));
-        bogorPin.add(bogorCore);
-        bogorPin.add(bogorRing);
-        earthRouteGroup.add(bogorPin);
-
-        // Animated traveling pulse orb
-        const pulseMesh = new THREE.Mesh(
-          new THREE.SphereGeometry(0.15, 16, 16),
-          new THREE.MeshBasicMaterial({ color: 0xffffff })
-        );
-        pulseMesh.position.copy(pJogja);
-        earthRouteGroup.add(pulseMesh);
-
-        earthPulseRef.current = {
-          mesh: pulseMesh,
-          curve: arcCurve,
-          jogjaRing,
-          bogorRing,
-        };
-
-        sphere.add(earthRouteGroup);
-      }
-
+      // Moon for Earth
       if (d.moon) {
-        const moonGeo = new THREE.SphereGeometry(d.size * 0.25, 32, 32);
-        const moonMat = new THREE.MeshStandardMaterial({ color: 0xc8c8c8, roughness: 0.85 });
+        const moonGeo = new THREE.SphereGeometry(1.9, 32, 32);
+        const moonMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d4, roughness: 0.85 });
         texLoader.load("/textures/moon.jpg", (tex) => {
           moonMat.map = tex;
           moonMat.needsUpdate = true;
         });
         const moon = new THREE.Mesh(moonGeo, moonMat);
-        moon.position.set(d.size + 4.5, 2.0, 0);
+        moon.position.set(d.size + 9.0, 1.5, 0);
         moon.userData = { planetName: name, isMoon: true };
-        grp.add(moon);
+        bodyGrp.add(moon);
         clickablePlanetMeshes.push(moon);
       }
 
+      // Majestic Ring System for Saturn
       if (d.ring) {
-        const innerR = d.size * 1.24;
-        const outerR = d.size * 2.38;
+        const innerR = d.size * 1.25;
+        const outerR = d.size * 2.45;
         const ringGeo = new THREE.RingGeometry(innerR, outerR, 128, 16);
 
-        // Map radial UV from [0, 1] across inner to outer radius
         const posAttr = ringGeo.attributes.position;
         const uvAttr = ringGeo.attributes.uv;
         for (let i = 0; i < posAttr.count; i++) {
@@ -799,23 +794,18 @@ export default function Home() {
         });
         const ringMesh = new THREE.Mesh(ringGeo, ringMat);
         ringMesh.userData = { planetName: name, isRing: true };
-        grp.add(ringMesh);
+
+        // Saturn rings tilt matched to axial tilt of 26.73°
+        ringMesh.rotation.z = THREE.MathUtils.degToRad(-d.axialTilt);
+        bodyGrp.add(ringMesh);
         clickablePlanetMeshes.push(ringMesh);
-
-        // Realistic Saturn axial tilt of ~26.7°
-        grp.rotation.z = THREE.MathUtils.degToRad(-26.7);
-        grp.rotation.x = THREE.MathUtils.degToRad(12.0);
       }
-
-      scene.add(grp);
-      planetMeshes[name] = grp;
     });
 
-    // 5. ACTIVE SATELLITE ORBITERS
+    // 6. ACTIVE SATELLITE LAUNCHER
     const activeSatellites: THREE.Group[] = [];
     const launchSatellite = () => {
       const pData = DATA[activeKey];
-      const pPos = PLANET_COORDS[activeKey];
       const sat = new THREE.Group();
 
       const satBody = new THREE.Mesh(
@@ -829,9 +819,13 @@ export default function Home() {
       sat.add(satBody);
       sat.add(wings);
 
-      sat.position.set(pPos[0], pPos[1], pPos[2]);
+      const targetBody = planetBodyMap[activeKey];
+      const worldPos = new THREE.Vector3();
+      targetBody.getWorldPosition(worldPos);
+
+      sat.position.copy(worldPos);
       sat.userData = {
-        center: new THREE.Vector3(pPos[0], pPos[1], pPos[2]),
+        targetPlanet: activeKey,
         radius: pData.size + 4.0 + Math.random() * 1.5,
         speed: 1.2 + Math.random() * 0.8,
         angle: Math.random() * Math.PI * 2,
@@ -850,24 +844,25 @@ export default function Home() {
       activeKey = name;
       playSfx("whoosh");
 
-      const pos = PLANET_COORDS[name];
-      const R = DATA[name].size;
+      const d = DATA[name];
+      const targetBody = planetBodyMap[name];
+      const worldPos = new THREE.Vector3();
+      targetBody.getWorldPosition(worldPos);
 
-      keyLight.position.set(pos[0], pos[1] + 35, pos[2] + 40);
-      rimLight.position.set(pos[0], pos[1] - 15, pos[2] - 30);
+      inspectLight.position.set(worldPos.x + 25, worldPos.y + 25, worldPos.z + 30);
 
       gsap.to(controls.target, {
-        x: pos[0],
-        y: pos[1] - R * 0.72,
-        z: pos[2],
+        x: worldPos.x,
+        y: worldPos.y,
+        z: worldPos.z,
         duration: 1.4,
         ease: "power3.inOut",
       });
 
       gsap.to(camera.position, {
-        x: pos[0],
-        y: pos[1] + R * 0.32,
-        z: pos[2] + R * 1.52,
+        x: worldPos.x,
+        y: worldPos.y + d.size * 0.45,
+        z: worldPos.z + d.size * 2.2,
         duration: 1.4,
         ease: "power3.inOut",
       });
@@ -880,9 +875,9 @@ export default function Home() {
       playSfx("click");
       const dir = new THREE.Vector3().subVectors(controls.target, camera.position).normalize();
       gsap.to(camera.position, {
-        x: camera.position.x + dir.x * 6,
-        y: camera.position.y + dir.y * 6,
-        z: camera.position.z + dir.z * 6,
+        x: camera.position.x + dir.x * 10,
+        y: camera.position.y + dir.y * 10,
+        z: camera.position.z + dir.z * 10,
         duration: 0.4,
         ease: "power2.out",
       });
@@ -892,9 +887,9 @@ export default function Home() {
       playSfx("click");
       const dir = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
       gsap.to(camera.position, {
-        x: camera.position.x + dir.x * 12,
-        y: camera.position.y + dir.y * 12,
-        z: camera.position.z + dir.z * 12,
+        x: camera.position.x + dir.x * 20,
+        y: camera.position.y + dir.y * 20,
+        z: camera.position.z + dir.z * 20,
         duration: 0.4,
         ease: "power2.out",
       });
@@ -902,46 +897,28 @@ export default function Home() {
 
     resetViewRef.current = () => {
       playSfx("whoosh");
-      const pos = PLANET_COORDS[activeKey];
-      const R = DATA[activeKey].size;
+      const d = DATA[activeKey];
+      const targetBody = planetBodyMap[activeKey];
+      const worldPos = new THREE.Vector3();
+      targetBody.getWorldPosition(worldPos);
+
       gsap.to(controls.target, {
-        x: pos[0],
-        y: pos[1] - R * 0.72,
-        z: pos[2],
+        x: worldPos.x,
+        y: worldPos.y,
+        z: worldPos.z,
         duration: 1.0,
         ease: "power3.inOut",
       });
       gsap.to(camera.position, {
-        x: pos[0],
-        y: pos[1] + R * 0.32,
-        z: pos[2] + R * 1.52,
+        x: worldPos.x,
+        y: worldPos.y + d.size * 0.45,
+        z: worldPos.z + d.size * 2.2,
         duration: 1.0,
         ease: "power3.inOut",
       });
     };
 
-    focusOnRouteRef.current = () => {
-      playSfx("whoosh");
-      const earthPos = PLANET_COORDS["Bumi"];
-      const R = DATA["Bumi"].size;
-      gsap.to(controls.target, {
-        x: earthPos[0],
-        y: earthPos[1],
-        z: earthPos[2],
-        duration: 1.2,
-        ease: "power3.inOut",
-      });
-      const pMid = getEarthVector3(-7.2, 108.6, R * 1.6);
-      gsap.to(camera.position, {
-        x: earthPos[0] + pMid.x,
-        y: earthPos[1] + pMid.y + 1.5,
-        z: earthPos[2] + pMid.z,
-        duration: 1.2,
-        ease: "power3.inOut",
-      });
-    };
-
-    // 6. 3D RAYCASTER FOR INTERACTIVE PLANET CLICKS & HOVER
+    // 7. RAYCASTER FOR INTERACTIVE 3D PLANET CLICKS
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     let isDragging = false;
@@ -1007,48 +984,84 @@ export default function Home() {
       const speedFactor = timeMultiplierRef.current;
       const t = clock.getElapsedTime() * speedFactor;
 
+      // Milky Way slow cosmic rotation
       if (skyDomeMeshRef.current) {
-        skyDomeMeshRef.current.rotation.y = t * 0.0004;
+        skyDomeMeshRef.current.rotation.y = t * 0.0003;
       }
 
-      // Route pulse and beacon rings animation on Earth
-      if (earthPulseRef.current?.mesh && earthPulseRef.current.curve) {
-        const progress = (Math.sin(clock.getElapsedTime() * 2.2) + 1) / 2;
-        const pt = earthPulseRef.current.curve.getPoint(progress);
-        earthPulseRef.current.mesh.position.copy(pt);
-
-        const ringScale = 1 + Math.sin(clock.getElapsedTime() * 4) * 0.25;
-        if (earthPulseRef.current.jogjaRing) {
-          earthPulseRef.current.jogjaRing.scale.set(ringScale, ringScale, 1);
-        }
-        if (earthPulseRef.current.bogorRing) {
-          earthPulseRef.current.bogorRing.scale.set(ringScale, ringScale, 1);
-        }
+      // Asteroid belt orbital motion
+      for (let i = 0; i < asteroidCount; i++) {
+        const a = asteroidData[i];
+        a.angle += a.speed * speedFactor;
+        dummyObj.position.set(Math.cos(a.angle) * a.radius, a.yOffset, Math.sin(a.angle) * a.radius);
+        dummyObj.updateMatrix();
+        asteroidInstanced.setMatrixAt(i, dummyObj.matrix);
       }
+      asteroidInstanced.instanceMatrix.needsUpdate = true;
 
-      activeSatellites.forEach((sat) => {
-        const u = sat.userData;
-        u.angle += 0.02 * u.speed * speedFactor;
-        sat.position.x = u.center.x + Math.cos(u.angle) * u.radius;
-        sat.position.z = u.center.z + Math.sin(u.angle) * u.radius;
-        sat.position.y = u.center.y + Math.sin(u.angle * 2) * u.inclination * u.radius;
-        sat.rotation.y = -u.angle;
-      });
-
+      // Real Keplerian Orbital Motions & Axial Rotations
       ORDER.forEach((name) => {
-        const grp = planetMeshes[name];
-        if (grp) {
-          grp.children.forEach((c) => {
+        const d = DATA[name];
+        const bodyGrp = planetBodyMap[name];
+        const sphere = planetSphereMap[name];
+
+        if (d.orbitRadius > 0 && bodyGrp) {
+          // Keplerian orbital speed (inversely proportional to orbital period)
+          const orbitSpeed = (365.25 / d.orbitDays) * 0.012 * speedFactor;
+          planetAngles[name] += orbitSpeed;
+          const curAng = planetAngles[name];
+          bodyGrp.position.set(
+            Math.cos(curAng) * d.orbitRadius,
+            0,
+            Math.sin(curAng) * d.orbitRadius
+          );
+        }
+
+        // Axial Spin
+        if (sphere) {
+          const spinSpeed = (24.0 / d.rotationHours) * 0.02 * speedFactor;
+          sphere.rotation.y += spinSpeed;
+        }
+
+        // Moon Orbiting Earth
+        if (d.moon && bodyGrp) {
+          bodyGrp.children.forEach((c) => {
             if (c.userData.isMoon) {
-              const R = DATA[name].size + 4.5;
-              c.position.x = Math.cos(t * 0.7) * R;
-              c.position.z = Math.sin(t * 0.7) * R;
-            } else if (c instanceof THREE.Mesh && c.geometry instanceof THREE.SphereGeometry) {
-              c.rotation.y += 0.003 * speedFactor;
+              const moonR = d.size + 9.0;
+              const moonAng = t * 1.8;
+              c.position.set(
+                Math.cos(moonAng) * moonR,
+                Math.sin(moonAng) * 1.5,
+                Math.sin(moonAng) * moonR
+              );
             }
           });
         }
       });
+
+      // Active Satellites Orbiting active planet
+      activeSatellites.forEach((sat) => {
+        const u = sat.userData;
+        const targetBody = planetBodyMap[u.targetPlanet];
+        if (targetBody) {
+          const worldPos = new THREE.Vector3();
+          targetBody.getWorldPosition(worldPos);
+
+          u.angle += 0.02 * u.speed * speedFactor;
+          sat.position.x = worldPos.x + Math.cos(u.angle) * u.radius;
+          sat.position.z = worldPos.z + Math.sin(u.angle) * u.radius;
+          sat.position.y = worldPos.y + Math.sin(u.angle * 2) * u.inclination * u.radius;
+          sat.rotation.y = -u.angle;
+        }
+      });
+
+      // Smooth tracking of active planet if user is observing it
+      const activeBody = planetBodyMap[activeKey];
+      if (activeBody) {
+        const targetPos = new THREE.Vector3();
+        activeBody.getWorldPosition(targetPos);
+        controls.target.lerp(targetPos, 0.08);
+      }
 
       controls.update();
       renderer.render(scene, camera);
@@ -1082,7 +1095,7 @@ export default function Home() {
   const nextPlanetName = ORDER[(currentIdx + 1) % ORDER.length];
 
   const calculatedWeight = Math.round(userWeight * currentPlanet.gravityFactor * 10) / 10;
-  const calculatedAge = Math.round((userAge * 365.25 / currentPlanet.orbitDays) * 10) / 10;
+  const calculatedAge = Math.round(((userAge * 365.25) / currentPlanet.orbitDays) * 10) / 10;
 
   const goToPrev = () => {
     navigateToPlanetRef.current(prevPlanetName);
@@ -1098,7 +1111,7 @@ export default function Home() {
       <nav className="spaceedu-nav">
         <div className="brand-logo">
           cosmonana<span>.</span>
-          <span className="brand-badge">STELLARIUM EDITION</span>
+          <span className="brand-badge">ASTRONOMICAL OBSERVATORY</span>
         </div>
 
         <div className="nav-links-wrap">
@@ -1119,7 +1132,7 @@ export default function Home() {
               setDrawerOpen(true);
             }}
           >
-            Science Facts
+            Fakta Sains
           </button>
           <button
             className={`nav-link-btn ${drawerOpen && activeTab === "lab" ? "active" : ""}`}
@@ -1129,7 +1142,7 @@ export default function Home() {
               setDrawerOpen(true);
             }}
           >
-            Lab & Gravity
+            Lab & Gravitasi
           </button>
           <button
             className={`nav-link-btn ${drawerOpen && activeTab === "love" ? "active" : ""}`}
@@ -1443,7 +1456,9 @@ export default function Home() {
               <button
                 className="chat-faq-chip"
                 onClick={() =>
-                  askDhani(`Mas Dhani, ceritain hal paling menarik dan menakjubkan tentang planet ${activePlanetName} dong! ✨`)
+                  askDhani(
+                    `Mas Dhani, ceritain hal paling menarik dan menakjubkan tentang planet ${activePlanetName} dong! ✨`
+                  )
                 }
               >
                 🪐 Rahasia Planet {activePlanetName}
@@ -1459,7 +1474,9 @@ export default function Home() {
               <button
                 className="chat-faq-chip"
                 onClick={() =>
-                  askDhani(`Mas, apa pemandangan paling indah kalau kita mengamati ${activePlanetName} dari dekat? ✨`)
+                  askDhani(
+                    `Mas, apa pemandangan paling indah kalau kita mengamati ${activePlanetName} dari dekat? ✨`
+                  )
                 }
               >
                 🌌 Keindahan {activePlanetName}
@@ -1467,7 +1484,9 @@ export default function Home() {
               <button
                 className="chat-faq-chip"
                 onClick={() =>
-                  askDhani(`Mas Dhani, kalau kita menjelajah semesta ke ${activePlanetName}, apa hal pertama yang bakal kita pelajari? 🚀`)
+                  askDhani(
+                    `Mas Dhani, kalau kita menjelajah semesta ke ${activePlanetName}, apa hal pertama yang bakal kita pelajari? 🚀`
+                  )
                 }
               >
                 🚀 Eksplorasi {activePlanetName}
@@ -1505,10 +1524,16 @@ export default function Home() {
 
       {/* INTERACTIVE LEARNING DRAWER */}
       <div id="info-drawer" className={drawerOpen ? "open" : ""}>
-        <div className="drawer-close-bar" onClick={() => setDrawerOpen(false)} title="Tutup Panel"></div>
+        <div
+          className="drawer-close-bar"
+          onClick={() => setDrawerOpen(false)}
+          title="Tutup Panel"
+        ></div>
 
         <div className="drawer-header">
-          <h2 className="drawer-planet-name">{activePlanetName} — {currentPlanet.type}</h2>
+          <h2 className="drawer-planet-name">
+            {activePlanetName} — {currentPlanet.type}
+          </h2>
 
           <div className="drawer-tab-selector">
             <button
@@ -1527,19 +1552,8 @@ export default function Home() {
                 setActiveTab("lab");
               }}
             >
-              Lab & Waktu
+              Lab & Gravitasi
             </button>
-            {activePlanetName === "Bumi" && (
-              <button
-                className={`drawer-tab-btn ${activeTab === "map" ? "active" : ""}`}
-                onClick={() => {
-                  playSfx("click");
-                  setActiveTab("map");
-                }}
-              >
-                🗺️ Rute Jogja ⇄ Bogor
-              </button>
-            )}
             <button
               className={`drawer-tab-btn ${activeTab === "love" ? "active" : ""}`}
               onClick={() => {
@@ -1556,12 +1570,36 @@ export default function Home() {
           <div>
             <div className="metrics-grid">
               <div className="metric-item">
-                <div className="metric-lbl">DIAMETER</div>
+                <div className="metric-lbl">DIAMETER EKUATOR</div>
                 <div className="metric-val">{currentPlanet.diameter}</div>
               </div>
               <div className="metric-item">
-                <div className="metric-lbl">JARAK ORBIT</div>
+                <div className="metric-lbl">JARAK KE MATAHARI</div>
                 <div className="metric-val">{currentPlanet.distance}</div>
+              </div>
+              <div className="metric-item">
+                <div className="metric-lbl">PERIODE REVOLUSI</div>
+                <div className="metric-val">
+                  {currentPlanet.orbitDays >= 365
+                    ? `${(currentPlanet.orbitDays / 365.25).toFixed(2)} Tahun Bumi`
+                    : `${currentPlanet.orbitDays} Hari Bumi`}
+                </div>
+              </div>
+              <div className="metric-item">
+                <div className="metric-lbl">PERIODE ROTASI</div>
+                <div className="metric-val">
+                  {Math.abs(currentPlanet.rotationHours) >= 24
+                    ? `${(Math.abs(currentPlanet.rotationHours) / 24).toFixed(1)} Hari ${currentPlanet.rotationHours < 0 ? "(Retrograde)" : ""}`
+                    : `${Math.abs(currentPlanet.rotationHours)} Jam`}
+                </div>
+              </div>
+              <div className="metric-item">
+                <div className="metric-lbl">KEMIRINGAN POROS</div>
+                <div className="metric-val">{currentPlanet.axialTilt}°</div>
+              </div>
+              <div className="metric-item">
+                <div className="metric-lbl">INKLINASI ORBIT</div>
+                <div className="metric-val">{currentPlanet.inclination}°</div>
               </div>
               <div className="metric-item">
                 <div className="metric-lbl">SUHU RATA-RATA</div>
@@ -1573,9 +1611,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="drawer-desc-box">
-              {currentPlanet.scienceFact}
-            </div>
+            <div className="drawer-desc-box">{currentPlanet.scienceFact}</div>
           </div>
         )}
 
@@ -1615,218 +1651,6 @@ export default function Home() {
           </div>
         )}
 
-        {activeTab === "map" && activePlanetName === "Bumi" && (
-          <div className="earth-route-container">
-            <div className="earth-radar-map-card">
-              <div className="radar-header">
-                <div className="radar-title-badge">
-                  <span>🗺️</span> Peta Rute: Jogja ⇄ Bogor
-                </div>
-                <div className="radar-live-indicator">
-                  <div className="radar-live-dot"></div>
-                  <span>TERHUBUNG LANGSUNG</span>
-                </div>
-              </div>
-
-              {/* RADAR SVG MAP VISUALIZER */}
-              <div className="radar-svg-wrapper">
-                <svg
-                  className="radar-svg"
-                  viewBox="0 0 500 200"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {/* Radar Circular Grids */}
-                  <circle cx="250" cy="100" r="90" stroke="rgba(56, 189, 248, 0.15)" strokeWidth="1" strokeDasharray="4 4" />
-                  <circle cx="250" cy="100" r="60" stroke="rgba(56, 189, 248, 0.18)" strokeWidth="1" />
-                  <circle cx="250" cy="100" r="30" stroke="rgba(56, 189, 248, 0.22)" strokeWidth="1" />
-                  <line x1="250" y1="10" x2="250" y2="190" stroke="rgba(56, 189, 248, 0.12)" strokeWidth="1" />
-                  <line x1="160" y1="100" x2="340" y2="100" stroke="rgba(56, 189, 248, 0.12)" strokeWidth="1" />
-
-                  {/* Rotating Radar Sweep Line */}
-                  <line
-                    x1="250"
-                    y1="100"
-                    x2="340"
-                    y2="100"
-                    stroke="url(#radarGradient)"
-                    strokeWidth="2"
-                    className="radar-sweep-line"
-                  />
-
-                  <defs>
-                    <linearGradient id="radarGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="rgba(56, 189, 248, 0.8)" />
-                      <stop offset="100%" stopColor="rgba(56, 189, 248, 0)" />
-                    </linearGradient>
-                    <linearGradient id="routeLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#f472b6" />
-                      <stop offset="50%" stopColor="#ffffff" />
-                      <stop offset="100%" stopColor="#38bdf8" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* Stylized Java Island Coast Outline */}
-                  <path
-                    d="M 60,110 Q 110,85 160,95 Q 230,80 320,105 Q 400,115 440,110 Q 420,135 340,130 Q 220,135 120,130 Z"
-                    fill="rgba(56, 189, 248, 0.06)"
-                    stroke="rgba(56, 189, 248, 0.3)"
-                    strokeWidth="1.5"
-                  />
-
-                  {/* Connection Arc Line (Bogor to Jogja) */}
-                  <path
-                    d="M 120,105 Q 240,45 360,115"
-                    fill="none"
-                    stroke="url(#routeLineGrad)"
-                    strokeWidth="2.5"
-                    className="radar-route-dash"
-                  />
-
-                  {/* Distance Pill Badge */}
-                  <g transform="translate(205, 52)">
-                    <rect width="90" height="22" rx="11" fill="rgba(15, 23, 42, 0.9)" stroke="rgba(56, 189, 248, 0.5)" strokeWidth="1" />
-                    <text x="45" y="15" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="bold" letterSpacing="0.5">
-                      ~442.8 KM
-                    </text>
-                  </g>
-
-                  {/* Bogor Marker */}
-                  <g transform="translate(120, 105)">
-                    <circle r="14" fill="rgba(244, 114, 182, 0.2)" />
-                    <circle r="8" fill="rgba(244, 114, 182, 0.4)" />
-                    <circle r="4" fill="#f472b6" />
-                    <text x="-8" y="24" fill="#fbcfe8" fontSize="10.5" fontWeight="bold">
-                      📍 Bogor (Sayangku 🌻)
-                    </text>
-                    <text x="-8" y="36" fill="#94a3b8" fontSize="8.5">
-                      6.595° S, 106.816° E
-                    </text>
-                  </g>
-
-                  {/* Jogja Marker */}
-                  <g transform="translate(360, 115)">
-                    <circle r="14" fill="rgba(56, 189, 248, 0.2)" />
-                    <circle r="8" fill="rgba(56, 189, 248, 0.4)" />
-                    <circle r="4" fill="#38bdf8" />
-                    <text x="-25" y="24" fill="#bae6fd" fontSize="10.5" fontWeight="bold">
-                      📍 Jogja (Mas Dhani 🪐)
-                    </text>
-                    <text x="-25" y="36" fill="#94a3b8" fontSize="8.5">
-                      7.797° S, 110.370° E
-                    </text>
-                  </g>
-                </svg>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="radar-actions-bar">
-                <button
-                  className="radar-action-btn radar-ping-btn"
-                  onClick={() => {
-                    playSfx("satellite");
-                    setShowPingToast(true);
-                    setTimeout(() => setShowPingToast(false), 4500);
-                  }}
-                >
-                  <span>📡</span> Kirim Sinyal Rindu (Ping Radar)
-                </button>
-                <button
-                  className="radar-action-btn radar-focus-btn"
-                  onClick={() => {
-                    focusOnRouteRef.current();
-                  }}
-                  title="Pusatkan Kamera 3D ke Jawa / Rute Jogja-Bogor"
-                >
-                  <span>🛰️</span> Fokus Kamera ke Rute 3D
-                </button>
-              </div>
-
-              {/* Ping Toast Notification */}
-              {showPingToast && (
-                <div className="ping-toast">
-                  <span>✨</span>
-                  <span><strong>Sinyal Rindu Terkirim:</strong> Sinyal cinta dan doa tulus dari Mas Dhani di Jogja telah sampai ke Bogor dengan kecepatan cahaya! 💖🌻</span>
-                </div>
-              )}
-
-              {/* Telemetry Grid */}
-              <div className="telemetry-grid">
-                <div className="telemetry-card">
-                  <div className="telemetry-label">
-                    <span>📍</span> TITIK JOGJA (MAS DHANI)
-                  </div>
-                  <div className="telemetry-val">D.I. Yogyakarta</div>
-                  <div className="telemetry-sub">7° 47&apos; 49&quot; S, 110° 22&apos; 13&quot; E • Ruang Doa & Rindu</div>
-                </div>
-
-                <div className="telemetry-card">
-                  <div className="telemetry-label">
-                    <span>🌻</span> TITIK BOGOR (SAYANGKU)
-                  </div>
-                  <div className="telemetry-val">Kota Bogor, Jawa Barat</div>
-                  <div className="telemetry-sub">6° 35&apos; 42&quot; S, 106° 47&apos; 59&quot; E • Kota Hujan & Rumah Terhangat</div>
-                </div>
-
-                <div className="telemetry-card">
-                  <div className="telemetry-label">
-                    <span>📏</span> JARAK UDARA LURUS
-                  </div>
-                  <div className="telemetry-val">442.8 Kilometer</div>
-                  <div className="telemetry-sub">Jarak Great-Circle Sphere di Permukaan Bumi</div>
-                </div>
-
-                <div className="telemetry-card">
-                  <div className="telemetry-label">
-                    <span>🛣️</span> JARAK RUTE JALUR DARAT
-                  </div>
-                  <div className="telemetry-val">~560 Kilometer</div>
-                  <div className="telemetry-sub">Melintasi Koridor Tol Trans-Jawa</div>
-                </div>
-              </div>
-
-              {/* Travel Matrix Comparison */}
-              <div className="travel-matrix">
-                <div className="travel-matrix-title">⚡ Estimasi Waktu Tempuh Jogja ⇄ Bogor</div>
-                <div className="travel-matrix-row">
-                  <div className="travel-mode">
-                    <span>✈️</span> Pesawat Udara (YIA ⇄ CGK/HLP)
-                  </div>
-                  <div className="travel-duration">~1 Jam 10 Menit</div>
-                </div>
-                <div className="travel-matrix-row">
-                  <div className="travel-mode">
-                    <span>🚄</span> Kereta Eksekutif (Taksaka / Argo Dwipangga)
-                  </div>
-                  <div className="travel-duration">~6 Jam 30 Menit</div>
-                </div>
-                <div className="travel-matrix-row">
-                  <div className="travel-mode">
-                    <span>🚗</span> Perjalanan Mobil / Tol Trans-Jawa
-                  </div>
-                  <div className="travel-duration">~7 Jam 45 Menit</div>
-                </div>
-                <div className="travel-matrix-row">
-                  <div className="travel-mode">
-                    <span>🤍</span> Sinyal Rindu & Doa Tulus Mas Dhani
-                  </div>
-                  <div className="travel-duration instant">0.000 Detik (Real-time) ✨</div>
-                </div>
-              </div>
-
-              {/* Inside Joke & Romantic Note Card */}
-              <div className="route-story-card">
-                <div className="route-story-badge">
-                  <span>💖</span> Catatan Khusus untuk Sayang
-                </div>
-                <div className="route-story-quote">
-                  &ldquo;Jauh di peta hanyalah ilusi angka di atas kertas. Dari Jogja sampai ke Bogor, rasa sayang, perhatian, dan doa mas selalu sampai tanpa perlu jeda waktu. Masih ingat candaan manis kamu dulu: &apos;nanti aku pindahin Bogor biar deketan sama Jogja&apos; hehe 🌻🤍. Mau sejauh apa pun kilometernya, tempat pulang dan tujuan mas selalu kamu.&rdquo;
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {activeTab === "love" && (
           <div className="nana-note-wrapper">
             <div className="nana-note-card">
@@ -1834,9 +1658,7 @@ export default function Home() {
                 <span className="nana-note-badge">💖 Pesan untuk Sayang</span>
                 <span className="nana-note-tag">🪐 {activePlanetName}</span>
               </div>
-              <div className="nana-note-quote">
-                &ldquo;{currentPlanet.romanticNote}&rdquo;
-              </div>
+              <div className="nana-note-quote">&ldquo;{currentPlanet.romanticNote}&rdquo;</div>
               <div className="nana-note-footer">
                 <span className="nana-note-sign">— Mas Dhani</span>
                 <span className="nana-note-date">✨ Di Bawah Langit Semesta</span>
@@ -1865,11 +1687,16 @@ export default function Home() {
         </div>
       </div>
 
-
-
       {/* LOADER */}
       <div id="loader">
-        <div style={{ color: "#ffffff", fontSize: "12px", letterSpacing: "2px", fontWeight: 600 }}>
+        <div
+          style={{
+            color: "#ffffff",
+            fontSize: "12px",
+            letterSpacing: "2px",
+            fontWeight: 600,
+          }}
+        >
           COSMONANA // INITIALIZING STELLARIUM OBSERVATORY...
         </div>
         <div className="loader-bar">
