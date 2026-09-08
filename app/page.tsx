@@ -243,6 +243,10 @@ export default function Home() {
   const [timeMultiplier, setTimeMultiplier] = useState<number>(1);
   const [showPingToast, setShowPingToast] = useState<boolean>(false);
 
+  // Background Music state & refs (New Audio Track)
+  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+  const bgmAudioRef = useRef<HTMLAudioElement | null>(null);
+
   // Solar System Scope Orrery Modal state
   const [showOrreryModal, setShowOrreryModal] = useState(false);
 
@@ -299,6 +303,73 @@ export default function Home() {
   useEffect(() => {
     if (skyDomeMeshRef.current) skyDomeMeshRef.current.visible = showMilkyWay;
   }, [showMilkyWay]);
+
+  // BGM CONTROLS (User Uploaded Soundtrack)
+  const startAmbientSoundscape = () => {
+    try {
+      if (!bgmAudioRef.current) {
+        const audio = new Audio("/audio/bgm.mp3");
+        audio.loop = true;
+        audio.volume = 0.55;
+        audio.addEventListener("ended", () => {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        });
+        bgmAudioRef.current = audio;
+      }
+      bgmAudioRef.current
+        .play()
+        .then(() => {
+          setIsAudioPlaying(true);
+        })
+        .catch(() => {
+          setIsAudioPlaying(false);
+        });
+    } catch {
+      setIsAudioPlaying(false);
+    }
+  };
+
+  const stopAmbientSoundscape = () => {
+    try {
+      if (bgmAudioRef.current) {
+        bgmAudioRef.current.pause();
+      }
+      setIsAudioPlaying(false);
+    } catch {}
+  };
+
+  const toggleAmbientAudio = () => {
+    playSfx("click");
+    if (isAudioPlaying) {
+      stopAmbientSoundscape();
+    } else {
+      startAmbientSoundscape();
+    }
+  };
+
+  // Auto-play BGM on first user interaction
+  useEffect(() => {
+    const handleFirstUserGesture = () => {
+      if (!isAudioPlaying && !bgmAudioRef.current) {
+        startAmbientSoundscape();
+      }
+      window.removeEventListener("click", handleFirstUserGesture);
+      window.removeEventListener("keydown", handleFirstUserGesture);
+      window.removeEventListener("touchstart", handleFirstUserGesture);
+    };
+    window.addEventListener("click", handleFirstUserGesture);
+    window.addEventListener("keydown", handleFirstUserGesture);
+    window.addEventListener("touchstart", handleFirstUserGesture);
+    return () => {
+      window.removeEventListener("click", handleFirstUserGesture);
+      window.removeEventListener("keydown", handleFirstUserGesture);
+      window.removeEventListener("touchstart", handleFirstUserGesture);
+      if (bgmAudioRef.current) {
+        bgmAudioRef.current.pause();
+      }
+    };
+  }, []);
 
   const playSfx = (type: "whoosh" | "click" | "satellite" | "target") => {
     try {
@@ -1073,6 +1144,23 @@ export default function Home() {
         </div>
 
         <div className="nav-right-cluster">
+          {/* BACKGROUND MUSIC TOGGLE */}
+          <button
+            className={`audio-toggle-btn ${isAudioPlaying ? "playing" : ""}`}
+            onClick={toggleAmbientAudio}
+            title={isAudioPlaying ? "Jeda Musik Latar" : "Putar Musik Latar"}
+          >
+            <span className="audio-icon">{isAudioPlaying ? "🎵" : "🔇"}</span>
+            <span className="audio-label">{isAudioPlaying ? "Musik Semesta ✨" : "Putar Musik"}</span>
+            {isAudioPlaying && (
+              <span className="soundwave-anim">
+                <span className="bar"></span>
+                <span className="bar"></span>
+                <span className="bar"></span>
+              </span>
+            )}
+          </button>
+
           {/* SOLAR SYSTEM SCOPE LIVE ORRERY BUTTON */}
           <button
             className="view-mode-pill"
