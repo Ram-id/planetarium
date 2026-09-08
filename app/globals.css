@@ -1591,13 +1591,223 @@ html, body {
 }
 
 /* ===================================================
-   FEATURE 1: WISH GENERATOR (PERMOHONAN SEMESTA)
+   FEATURE 1: COSMIC SKY LANTERNS (LAMPION HARAPAN KOSMIK)
    =================================================== */
 
-.wish-modal-backdrop {
+.lantern-modal-backdrop {
   position: fixed;
   inset: 0;
   z-index: 100;
+  background: rgba(3, 6, 17, 0.88);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 16px;
+}
+
+.lantern-modal-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lantern-modal-window {
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  background: radial-gradient(circle at top, rgba(251, 146, 60, 0.22), transparent 55%),
+              radial-gradient(circle at bottom right, rgba(236, 72, 153, 0.18), transparent 50%),
+              rgba(10, 18, 38, 0.96);
+  border: 1px solid rgba(251, 146, 60, 0.35);
+  border-radius: 24px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 45px rgba(251, 146, 60, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lantern-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.65);
+}
+
+.lantern-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 16px;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.lantern-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.lantern-prompt-card {
+  background: rgba(251, 146, 60, 0.08);
+  border: 1px solid rgba(251, 146, 60, 0.25);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.lantern-prompt-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #f59e0b, #fb923c, #ec4899);
+}
+
+.lantern-prompt-text {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #fde68a;
+}
+
+.lantern-color-picker-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lantern-picker-lbl {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.lantern-color-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lantern-color-btn {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.lantern-color-btn.active {
+  border-color: #fb923c;
+  background: rgba(251, 146, 60, 0.25);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(251, 146, 60, 0.4);
+}
+
+.color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.lantern-textarea {
+  width: 100%;
+  height: 110px;
+  background: rgba(8, 14, 30, 0.85);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  border-radius: 16px;
+  padding: 14px 16px;
+  color: #ffffff;
+  font-size: 13.5px;
+  line-height: 1.6;
+  outline: none;
+  resize: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: inherit;
+}
+
+.lantern-textarea:focus {
+  border-color: #fb923c;
+  box-shadow: 0 0 20px rgba(251, 146, 60, 0.35);
+}
+
+.lantern-author-input {
+  width: 100%;
+  background: rgba(8, 14, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+}
+
+.lantern-author-input:focus {
+  border-color: #fb923c;
+}
+
+.lantern-launch-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #ea580c, #f59e0b, #ec4899);
+  border: none;
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 8px 30px rgba(234, 88, 12, 0.45);
+  transition: all 0.25s ease;
+}
+
+.lantern-launch-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(234, 88, 12, 0.6);
+  filter: brightness(1.1);
+}
+
+.lantern-launch-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===================================================
+   LANTERN WISH REVEAL POPUP (CLICKING A LANTERN)
+   =================================================== */
+
+.lantern-view-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
   background: rgba(3, 6, 17, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -1610,196 +1820,192 @@ html, body {
   padding: 16px;
 }
 
-.wish-modal-backdrop.show {
+.lantern-view-modal-backdrop.show {
   opacity: 1;
   pointer-events: auto;
 }
 
-.wish-modal-window {
+.lantern-view-card {
   width: 100%;
-  max-width: 580px;
-  max-height: 90vh;
-  background: radial-gradient(circle at top right, rgba(30, 58, 138, 0.35), transparent 60%),
-              radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.2), transparent 50%),
-              rgba(10, 18, 38, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  max-width: 480px;
+  background: radial-gradient(circle at top center, rgba(251, 146, 60, 0.25), transparent 60%),
+              rgba(10, 18, 38, 0.97);
+  border: 1px solid rgba(251, 146, 60, 0.4);
   border-radius: 24px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 50px rgba(251, 146, 60, 0.35);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
   animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.wish-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(15, 23, 42, 0.6);
-}
-
-.wish-modal-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 800;
-  font-size: 16px;
-  color: #ffffff;
-  letter-spacing: 0.3px;
-}
-
-.wish-modal-body {
   padding: 24px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
-.wish-prompt-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 16px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.wish-prompt-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #38bdf8, #f472b6, #fbbf24);
-}
-
-.wish-prompt-text {
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: #e2e8f0;
-}
-
-.wish-categories-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.wish-category-chip {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #94a3b8;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.wish-category-chip:hover,
-.wish-category-chip.active {
-  background: rgba(56, 189, 248, 0.2);
-  border-color: #38bdf8;
-  color: #ffffff;
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-}
-
-.wish-textarea-wrap {
-  position: relative;
-}
-
-.wish-textarea {
-  width: 100%;
-  height: 110px;
-  background: rgba(8, 14, 30, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  padding: 14px 16px;
-  color: #ffffff;
-  font-size: 13.5px;
-  line-height: 1.6;
-  outline: none;
-  resize: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  font-family: inherit;
-}
-
-.wish-textarea:focus {
-  border-color: #38bdf8;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
-}
-
-.wish-send-btn {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #0284c7, #ec4899);
-  border: none;
-  border-radius: 999px;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 8px 25px rgba(236, 72, 153, 0.35);
-  transition: all 0.25s ease;
-}
-
-.wish-send-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(236, 72, 153, 0.5);
-  filter: brightness(1.1);
-}
-
-.wish-send-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.wish-blessing-card {
-  background: rgba(244, 114, 182, 0.08);
-  border: 1px solid rgba(244, 114, 182, 0.25);
-  border-radius: 16px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  animation: fadeIn 0.4s ease;
-}
-
-.wish-blessing-header {
+.lantern-glow-badge-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #f472b6;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
-.wish-blessing-quote {
-  font-size: 13.5px;
-  line-height: 1.65;
+.lantern-visual-glow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+  animation: lanternBob 2.5s infinite ease-in-out;
+}
+
+@keyframes lanternBob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+}
+
+.lantern-scroll-paper {
+  background: radial-gradient(circle at center, #1e1b4b, #0f172a);
+  border: 1px solid rgba(251, 146, 60, 0.25);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lantern-paper-quote {
+  font-family: Georgia, "Playfair Display", serif;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: #fef08a;
+  font-style: italic;
+}
+
+.lantern-paper-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 10px;
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+.lantern-blessing-box {
+  background: rgba(244, 114, 182, 0.1);
+  border: 1px solid rgba(244, 114, 182, 0.3);
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.6;
   color: #fce7f3;
   font-style: italic;
 }
 
-.wish-history-section {
+.lantern-actions-row {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 10px;
+}
+
+.lantern-heart-btn {
+  flex: 1;
+  padding: 12px;
+  background: linear-gradient(135deg, #ec4899, #f43f5e);
+  border: none;
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+  transition: all 0.2s ease;
+}
+
+.lantern-heart-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* Floating 3D Lantern Badges in the Sky */
+.floating-lantern-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  transform: translate3d(-9999px, -9999px, 0);
+  margin-left: -40px;
+  margin-top: -30px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(251, 146, 60, 0.4);
+  border-radius: 999px;
+  padding: 4px 12px 4px 8px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 18px rgba(251, 146, 60, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fef08a;
+  white-space: nowrap;
+}
+
+.floating-lantern-badge:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: #fb923c;
+  box-shadow: 0 6px 25px rgba(251, 146, 60, 0.6);
+  transform: scale(1.1) !important;
+}
+
+/* Floating Lanterns Quick List Tray in bottom-right */
+.lanterns-sky-tray {
+  position: fixed;
+  bottom: 85px;
+  right: 28px;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 18, 38, 0.85);
+  border: 1px solid rgba(251, 146, 60, 0.35);
+  border-radius: 999px;
+  padding: 6px 14px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(251, 146, 60, 0.2);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.lanterns-sky-tray:hover {
+  background: rgba(20, 30, 58, 0.95);
+  border-color: #fb923c;
+  box-shadow: 0 10px 35px rgba(251, 146, 60, 0.4);
+  transform: translateY(-2px);
+}
+
+.tray-flame {
+  font-size: 16px;
+  animation: lanternBob 2s infinite ease-in-out;
+}
+
+.tray-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #fed7aa;
+}
+
+.tray-badge-num {
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(251, 146, 60, 0.3);
+  color: #ffffff;
+  padding: 1px 7px;
+  border-radius: 999px;
 }
 
 .wish-history-title {

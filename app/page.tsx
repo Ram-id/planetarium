@@ -315,78 +315,142 @@ export default function Home() {
   // Solar System Scope Orrery Modal state
   const [showOrreryModal, setShowOrreryModal] = useState(false);
 
-  // FEATURE 1: WISH GENERATOR STATE
-  const [showWishModal, setShowWishModal] = useState(false);
-  const [wishCategory, setWishCategory] = useState<string>("💖 Cinta & Kita");
-  const [wishText, setWishText] = useState<string>("");
-  const [wishBlessing, setWishBlessing] = useState<string | null>(null);
-  interface SavedWish {
+  // FEATURE 1: COSMIC SKY LANTERNS (LAMPION HARAPAN KOSMIK) STATE
+  interface SkyLantern {
     id: string;
-    category: string;
     text: string;
+    author: string;
+    color: string;
+    colorName: string;
     date: string;
     blessing: string;
+    likes: number;
+    x: number;
+    y: number;
+    z: number;
+    riseSpeed: number;
+    wobblePhase: number;
   }
-  const [wishHistory, setWishHistory] = useState<SavedWish[]>([
+
+  const [showLanternModal, setShowLanternModal] = useState(false);
+  const [showLanternViewModal, setShowLanternViewModal] = useState(false);
+  const [selectedLantern, setSelectedLantern] = useState<SkyLantern | null>(null);
+  const [lanternInputText, setLanternInputText] = useState("");
+  const [lanternAuthor, setLanternAuthor] = useState("Nana Cantik");
+  const [lanternColor, setLanternColor] = useState("#f97316");
+
+  const INITIAL_LANTERNS: SkyLantern[] = [
     {
-      id: "wish-init-1",
-      category: "💖 Cinta & Kita",
-      text: "Semoga kita berdua selalu bahagia, langgeng, dan selalu saling menemani di setiap musim kehidupan ✨",
+      id: "lantern-dhani-1",
+      text: "Semoga senyuman manis bidadariku selalu bercahaya, dan hatimu selalu dipenuhi rasa tenang & bahagia setiap hari. ✨",
+      author: "Mas Dhani 💖",
+      color: "#f97316",
+      colorName: "Golden Amber",
       date: "8 Maret 2026",
-      blessing:
-        "Permohonanmu sudah melesat menembus bintang-bintang langit semesta sayang. Mas Dhani selalu mendoakan dan mendampingi langkahmu. 🤍🪐",
+      blessing: "Mas Dhani selalu siap nemenin dan melindungi kamu, di mana pun dan kapan pun.",
+      likes: 12,
+      x: 120,
+      y: 85,
+      z: -160,
+      riseSpeed: 0.015,
+      wobblePhase: 0.4,
     },
-  ]);
+    {
+      id: "lantern-dhani-2",
+      text: "Harapan terbesarku: bisa terus menggenggam tanganmu, melewati jutaan detik dan musim kehidupan berdua. 🪐🤍",
+      author: "Mas Dhani 💖",
+      color: "#ec4899",
+      colorName: "Rose Romance",
+      date: "8 Maret 2026",
+      blessing: "Rasa sayang Mas ke kamu tak terhingga seluas galaksi semesta raya.",
+      likes: 24,
+      x: -180,
+      y: 110,
+      z: 90,
+      riseSpeed: 0.018,
+      wobblePhase: 1.8,
+    },
+    {
+      id: "lantern-dhani-3",
+      text: "Semoga segala impian besar, cita-cita, dan langkah hebatmu dimudahkan dan tercapai dengan begitu indah. 🌟🎓",
+      author: "Mas Dhani 💖",
+      color: "#38bdf8",
+      colorName: "Cosmic Cyan",
+      date: "8 Maret 2026",
+      blessing: "Mas akan selalu jadi suporter nomor satu untuk semua mimpimu sayang.",
+      likes: 18,
+      x: 60,
+      y: 140,
+      z: 180,
+      riseSpeed: 0.012,
+      wobblePhase: 3.2,
+    },
+  ];
 
-  // FEATURE 2: POLAROID SNAPSHOT STATE
-  const [showPolaroidModal, setShowPolaroidModal] = useState(false);
-  const [polaroidImgUrl, setPolaroidImgUrl] = useState<string | null>(null);
-  const [polaroidCaption, setPolaroidCaption] = useState<string>("");
-  const [polaroidFilter, setPolaroidFilter] = useState<"original" | "vintage" | "cyber" | "golden" | "bw">("original");
+  const [lanternsList, setLanternsList] = useState<SkyLantern[]>(INITIAL_LANTERNS);
+  const lanternsListRef = useRef<SkyLantern[]>(INITIAL_LANTERNS);
+  useEffect(() => {
+    lanternsListRef.current = lanternsList;
+  }, [lanternsList]);
 
-  // FEATURE 3: TIME CAPSULE & LOVE QUIZ STATE
-  const [showCapsuleModal, setShowCapsuleModal] = useState(false);
-  const [capsuleTab, setCapsuleTab] = useState<"letter" | "reasons" | "quiz">("letter");
-  const [quizIndex, setQuizIndex] = useState<number>(0);
-  const [quizSelected, setQuizSelected] = useState<number | null>(null);
-  const [quizScore, setQuizScore] = useState<number>(0);
-  const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
+  const spawn3DLanternRef = useRef<(lantern: SkyLantern, isNewLaunch?: boolean) => void>(() => {});
 
-  // FEATURE 4: ARCADE MINI-GAME STATE
-  const [showGameModal, setShowGameModal] = useState<boolean>(false);
-  const [gameState, setGameState] = useState<"menu" | "playing" | "gameover" | "victory">("menu");
-  const [gameScore, setGameScore] = useState<number>(0);
-  const [gameHighScore, setGameHighScore] = useState<number>(0);
-  const [gameLives, setGameLives] = useState<number>(3);
-  const [gameDistance, setGameDistance] = useState<string>("0.00 AU");
-  const arcadeCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const gameMoveLeftRef = useRef(false);
-  const gameMoveRightRef = useRef(false);
-  const gameLoopIdRef = useRef<number | null>(null);
-
-  // TOAST NOTIFICATION STATE
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
-  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const showToastRef = useRef<(msg: string) => void>(() => {});
-
-  const showToast = (msg: string) => {
-    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
-    setToastMsg(msg);
-    toastTimeoutRef.current = setTimeout(() => {
-      setToastMsg(null);
-    }, 4500);
-  };
-  showToastRef.current = showToast;
-
-  // Load persisted wishes and game highscore from localStorage
+  // Load persisted lanterns and game highscore from localStorage
   useEffect(() => {
     try {
       const savedHigh = localStorage.getItem("cosmonana_rocket_highscore");
       if (savedHigh) setGameHighScore(parseInt(savedHigh, 10) || 0);
-      const savedWishes = localStorage.getItem("cosmonana_wishes");
-      if (savedWishes) setWishHistory(JSON.parse(savedWishes));
+      const savedLanterns = localStorage.getItem("cosmonana_lanterns");
+      if (savedLanterns) {
+        const parsed = JSON.parse(savedLanterns);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setLanternsList(parsed);
+          lanternsListRef.current = parsed;
+        }
+      }
     } catch {}
   }, []);
+
+  // Toast Notification state
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const showToastRef = useRef<(msg: string) => void>(() => {});
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    toastTimeoutRef.current = setTimeout(() => {
+      setToastMsg(null);
+    }, 4500);
+  };
+  useEffect(() => {
+    showToastRef.current = showToast;
+  }, []);
+
+  // Feature 2: Polaroid Snapshot state
+  const [showPolaroidModal, setShowPolaroidModal] = useState(false);
+  const [polaroidImgUrl, setPolaroidImgUrl] = useState<string | null>(null);
+  const [polaroidCaption, setPolaroidCaption] = useState("");
+  const [polaroidFilter, setPolaroidFilter] = useState<"original" | "vintage" | "cyber" | "golden" | "bw">("original");
+
+  // Feature 3: Love Capsule & Quiz state
+  const [showCapsuleModal, setShowCapsuleModal] = useState(false);
+  const [capsuleTab, setCapsuleTab] = useState<"letter" | "reasons" | "quiz">("letter");
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [quizSelected, setQuizSelected] = useState<number | null>(null);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+
+  // Feature 4: Retro Cosmic Rocket Mini-Game state
+  const [showGameModal, setShowGameModal] = useState(false);
+  const [gameState, setGameState] = useState<"menu" | "playing" | "gameover" | "victory">("menu");
+  const [gameScore, setGameScore] = useState(0);
+  const [gameHighScore, setGameHighScore] = useState(0);
+  const [gameLives, setGameLives] = useState(3);
+  const [gameDistance, setGameDistance] = useState("0 AU");
+  const arcadeCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const gameLoopIdRef = useRef<number | null>(null);
+  const gameMoveLeftRef = useRef(false);
+  const gameMoveRightRef = useRef(false);
 
   const [showDhaniModal, setShowDhaniModal] = useState(false);
   const [dhaniInput, setDhaniInput] = useState("");
@@ -741,45 +805,75 @@ export default function Home() {
     }
   };
 
-  // FEATURE 1 HANDLERS: WISH GENERATOR
-  const handleSendWish = () => {
-    if (!wishText.trim()) return;
+  // FEATURE 1 HANDLERS: COSMIC SKY LANTERNS (LAMPION HARAPAN)
+  const handleLaunchLantern = () => {
+    if (!lanternInputText.trim()) return;
     playSfx("wish");
-    triggerShootingStarRef.current();
 
-    const blessingTexts = [
-      "Permohonanmu sudah melesat menembus bintang-bintang langit semesta sayang. Mas Dhani selalu mendoakan dan mendampingi setiap langkahmu untuk mewujudkannya. Semoga semesta selalu memelukmu sehangat Mas memelukmu. ✨💖",
-      "Bintang jatuh malam ini membawa impian manismu ke orbit tertinggi. Apapun yang kamu cita-citakan, Mas yakin kamu pasti bisa mencapainya, dan Mas akan selalu ada di baris terdepan buat dukung kamu! 🌟🤍",
-      "Doa tulusmu sudah didengar seluruh galaksi cantikku. Mas percaya hal-hal baik akan selalu datang ke hidupmu. Tetap tersenyum manis yaa bidadariku! 🪐🌸",
-    ];
-    const pickedBlessing = blessingTexts[Math.floor(Math.random() * blessingTexts.length)];
-    setWishBlessing(pickedBlessing);
-
-    const newWish: SavedWish = {
-      id: "wish-" + Date.now(),
-      category: wishCategory,
-      text: wishText.trim(),
-      date: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }),
-      blessing: pickedBlessing,
+    const colorNames: Record<string, string> = {
+      "#f97316": "Golden Amber",
+      "#ec4899": "Rose Romance",
+      "#38bdf8": "Cosmic Cyan",
+      "#a855f7": "Starlight Violet",
     };
 
-    const updatedHistory = [newWish, ...wishHistory];
-    setWishHistory(updatedHistory);
+    const blessings = [
+      "Lampionmu telah membumbung tinggi membawa doa suci ke langit semesta sayang. Mas Dhani selalu mendoakan dan mendampingi setiap langkahmu. ✨💖",
+      "Cahaya hangat lentera ini menjadi saksi betapa tulusnya impianmu. Mas selalu ada di sampingmu untuk mewujudkannya satu per satu! 🌟🤍",
+      "Semesta tersenyum melihat lampion harapanmu malam ini. Semoga kebahagiaan selalu memeluk harimu, bidadariku tercinta. 🪐🌸",
+    ];
+    const pickedBlessing = blessings[Math.floor(Math.random() * blessings.length)];
+
+    const newLantern: SkyLantern = {
+      id: "lantern-" + Date.now(),
+      text: lanternInputText.trim(),
+      author: lanternAuthor.trim() || "Nana Cantik",
+      color: lanternColor,
+      colorName: colorNames[lanternColor] || "Golden Amber",
+      date: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }),
+      blessing: pickedBlessing,
+      likes: 1,
+      x: (Math.random() - 0.5) * 320,
+      y: 90 + Math.random() * 90,
+      z: (Math.random() - 0.5) * 320,
+      riseSpeed: 0.015 + Math.random() * 0.012,
+      wobblePhase: Math.random() * Math.PI * 2,
+    };
+
+    const updated = [newLantern, ...lanternsList];
+    setLanternsList(updated);
     try {
-      localStorage.setItem("cosmonana_wishes", JSON.stringify(updatedHistory));
+      localStorage.setItem("cosmonana_lanterns", JSON.stringify(updated));
     } catch {}
 
-    setWishText("");
-    showToast("🌠 Permohonanmu telah meluncur bersama bintang jatuh ke semesta!");
+    // Spawn 3D mesh in scene and animate rising up
+    spawn3DLanternRef.current(newLantern, true);
+
+    setLanternInputText("");
+    setShowLanternModal(false);
+    showToast("🏮 Lampion harapanmu telah melayang ke langit semesta! Klik lampion di langit untuk membaca isinya ✨");
   };
 
-  const handleDeleteWish = (id: string) => {
+  const handleLikeLantern = (id: string) => {
+    playSfx("heart");
+    setLanternsList((prev) =>
+      prev.map((l) => (l.id === id ? { ...l, likes: l.likes + 1 } : l))
+    );
+    if (selectedLantern && selectedLantern.id === id) {
+      setSelectedLantern((prev) => (prev ? { ...prev, likes: prev.likes + 1 } : null));
+    }
+    showToast("💖 Cahaya cinta dikirimkan ke lampion harapan!");
+  };
+
+  const handleDeleteLantern = (id: string) => {
     playSfx("click");
-    const filtered = wishHistory.filter((w) => w.id !== id);
-    setWishHistory(filtered);
+    const filtered = lanternsList.filter((l) => l.id !== id);
+    setLanternsList(filtered);
     try {
-      localStorage.setItem("cosmonana_wishes", JSON.stringify(filtered));
+      localStorage.setItem("cosmonana_lanterns", JSON.stringify(filtered));
     } catch {}
+    setShowLanternViewModal(false);
+    showToast("Lampion harapan telah diturunkan dari langit.");
   };
 
   // FEATURE 2 HANDLERS: POLAROID SNAPSHOT
@@ -1496,6 +1590,98 @@ export default function Home() {
     };
     triggerShootingStarRef.current = spawnShootingStar;
 
+    // 5.8 3D FLOATING SKY LANTERNS SYSTEM (Lampion Terbang Kosmik)
+    const activeLanternMeshes: THREE.Group[] = [];
+    const clickableLanternObjects: THREE.Object3D[] = [];
+
+    const create3DLanternMesh = (l: SkyLantern, isNewLaunch = false) => {
+      const group = new THREE.Group();
+      group.name = "lantern_" + l.id;
+      group.userData = {
+        lanternId: l.id,
+        isLantern: true,
+        riseSpeed: l.riseSpeed,
+        wobblePhase: l.wobblePhase,
+      };
+
+      const colorHex = parseInt(l.color.replace("#", "0x"), 16) || 0xf97316;
+
+      // Outer Paper Lantern Shell (Soft tapered cylinder)
+      const lanternGeo = new THREE.CylinderGeometry(2.8, 2.2, 5.8, 14, 1, false);
+      const lanternMat = new THREE.MeshStandardMaterial({
+        color: colorHex,
+        emissive: colorHex,
+        emissiveIntensity: 0.85,
+        roughness: 0.35,
+        metalness: 0.1,
+        transparent: true,
+        opacity: 0.92,
+      });
+      const lanternBody = new THREE.Mesh(lanternGeo, lanternMat);
+      lanternBody.userData = { lanternId: l.id, isLantern: true };
+      group.add(lanternBody);
+
+      // Top Dome Cap
+      const topCapGeo = new THREE.SphereGeometry(2.8, 14, 8, 0, Math.PI * 2, 0, Math.PI * 0.5);
+      const topCapMat = new THREE.MeshStandardMaterial({
+        color: colorHex,
+        emissive: colorHex,
+        emissiveIntensity: 0.9,
+      });
+      const topCap = new THREE.Mesh(topCapGeo, topCapMat);
+      topCap.position.y = 2.9;
+      topCap.userData = { lanternId: l.id, isLantern: true };
+      group.add(topCap);
+
+      // Inner Glowing Core / Flame
+      const flameGeo = new THREE.SphereGeometry(1.1, 8, 8);
+      const flameMat = new THREE.MeshBasicMaterial({ color: 0xfffaed });
+      const flame = new THREE.Mesh(flameGeo, flameMat);
+      flame.position.y = -1.2;
+      group.add(flame);
+
+      // Warm glow light attached to the lantern
+      const lanternLight = new THREE.PointLight(colorHex, 1.2, 45, 0.4);
+      lanternLight.position.y = 0;
+      group.add(lanternLight);
+
+      if (isNewLaunch) {
+        // Start from near current camera view and float upward smoothly
+        const camPos = camera.position.clone();
+        const dir = camera.getWorldDirection(new THREE.Vector3());
+        const startPos = camPos.clone().add(dir.clone().multiplyScalar(40));
+        startPos.y -= 15;
+        group.position.copy(startPos);
+
+        const targetY = startPos.y + 120 + Math.random() * 60;
+        const targetX = startPos.x + (Math.random() - 0.5) * 60;
+        const targetZ = startPos.z + (Math.random() - 0.5) * 60;
+
+        gsap.to(group.position, {
+          x: targetX,
+          y: targetY,
+          z: targetZ,
+          duration: 9.0,
+          ease: "power1.out",
+        });
+      } else {
+        group.position.set(l.x, l.y, l.z);
+      }
+
+      scene.add(group);
+      activeLanternMeshes.push(group);
+      clickableLanternObjects.push(lanternBody, topCap);
+    };
+
+    // Spawn initial pre-seeded lanterns
+    lanternsListRef.current.forEach((l) => {
+      create3DLanternMesh(l, false);
+    });
+
+    spawn3DLanternRef.current = (l: SkyLantern, isNewLaunch = true) => {
+      create3DLanternMesh(l, isNewLaunch);
+    };
+
     // 6. SOLAR SYSTEM ARCHITECTURE (All 8 Planets + Sun + Moon + Saturn Rings)
     const planetGroupMap: Record<string, THREE.Group> = {};
     const planetBodyMap: Record<string, THREE.Group> = {};
@@ -1942,7 +2128,7 @@ export default function Home() {
       }
     };
 
-    // 8. RAYCASTER FOR INTERACTIVE 3D PLANET CLICKS
+    // 8. RAYCASTER FOR INTERACTIVE 3D PLANET & LANTERN CLICKS
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     let isDragging = false;
@@ -1964,7 +2150,8 @@ export default function Home() {
       mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
       raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObjects(clickablePlanetMeshes, false);
+      const allClickable = clickablePlanetMeshes.concat(clickableLanternObjects);
+      const intersects = raycaster.intersectObjects(allClickable, false);
       if (intersects.length > 0) {
         if (canvasRef.current) canvasRef.current.style.cursor = "pointer";
       } else {
@@ -1981,10 +2168,21 @@ export default function Home() {
       mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
       raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObjects(clickablePlanetMeshes, false);
+      const allClickable = clickablePlanetMeshes.concat(clickableLanternObjects);
+      const intersects = raycaster.intersectObjects(allClickable, false);
 
       if (intersects.length > 0) {
         const hit = intersects[0].object;
+        if (hit.userData.isLantern && hit.userData.lanternId) {
+          const lId = hit.userData.lanternId;
+          const found = lanternsListRef.current.find((l) => l.id === lId);
+          if (found) {
+            playSfx("wish");
+            setSelectedLantern(found);
+            setShowLanternViewModal(true);
+            return;
+          }
+        }
         const targetName = hit.userData.planetName as PlanetName;
         if (targetName) {
           playSfx("target");
@@ -2048,7 +2246,7 @@ export default function Home() {
           lastStarTriggerTime = Date.now();
           spawnShootingStar();
           if (Math.random() > 0.45) {
-            showToastRef.current?.("🌠 Bintang jatuh melintas di langit! Klik untuk buat permohonan ✨");
+            showToastRef.current?.("🌠 Bintang jatuh melintas di langit! Nyalakan lampion harapanmu ✨");
           }
         }
       }
@@ -2118,6 +2316,36 @@ export default function Home() {
           sat.position.z = worldPos.z + Math.sin(u.angle) * u.radius;
           sat.position.y = worldPos.y + Math.sin(u.angle * 2) * u.inclination * u.radius;
           sat.rotation.y = -u.angle;
+        }
+      });
+
+      // Floating Cosmic Sky Lanterns Motion & Coordinate Projection
+      activeLanternMeshes.forEach((meshGrp) => {
+        const u = meshGrp.userData;
+        meshGrp.position.y += (u.riseSpeed || 0.015) * (speedFactor === 0 ? 0.05 : speedFactor);
+        if (meshGrp.position.y > 450) {
+          meshGrp.position.y = 80;
+        }
+        meshGrp.position.x += Math.sin(t * 0.7 + (u.wobblePhase || 0)) * 0.035;
+        meshGrp.position.z += Math.cos(t * 0.7 + (u.wobblePhase || 0)) * 0.035;
+        meshGrp.rotation.y += 0.003;
+
+        // Project 3D position to 2D screen coordinate for badge
+        const badgeEl = document.getElementById("lantern-badge-" + u.lanternId);
+        if (badgeEl) {
+          const p3d = new THREE.Vector3();
+          meshGrp.getWorldPosition(p3d);
+          p3d.y += 3.8;
+          p3d.project(camera);
+          const isVis = p3d.z < 1.0;
+          if (isVis) {
+            const sx = (p3d.x * 0.5 + 0.5) * window.innerWidth;
+            const sy = (-(p3d.y * 0.5) + 0.5) * window.innerHeight;
+            badgeEl.style.transform = `translate3d(${sx}px, ${sy}px, 0)`;
+            badgeEl.style.display = "flex";
+          } else {
+            badgeEl.style.display = "none";
+          }
         }
       });
 
@@ -2258,10 +2486,10 @@ export default function Home() {
             className="nav-link-btn"
             onClick={() => {
               playSfx("click");
-              setShowWishModal(true);
+              setShowLanternModal(true);
             }}
           >
-            🌠 Permohonan
+            🏮 Lampion Harapan
           </button>
           <button
             className="nav-link-btn"
@@ -2438,7 +2666,7 @@ export default function Home() {
         </button>
       </div>
 
-      {/* 3D ORBIT FLOATING PLANET BADGES & BEACONS LAYER */}
+      {/* 3D ORBIT FLOATING PLANET BADGES & LANTERNS LAYER */}
       <div className="orbit-labels-layer">
         {ORDER.map((name) => {
           const d = DATA[name];
@@ -2462,6 +2690,37 @@ export default function Home() {
             </div>
           );
         })}
+
+        {/* 3D Floating Lantern Badges in the Sky */}
+        {lanternsList.map((l) => (
+          <div
+            key={l.id}
+            id={`lantern-badge-${l.id}`}
+            className="floating-lantern-badge"
+            onClick={() => {
+              playSfx("wish");
+              setSelectedLantern(l);
+              setShowLanternViewModal(true);
+            }}
+            title={`Buka Lampion: "${l.text.slice(0, 32)}..."`}
+          >
+            <span style={{ fontSize: "13px" }}>🏮</span>
+            <span style={{ color: l.color, fontWeight: 700 }}>{l.author}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* BOTTOM-RIGHT QUICK SKY LANTERNS TRAY */}
+      <div
+        className="lanterns-sky-tray"
+        onClick={() => {
+          playSfx("click");
+          setShowLanternModal(true);
+        }}
+        title="Nyalakan & Terbangkan Lampion Harapan ke Langit Semesta"
+      >
+        <span className="tray-flame">🏮</span>
+        <span className="tray-title">Terbangkan Lampion ({lanternsList.length})</span>
       </div>
 
       {/* STELLARIUM DOCK */}
@@ -2530,16 +2789,16 @@ export default function Home() {
 
         <div className="dock-divider"></div>
 
-        {/* Feature 1: Make a Wish Button */}
+        {/* Feature 1: Cosmic Sky Lanterns Button */}
         <button
           className="dock-btn"
           onClick={() => {
             playSfx("click");
-            setShowWishModal(true);
+            setShowLanternModal(true);
           }}
-          title="Tulis Permohonan Impianmu ke Bintang Jatuh Semesta"
+          title="Tulis Permohonan & Terbangkan Lampion Harapan ke Langit Semesta"
         >
-          🌠 Permohonan
+          🏮 Lampion
         </button>
 
         {/* Feature 2: Polaroid Snapshot Button */}
@@ -2804,18 +3063,18 @@ export default function Home() {
         </div>
       </div>
 
-      {/* FEATURE 1: MAKE A COSMIC WISH MODAL */}
-      <div className={`wish-modal-backdrop ${showWishModal ? "show" : ""}`}>
-        <div className="wish-modal-window">
-          <div className="wish-modal-header">
-            <div className="wish-modal-title">
-              <span>🌠 Permohonan Semesta (Make a Wish)</span>
+      {/* FEATURE 1: COSMIC SKY LANTERNS MODAL (TULIS & TERBANGKAN LAMPION) */}
+      <div className={`lantern-modal-backdrop ${showLanternModal ? "show" : ""}`}>
+        <div className="lantern-modal-window">
+          <div className="lantern-modal-header">
+            <div className="lantern-modal-title">
+              <span>🏮 Terbangkan Lampion Harapan Kosmik</span>
             </div>
             <button
               className="orrery-close-btn"
               onClick={() => {
                 playSfx("click");
-                setShowWishModal(false);
+                setShowLanternModal(false);
               }}
               title="Tutup"
             >
@@ -2823,87 +3082,138 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="wish-modal-body">
-            <div className="wish-prompt-card">
-              <p className="wish-prompt-text">
-                Di bawah kubah langit semesta ini, tuliskan permohonan atau impianmu. Mas Dhani dan semesta akan mengabadikan dan selalu mendoakannya. ✨
+          <div className="lantern-modal-body">
+            <div className="lantern-prompt-card">
+              <p className="lantern-prompt-text">
+                Tuliskan permohonan, doa tulus, atau impian indahmu. Masukkan ke dalam lampion bercahaya hangat dan terbangkan melayang menembus langit malam semesta. ✨
               </p>
             </div>
 
-            <div className="wish-categories-row">
-              {["💖 Cinta & Kita", "🎓 Impian & Masa Depan", "🌸 Bahagia & Sehat", "🪐 Petualangan Bersama"].map((cat) => (
-                <button
-                  key={cat}
-                  className={`wish-category-chip ${wishCategory === cat ? "active" : ""}`}
-                  onClick={() => {
-                    playSfx("click");
-                    setWishCategory(cat);
-                  }}
-                >
-                  {cat}
-                </button>
-              ))}
+            {/* Lantern Light Color Palette Selection */}
+            <div className="lantern-color-picker-wrap">
+              <div className="lantern-picker-lbl">Pilih Cahaya Lampion:</div>
+              <div className="lantern-color-row">
+                {[
+                  { color: "#f97316", name: "Golden Amber" },
+                  { color: "#ec4899", name: "Rose Romance" },
+                  { color: "#38bdf8", name: "Cosmic Cyan" },
+                  { color: "#a855f7", name: "Starlight Violet" },
+                ].map((c) => (
+                  <button
+                    key={c.color}
+                    className={`lantern-color-btn ${lanternColor === c.color ? "active" : ""}`}
+                    onClick={() => {
+                      playSfx("click");
+                      setLanternColor(c.color);
+                    }}
+                  >
+                    <span className="color-dot" style={{ background: c.color, boxShadow: `0 0 8px ${c.color}` }} />
+                    <span>{c.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="wish-textarea-wrap">
+            {/* Author input */}
+            <div>
+              <div className="lantern-picker-lbl" style={{ marginBottom: "6px" }}>Nama Pengirim Doa:</div>
+              <input
+                type="text"
+                className="lantern-author-input"
+                value={lanternAuthor}
+                onChange={(e) => setLanternAuthor(e.target.value)}
+                placeholder="Nama kamu (misal: Nana Cantik)"
+              />
+            </div>
+
+            {/* Wish Textarea */}
+            <div>
+              <div className="lantern-picker-lbl" style={{ marginBottom: "6px" }}>Isi Harapan / Permohonan:</div>
               <textarea
-                className="wish-textarea"
-                placeholder="Tuliskan harapan atau permohonanmu untuk kita dan masa depan..."
-                value={wishText}
-                onChange={(e) => setWishText(e.target.value)}
+                className="lantern-textarea"
+                placeholder="Tuliskan harapan indahmu untuk kita, kesehatan, kebahagiaan, atau masa depan di sini..."
+                value={lanternInputText}
+                onChange={(e) => setLanternInputText(e.target.value)}
               />
             </div>
 
             <button
-              className="wish-send-btn"
-              onClick={handleSendWish}
-              disabled={!wishText.trim()}
+              className="lantern-launch-btn"
+              onClick={handleLaunchLantern}
+              disabled={!lanternInputText.trim()}
             >
-              🌠 Terbangkan Permohonan Bersama Bintang Jatuh
+              <span>🔥</span>
+              <span>Nyalakan & Terbangkan Lampion ke Langit Semesta</span>
             </button>
-
-            {wishBlessing && (
-              <div className="wish-blessing-card">
-                <div className="wish-blessing-header">
-                  <span>✨ Doa Semesta Mas Dhani</span>
-                  <span>🤍</span>
-                </div>
-                <div className="wish-blessing-quote">&ldquo;{wishBlessing}&rdquo;</div>
-              </div>
-            )}
-
-            {wishHistory.length > 0 && (
-              <div className="wish-history-section">
-                <div className="wish-history-title">
-                  <span>Permohonan Tersimpan di Galaksi ({wishHistory.length})</span>
-                </div>
-                {wishHistory.map((w) => (
-                  <div key={w.id} className="wish-history-item">
-                    <div className="wish-item-header">
-                      <span className="wish-item-tag">{w.category}</span>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <span className="wish-item-time">{w.date}</span>
-                        <button
-                          onClick={() => handleDeleteWish(w.id)}
-                          style={{ background: "none", border: "none", color: "#ef4444", fontSize: "11px", cursor: "pointer" }}
-                          title="Hapus Permohonan"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    </div>
-                    <div className="wish-item-text">{w.text}</div>
-                    {w.blessing && (
-                      <div style={{ fontSize: "11.5px", color: "#f472b6", fontStyle: "italic", borderTop: "1px dashed rgba(255,255,255,0.08)", paddingTop: "4px" }}>
-                        Mas Dhani: &ldquo;{w.blessing}&rdquo;
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
+      </div>
+
+      {/* FEATURE 1: VIEW A FLOATING SKY LANTERN MODAL */}
+      <div className={`lantern-view-modal-backdrop ${showLanternViewModal && selectedLantern ? "show" : ""}`}>
+        {selectedLantern && (
+          <div className="lantern-view-card">
+            <div className="lantern-glow-badge-row">
+              <div className="lantern-visual-glow">
+                <span>🏮</span>
+                <span style={{ fontSize: "14px", fontWeight: 800, color: selectedLantern.color }}>
+                  Lampion {selectedLantern.colorName}
+                </span>
+              </div>
+              <button
+                className="orrery-close-btn"
+                onClick={() => {
+                  playSfx("click");
+                  setShowLanternViewModal(false);
+                }}
+                title="Tutup"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="lantern-scroll-paper">
+              <div style={{ fontSize: "12px", color: "#94a3b8", display: "flex", justifyContent: "space-between" }}>
+                <span>✨ Harapan Tertulis:</span>
+                <span>{selectedLantern.date}</span>
+              </div>
+              <div className="lantern-paper-quote">
+                &ldquo;{selectedLantern.text}&rdquo;
+              </div>
+              <div className="lantern-paper-footer">
+                <span>Oleh: <strong style={{ color: "#ffffff" }}>{selectedLantern.author}</strong></span>
+                <span>💖 {selectedLantern.likes} Cahaya Cinta</span>
+              </div>
+            </div>
+
+            {selectedLantern.blessing && (
+              <div className="lantern-blessing-box">
+                <div style={{ fontWeight: 700, color: "#f472b6", marginBottom: "4px" }}>
+                  🤍 Doa Pendamping Mas Dhani:
+                </div>
+                <div>&ldquo;{selectedLantern.blessing}&rdquo;</div>
+              </div>
+            )}
+
+            <div className="lantern-actions-row">
+              <button
+                className="lantern-heart-btn"
+                onClick={() => handleLikeLantern(selectedLantern.id)}
+              >
+                <span>💖</span>
+                <span>Beri Cahaya Cinta ({selectedLantern.likes})</span>
+              </button>
+              <button
+                className="orrery-close-btn"
+                style={{ width: "auto", padding: "0 14px", borderRadius: "999px", fontSize: "12px", color: "#ef4444" }}
+                onClick={() => handleDeleteLantern(selectedLantern.id)}
+                title="Turunkan Lampion"
+              >
+                ✕ Turunkan
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* FEATURE 2: COSMIC POLAROID SNAPSHOT STUDIO */}
@@ -3270,12 +3580,12 @@ export default function Home() {
       <div
         className={`cosmic-toast ${toastMsg ? "show" : ""}`}
         onClick={() => {
-          if (toastMsg?.includes("Bintang jatuh")) {
+          if (toastMsg?.includes("Bintang jatuh") || toastMsg?.includes("Lampion")) {
             playSfx("click");
-            setShowWishModal(true);
+            setShowLanternModal(true);
           }
         }}
-        style={{ cursor: toastMsg?.includes("Bintang jatuh") ? "pointer" : "default" }}
+        style={{ cursor: toastMsg?.includes("Bintang jatuh") || toastMsg?.includes("Lampion") ? "pointer" : "default" }}
       >
         <span>{toastMsg}</span>
       </div>
