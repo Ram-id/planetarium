@@ -994,6 +994,22 @@ export default function Home() {
         <span>{nextPlanetName}</span>
       </button>
 
+      {/* FLOATING CHAT LAUNCHER WIDGET */}
+      <div
+        className="floating-dhani-launcher"
+        onClick={() => {
+          playSfx("click");
+          setShowDhaniModal(true);
+        }}
+        title="Buka Chat Tanya Mas Dhani"
+      >
+        <div className="floating-dhani-avatar">🪐</div>
+        <div className="floating-dhani-text">
+          <div className="floating-dhani-title">Tanya Mas Dhani ✨</div>
+          <div className="floating-dhani-sub">Klik untuk mengobrol</div>
+        </div>
+      </div>
+
       {/* FLOATING ZOOM & CAMERA CONTROLS */}
       <div className="camera-hud-controls">
         <button

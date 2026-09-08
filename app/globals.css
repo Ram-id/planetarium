@@ -1269,3 +1269,90 @@ html, body {
   cursor: not-allowed;
   transform: none;
 }
+
+/* NAV CTA BUTTON (Tanya Mas Dhani) */
+.nav-cta-btn {
+  pointer-events: auto !important;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.45);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.nav-cta-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 30px rgba(236, 72, 153, 0.75);
+  border-color: #ffffff;
+}
+
+.nav-cta-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* FLOATING CHAT LAUNCHER WIDGET (Bottom-Right) */
+.floating-dhani-launcher {
+  position: fixed;
+  bottom: 24px;
+  left: 28px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(236, 72, 153, 0.4);
+  padding: 8px 18px 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 25px rgba(236, 72, 153, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.floating-dhani-launcher:hover {
+  transform: translateY(-3px) scale(1.04);
+  background: rgba(30, 41, 59, 0.95);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 35px rgba(236, 72, 153, 0.5);
+  border-color: rgba(236, 72, 153, 0.8);
+}
+
+.floating-dhani-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #38bdf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+}
+
+.floating-dhani-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.floating-dhani-title {
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.floating-dhani-sub {
+  color: #94a3b8;
+  font-size: 10px;
+}
