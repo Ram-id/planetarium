@@ -638,6 +638,7 @@ export default function Home() {
 
     // 4. FULL LIVING SOLAR SYSTEM (All planets present in 3D space!)
     const planetMeshes: Record<string, THREE.Group> = {};
+    const clickablePlanetMeshes: THREE.Object3D[] = [];
 
     ORDER.forEach((name) => {
       const d = DATA[name];
@@ -673,7 +674,9 @@ export default function Home() {
       }
 
       const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+      sphere.userData = { planetName: name };
       grp.add(sphere);
+      clickablePlanetMeshes.push(sphere);
 
       if (d.moon) {
         const moonGeo = new THREE.SphereGeometry(d.size * 0.25, 32, 32);
@@ -684,8 +687,9 @@ export default function Home() {
         });
         const moon = new THREE.Mesh(moonGeo, moonMat);
         moon.position.set(d.size + 4.5, 2.0, 0);
-        moon.userData = { isMoon: true };
+        moon.userData = { planetName: name, isMoon: true };
         grp.add(moon);
+        clickablePlanetMeshes.push(moon);
       }
 
       if (d.ring) {
@@ -699,7 +703,9 @@ export default function Home() {
         });
         const ringMesh = new THREE.Mesh(ringGeo, ringMat);
         ringMesh.rotation.x = Math.PI / 2.3;
+        ringMesh.userData = { planetName: name, isRing: true };
         grp.add(ringMesh);
+        clickablePlanetMeshes.push(ringMesh);
       }
 
       scene.add(grp);
@@ -838,6 +844,64 @@ export default function Home() {
       });
     };
 
+    // 6. 3D RAYCASTER FOR INTERACTIVE PLANET CLICKS & HOVER
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    const handlePointerDown = (e: PointerEvent) => {
+      isDragging = false;
+      startX = e.clientX;
+      startY = e.clientY;
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (Math.hypot(e.clientX - startX, e.clientY - startY) > 6) {
+        isDragging = true;
+      }
+
+      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(clickablePlanetMeshes, false);
+      if (intersects.length > 0) {
+        if (canvasRef.current) canvasRef.current.style.cursor = "pointer";
+      } else {
+        if (canvasRef.current) canvasRef.current.style.cursor = "default";
+      }
+    };
+
+    const handlePointerUp = (e: PointerEvent) => {
+      if (isDragging || Math.hypot(e.clientX - startX, e.clientY - startY) > 8) {
+        return;
+      }
+
+      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(clickablePlanetMeshes, false);
+
+      if (intersects.length > 0) {
+        const hit = intersects[0].object;
+        const targetName = hit.userData.planetName as PlanetName;
+        if (targetName) {
+          playSfx("target");
+          navigateToPlanet(targetName);
+        }
+      }
+    };
+
+    const canvasEl = canvasRef.current;
+    if (canvasEl) {
+      canvasEl.addEventListener("pointerdown", handlePointerDown);
+      canvasEl.addEventListener("pointermove", handlePointerMove);
+      canvasEl.addEventListener("pointerup", handlePointerUp);
+    }
+
     let animFrameId: number;
     const clock = new THREE.Clock();
 
@@ -888,6 +952,11 @@ export default function Home() {
     window.addEventListener("resize", handleResize);
 
     return () => {
+      if (canvasEl) {
+        canvasEl.removeEventListener("pointerdown", handlePointerDown);
+        canvasEl.removeEventListener("pointermove", handlePointerMove);
+        canvasEl.removeEventListener("pointerup", handlePointerUp);
+      }
       clearTimeout(fallbackTimeout);
       cancelAnimationFrame(animFrameId);
       window.removeEventListener("resize", handleResize);
