@@ -340,6 +340,7 @@ export default function Home() {
   const [lanternInputText, setLanternInputText] = useState("");
   const [lanternAuthor, setLanternAuthor] = useState("Nana Cantik");
   const [lanternColor, setLanternColor] = useState("#f97316");
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const INITIAL_LANTERNS: SkyLantern[] = [
     {
@@ -2720,6 +2721,170 @@ export default function Home() {
         >
           100x
         </button>
+      </div>
+
+      {/* MOBILE-ONLY DEDICATED BOTTOM NAVIGATION BAR */}
+      <div className={`mobile-bottom-dock ${drawerOpen ? "drawer-opened" : ""}`}>
+        <button
+          className={`mobile-dock-btn ${drawerOpen ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setDrawerOpen(!drawerOpen);
+          }}
+        >
+          <span className="mobile-dock-icon">🪐</span>
+          <span className="mobile-dock-label">Planet</span>
+        </button>
+
+        <button
+          className={`mobile-dock-btn ${showLanternSanctuary ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setShowLanternSanctuary(true);
+          }}
+        >
+          <span className="mobile-dock-icon">🏮</span>
+          <span className="mobile-dock-label">Lampion</span>
+        </button>
+
+        <button
+          className={`mobile-dock-btn mobile-dock-highlight ${showDhaniModal ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setShowDhaniModal(true);
+          }}
+        >
+          <span className="mobile-dock-icon">💬</span>
+          <span className="mobile-dock-label">Mas Dhani</span>
+        </button>
+
+        <button
+          className={`mobile-dock-btn ${showCapsuleModal ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setShowCapsuleModal(true);
+          }}
+        >
+          <span className="mobile-dock-icon">🎁</span>
+          <span className="mobile-dock-label">Kapsul</span>
+        </button>
+
+        <button
+          className={`mobile-dock-btn ${showMobileMenu ? "active" : ""}`}
+          onClick={() => {
+            playSfx("click");
+            setShowMobileMenu(true);
+          }}
+        >
+          <span className="mobile-dock-icon">✨</span>
+          <span className="mobile-dock-label">Menu</span>
+        </button>
+      </div>
+
+      {/* MOBILE FITUR LAINNYA BOTTOM SHEET MODAL */}
+      <div
+        className={`mobile-menu-backdrop ${showMobileMenu ? "show" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            playSfx("click");
+            setShowMobileMenu(false);
+          }
+        }}
+      >
+        <div className="mobile-menu-sheet">
+          <div className="mobile-sheet-header">
+            <div className="mobile-sheet-title">
+              <span>✨ Fitur & Eksplorasi Semesta</span>
+            </div>
+            <button
+              className="orrery-close-btn"
+              onClick={() => {
+                playSfx("click");
+                setShowMobileMenu(false);
+              }}
+              title="Tutup Menu"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="mobile-sheet-grid">
+            <button
+              className="mobile-feature-card"
+              onClick={() => {
+                setShowMobileMenu(false);
+                capturePolaroidSnapshot();
+              }}
+            >
+              <div className="feature-card-icon">📸</div>
+              <div className="feature-card-title">Foto Polaroid</div>
+              <div className="feature-card-sub">Abadikan momen kosmik</div>
+            </button>
+
+            <button
+              className="mobile-feature-card"
+              onClick={() => {
+                setShowMobileMenu(false);
+                playSfx("click");
+                setShowGameModal(true);
+              }}
+            >
+              <div className="feature-card-icon">🚀</div>
+              <div className="feature-card-title">Mini-Game Roket</div>
+              <div className="feature-card-sub">Jelajah rintangan bintang</div>
+            </button>
+
+            <button
+              className="mobile-feature-card"
+              onClick={() => {
+                setShowMobileMenu(false);
+                playSfx("click");
+                setShowOrreryModal(true);
+              }}
+            >
+              <div className="feature-card-icon">🪐</div>
+              <div className="feature-card-title">Orrery Sandbox</div>
+              <div className="feature-card-sub">Simulasi 3D Solar Scope</div>
+            </button>
+
+            <button
+              className="mobile-feature-card"
+              onClick={() => {
+                setShowMobileMenu(false);
+                playSfx("click");
+                viewSolarOverviewRef.current();
+              }}
+            >
+              <div className="feature-card-icon">🔭</div>
+              <div className="feature-card-title">Pandangan Semesta</div>
+              <div className="feature-card-sub">Lihat seluruh orbit tata surya</div>
+            </button>
+
+            <button
+              className="mobile-feature-card"
+              onClick={() => {
+                const nextMode = layoutMode === "orbit" ? "linear" : "orbit";
+                switchLayoutModeRef.current(nextMode);
+              }}
+            >
+              <div className="feature-card-icon">{layoutMode === "orbit" ? "📏" : "🪐"}</div>
+              <div className="feature-card-title">Mode: {layoutMode === "orbit" ? "Berjajar" : "Orbit 3D"}</div>
+              <div className="feature-card-sub">Ganti susunan tata surya</div>
+            </button>
+
+            <button
+              className="mobile-feature-card"
+              onClick={() => {
+                playSfx("click");
+                setShowOrbitLabels(!showOrbitLabels);
+              }}
+            >
+              <div className="feature-card-icon">🏷️</div>
+              <div className="feature-card-title">Label Orbit: {showOrbitLabels ? "Aktif" : "Mati"}</div>
+              <div className="feature-card-sub">Tampilkan nama & jarak</div>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* 3D WEBGL CANVAS */}

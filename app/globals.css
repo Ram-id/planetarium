@@ -3416,27 +3416,25 @@ input, textarea, select {
 
 /* MOBILE PHONES (<= 768px) */
 @media (max-width: 768px) {
-  /* 1. TOP NAVBAR */
+  /* 1. TOP NAVBAR (Ultra Clean & Minimal on Mobile) */
   .spaceedu-nav {
-    left: 10px;
-    right: 10px;
-    top: 10px;
+    left: 12px;
+    right: 12px;
+    top: 12px;
     gap: 8px;
   }
 
   .brand-logo {
-    font-size: 1.05rem;
+    font-size: 1rem;
+    font-weight: 800;
   }
 
   .brand-badge {
-    font-size: 8px;
-    padding: 1px 6px;
-    letter-spacing: 0.5px;
-    margin-left: 4px;
+    display: none;
   }
 
   .nav-right-cluster {
-    gap: 5px;
+    gap: 6px;
   }
 
   .view-mode-pill {
@@ -3451,73 +3449,56 @@ input, textarea, select {
     gap: 5px;
   }
 
+  /* Hide overflowing desktop elements on mobile */
   .nav-cta-btn {
-    padding: 6px 12px;
-    font-size: 11px;
-    gap: 4px;
+    display: none !important;
   }
 
   .nav-links-wrap {
-    padding: 5px 12px;
-    gap: 12px;
-    border-radius: 16px;
+    display: none !important;
   }
 
-  .nav-link-btn {
-    font-size: 11px;
-    padding: 2px 4px;
-  }
-
-  /* 2. HERO SECTION */
+  /* 2. HERO SECTION (Minimal & Unobtrusive on Mobile) */
   .hero-container {
-    top: 18%;
-    width: 92%;
-    max-width: 92%;
+    top: 12%;
+    width: 88%;
+    max-width: 88%;
   }
 
   .hero-eyebrow {
-    font-size: 9.5px;
-    letter-spacing: 3px;
-    margin-bottom: 4px;
+    font-size: 8px;
+    letter-spacing: 2px;
+    margin-bottom: 2px;
   }
 
   .hero-title {
-    font-size: 2.3rem;
+    font-size: 1.7rem;
     letter-spacing: 2px;
     line-height: 1.1;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .hero-desc {
-    font-size: 12px;
-    line-height: 1.5;
-    margin-bottom: 12px;
-    max-width: 92%;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    display: none;
   }
 
   .hero-cta-btn {
-    padding: 9px 24px;
-    font-size: 11px;
-    letter-spacing: 1px;
+    display: none;
   }
 
   /* 3. SIDE PEEK NAVIGATION */
   .side-peek-btn {
-    top: 50%;
+    top: 45%;
     padding: 4px;
     gap: 0;
   }
 
   .side-peek-left {
-    left: 8px;
+    left: 6px;
   }
 
   .side-peek-right {
-    right: 8px;
+    right: 6px;
   }
 
   .side-peek-btn span {
@@ -3525,86 +3506,192 @@ input, textarea, select {
   }
 
   .side-peek-preview {
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
   }
 
-  /* 4. FLOATING HUD CONTROLS */
+  /* 4. HIDE DESKTOP FLOATING CONTROLS & DOCK ON MOBILE */
   .floating-dhani-launcher {
-    bottom: 74px;
-    left: 10px;
-    padding: 5px 12px 5px 6px;
-    gap: 6px;
-  }
-
-  .floating-dhani-avatar {
-    width: 28px;
-    height: 28px;
-    font-size: 13px;
-  }
-
-  .floating-dhani-title {
-    font-size: 11px;
-  }
-
-  .floating-dhani-sub {
-    display: none;
+    display: none !important;
   }
 
   .camera-hud-controls {
-    bottom: 74px;
-    right: 10px;
-    gap: 6px;
-  }
-
-  .cam-tool-btn {
-    width: 35px;
-    height: 35px;
-    font-size: 13px;
+    display: none !important;
   }
 
   .lanterns-sky-tray {
-    bottom: 125px;
-    right: 10px;
-    padding: 5px 11px;
-    gap: 6px;
+    display: none !important;
   }
 
-  .tray-flame {
-    font-size: 14px;
-  }
-
-  .tray-title {
-    font-size: 10.5px;
-  }
-
-  /* 5. STELLARIUM DOCK (Smooth Horizontal Scroll on Mobile) */
   .stellarium-dock {
-    bottom: 12px;
-    width: 95vw;
-    max-width: 95vw;
-    padding: 6px 8px;
-    gap: 6px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    border-radius: 18px;
-    justify-content: flex-start;
+    display: none !important;
   }
 
-  .stellarium-dock::-webkit-scrollbar {
-    display: none;
+  /* 5. MOBILE BOTTOM NAVIGATION DOCK */
+  .mobile-bottom-dock {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 62px;
+    z-index: 90;
+    background: rgba(8, 14, 30, 0.94);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    align-items: center;
+    justify-content: space-around;
+    padding: 3px 6px env(safe-area-inset-bottom, 6px);
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
 
-  .dock-btn {
-    padding: 5px 10px;
-    font-size: 10.5px;
-    white-space: nowrap;
-    flex-shrink: 0;
+  .mobile-bottom-dock.drawer-opened {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
   }
 
-  .dock-divider {
-    flex-shrink: 0;
+  .mobile-dock-btn {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    padding: 6px 0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-dock-btn:active {
+    transform: scale(0.92);
+  }
+
+  .mobile-dock-icon {
+    font-size: 19px;
+    line-height: 1;
+  }
+
+  .mobile-dock-label {
+    font-size: 9.5px;
+    letter-spacing: 0.2px;
+  }
+
+  .mobile-dock-btn.active {
+    color: #38bdf8;
+  }
+
+  .mobile-dock-btn.mobile-dock-highlight {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(56, 189, 248, 0.2));
+    border: 1px solid rgba(236, 72, 153, 0.4);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(236, 72, 153, 0.25);
+  }
+
+  /* 6. MOBILE MENU BOTTOM SHEET */
+  .mobile-menu-backdrop {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    background: rgba(3, 7, 18, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    padding: 0;
+  }
+
+  .mobile-menu-backdrop.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .mobile-menu-sheet {
+    width: 100%;
+    max-width: 500px;
+    background: #0d1428;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px 24px 0 0;
+    padding: 20px 16px env(safe-area-inset-bottom, 24px);
+    box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobile-menu-backdrop.show .mobile-menu-sheet {
+    transform: translateY(0);
+  }
+
+  .mobile-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-sheet-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .mobile-sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .mobile-feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #ffffff;
+  }
+
+  .mobile-feature-card:active {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #38bdf8;
+    transform: scale(0.97);
+  }
+
+  .feature-card-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+
+  .feature-card-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .feature-card-sub {
+    font-size: 9.5px;
+    color: #94a3b8;
   }
 
   /* 6. INFO DRAWER */
