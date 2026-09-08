@@ -41,6 +41,8 @@ type PlanetName =
   | "Uranus"
   | "Neptunus";
 
+type LayoutMode = "orbit" | "linear";
+
 const ORDER: PlanetName[] = [
   "Matahari",
   "Merkurius",
@@ -52,6 +54,18 @@ const ORDER: PlanetName[] = [
   "Uranus",
   "Neptunus",
 ];
+
+const LINEAR_COORDS: Record<PlanetName, number> = {
+  Matahari: 0,
+  Merkurius: 65,
+  Venus: 130,
+  Bumi: 200,
+  Mars: 275,
+  Yupiter: 385,
+  Saturnus: 520,
+  Uranus: 655,
+  Neptunus: 790,
+};
 
 const DATA: Record<PlanetName, PlanetInfo> = {
   Matahari: {
@@ -274,6 +288,7 @@ export default function Home() {
   const [activePlanetName, setActivePlanetName] = useState<PlanetName>("Bumi");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"science" | "lab" | "love">("science");
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>("orbit");
   const [userWeight, setUserWeight] = useState<number>(45);
   const [userAge, setUserAge] = useState<number>(20);
 
@@ -318,12 +333,18 @@ export default function Home() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
   const triggerSatelliteLaunchRef = useRef<() => void>(() => {});
+  const switchLayoutModeRef = useRef<(mode: LayoutMode) => void>(() => {});
   const zoomInRef = useRef<() => void>(() => {});
   const zoomOutRef = useRef<() => void>(() => {});
   const resetViewRef = useRef<() => void>(() => {});
 
+  const layoutModeRef = useRef<LayoutMode>("orbit");
   const timeMultiplierRef = useRef<number>(1);
   const skyDomeMeshRef = useRef<THREE.Mesh | null>(null);
+
+  useEffect(() => {
+    layoutModeRef.current = layoutMode;
+  }, [layoutMode]);
 
   useEffect(() => {
     timeMultiplierRef.current = timeMultiplier;
@@ -656,6 +677,7 @@ export default function Home() {
     const planetGroupMap: Record<string, THREE.Group> = {};
     const planetBodyMap: Record<string, THREE.Group> = {};
     const planetSphereMap: Record<string, THREE.Mesh> = {};
+    const orbitLineMap: Record<string, THREE.Line> = {};
     const clickablePlanetMeshes: THREE.Object3D[] = [];
     const planetAngles: Record<string, number> = {};
 
@@ -691,11 +713,11 @@ export default function Home() {
         });
         const orbitLine = new THREE.Line(orbitGeo, orbitMat);
         pivotGrp.add(orbitLine);
+        orbitLineMap[name] = orbitLine;
       }
 
-      // Planet Body Group (Translates along the orbit)
+      // Planet Body Group (Translates along orbit or linear position)
       const bodyGrp = new THREE.Group();
-      // Initial spread angle along orbit
       const initAngle = (ORDER.indexOf(name) * Math.PI * 2) / 9;
       planetAngles[name] = initAngle;
       bodyGrp.position.set(
@@ -845,31 +867,156 @@ export default function Home() {
       playSfx("whoosh");
 
       const d = DATA[name];
-      const targetBody = planetBodyMap[name];
-      const worldPos = new THREE.Vector3();
-      targetBody.getWorldPosition(worldPos);
 
-      inspectLight.position.set(worldPos.x + 25, worldPos.y + 25, worldPos.z + 30);
+      if (layoutModeRef.current === "linear") {
+        const posX = LINEAR_COORDS[name];
+        inspectLight.position.set(posX + 25, 25, 30);
 
-      gsap.to(controls.target, {
-        x: worldPos.x,
-        y: worldPos.y,
-        z: worldPos.z,
-        duration: 1.4,
-        ease: "power3.inOut",
-      });
+        gsap.to(controls.target, {
+          x: posX,
+          y: 0,
+          z: 0,
+          duration: 1.3,
+          ease: "power3.inOut",
+        });
 
-      gsap.to(camera.position, {
-        x: worldPos.x,
-        y: worldPos.y + d.size * 0.45,
-        z: worldPos.z + d.size * 2.2,
-        duration: 1.4,
-        ease: "power3.inOut",
-      });
+        gsap.to(camera.position, {
+          x: posX,
+          y: d.size * 0.45,
+          z: d.size * 2.2,
+          duration: 1.3,
+          ease: "power3.inOut",
+        });
+      } else {
+        const targetBody = planetBodyMap[name];
+        const worldPos = new THREE.Vector3();
+        targetBody.getWorldPosition(worldPos);
+
+        inspectLight.position.set(worldPos.x + 25, worldPos.y + 25, worldPos.z + 30);
+
+        gsap.to(controls.target, {
+          x: worldPos.x,
+          y: worldPos.y,
+          z: worldPos.z,
+          duration: 1.3,
+          ease: "power3.inOut",
+        });
+
+        gsap.to(camera.position, {
+          x: worldPos.x,
+          y: worldPos.y + d.size * 0.45,
+          z: worldPos.z + d.size * 2.2,
+          duration: 1.3,
+          ease: "power3.inOut",
+        });
+      }
 
       setActivePlanetName(name);
     }
     navigateToPlanetRef.current = navigateToPlanet;
+
+    // DUAL MODE SWITCHER (Orbit 3D vs Berjajar Linear)
+    const switchLayoutMode = (mode: LayoutMode) => {
+      playSfx("whoosh");
+      layoutModeRef.current = mode;
+      setLayoutMode(mode);
+
+      if (mode === "linear") {
+        // Hide orbital rings and asteroid belt
+        Object.values(orbitLineMap).forEach((line) => {
+          line.visible = false;
+        });
+        if (asteroidInstanced) asteroidInstanced.visible = false;
+
+        // Animate all planets to linear position along X-axis
+        ORDER.forEach((name) => {
+          const pivot = planetGroupMap[name];
+          if (pivot) {
+            gsap.to(pivot.rotation, { x: 0, duration: 1.0, ease: "power2.inOut" });
+          }
+          const body = planetBodyMap[name];
+          if (body) {
+            const targetX = LINEAR_COORDS[name];
+            gsap.to(body.position, {
+              x: targetX,
+              y: 0,
+              z: 0,
+              duration: 1.2,
+              ease: "power3.inOut",
+            });
+          }
+        });
+
+        // Reposition camera and controls to active planet in linear layout
+        const activeX = LINEAR_COORDS[activeKey];
+        const d = DATA[activeKey];
+        inspectLight.position.set(activeX + 25, 25, 30);
+        gsap.to(controls.target, { x: activeX, y: 0, z: 0, duration: 1.2, ease: "power3.inOut" });
+        gsap.to(camera.position, {
+          x: activeX,
+          y: d.size * 0.45,
+          z: d.size * 2.2,
+          duration: 1.2,
+          ease: "power3.inOut",
+        });
+      } else {
+        // Orbit mode: restore orbital lines and asteroid belt
+        Object.values(orbitLineMap).forEach((line) => {
+          line.visible = true;
+        });
+        if (asteroidInstanced) asteroidInstanced.visible = true;
+
+        // Restore pivot inclination and orbital positions
+        ORDER.forEach((name) => {
+          const d = DATA[name];
+          const pivot = planetGroupMap[name];
+          if (pivot) {
+            gsap.to(pivot.rotation, {
+              x: THREE.MathUtils.degToRad(d.inclination),
+              duration: 1.0,
+              ease: "power2.inOut",
+            });
+          }
+          const body = planetBodyMap[name];
+          if (body && d.orbitRadius > 0) {
+            const curAng = planetAngles[name];
+            gsap.to(body.position, {
+              x: Math.cos(curAng) * d.orbitRadius,
+              y: 0,
+              z: Math.sin(curAng) * d.orbitRadius,
+              duration: 1.2,
+              ease: "power3.inOut",
+            });
+          }
+        });
+
+        // Reposition camera and controls to active planet in orbit layout
+        setTimeout(() => {
+          const targetBody = planetBodyMap[activeKey];
+          if (targetBody) {
+            const worldPos = new THREE.Vector3();
+            targetBody.getWorldPosition(worldPos);
+            const d = DATA[activeKey];
+            inspectLight.position.set(worldPos.x + 25, worldPos.y + 25, worldPos.z + 30);
+            gsap.to(controls.target, {
+              x: worldPos.x,
+              y: worldPos.y,
+              z: worldPos.z,
+              duration: 1.2,
+              ease: "power3.inOut",
+            });
+            gsap.to(camera.position, {
+              x: worldPos.x,
+              y: worldPos.y + d.size * 0.45,
+              z: worldPos.z + d.size * 2.2,
+              duration: 1.2,
+              ease: "power3.inOut",
+            });
+          }
+        }, 120);
+      }
+    };
+    switchLayoutModeRef.current = switchLayoutMode;
 
     zoomInRef.current = () => {
       playSfx("click");
@@ -898,24 +1045,43 @@ export default function Home() {
     resetViewRef.current = () => {
       playSfx("whoosh");
       const d = DATA[activeKey];
-      const targetBody = planetBodyMap[activeKey];
-      const worldPos = new THREE.Vector3();
-      targetBody.getWorldPosition(worldPos);
 
-      gsap.to(controls.target, {
-        x: worldPos.x,
-        y: worldPos.y,
-        z: worldPos.z,
-        duration: 1.0,
-        ease: "power3.inOut",
-      });
-      gsap.to(camera.position, {
-        x: worldPos.x,
-        y: worldPos.y + d.size * 0.45,
-        z: worldPos.z + d.size * 2.2,
-        duration: 1.0,
-        ease: "power3.inOut",
-      });
+      if (layoutModeRef.current === "linear") {
+        const posX = LINEAR_COORDS[activeKey];
+        gsap.to(controls.target, {
+          x: posX,
+          y: 0,
+          z: 0,
+          duration: 1.0,
+          ease: "power3.inOut",
+        });
+        gsap.to(camera.position, {
+          x: posX,
+          y: d.size * 0.45,
+          z: d.size * 2.2,
+          duration: 1.0,
+          ease: "power3.inOut",
+        });
+      } else {
+        const targetBody = planetBodyMap[activeKey];
+        const worldPos = new THREE.Vector3();
+        targetBody.getWorldPosition(worldPos);
+
+        gsap.to(controls.target, {
+          x: worldPos.x,
+          y: worldPos.y,
+          z: worldPos.z,
+          duration: 1.0,
+          ease: "power3.inOut",
+        });
+        gsap.to(camera.position, {
+          x: worldPos.x,
+          y: worldPos.y + d.size * 0.45,
+          z: worldPos.z + d.size * 2.2,
+          duration: 1.0,
+          ease: "power3.inOut",
+        });
+      }
     };
 
     // 7. RAYCASTER FOR INTERACTIVE 3D PLANET CLICKS
@@ -989,24 +1155,26 @@ export default function Home() {
         skyDomeMeshRef.current.rotation.y = t * 0.0003;
       }
 
-      // Asteroid belt orbital motion
-      for (let i = 0; i < asteroidCount; i++) {
-        const a = asteroidData[i];
-        a.angle += a.speed * speedFactor;
-        dummyObj.position.set(Math.cos(a.angle) * a.radius, a.yOffset, Math.sin(a.angle) * a.radius);
-        dummyObj.updateMatrix();
-        asteroidInstanced.setMatrixAt(i, dummyObj.matrix);
+      // Asteroid belt orbital motion (only in orbit mode)
+      if (layoutModeRef.current === "orbit" && asteroidInstanced.visible) {
+        for (let i = 0; i < asteroidCount; i++) {
+          const a = asteroidData[i];
+          a.angle += a.speed * speedFactor;
+          dummyObj.position.set(Math.cos(a.angle) * a.radius, a.yOffset, Math.sin(a.angle) * a.radius);
+          dummyObj.updateMatrix();
+          asteroidInstanced.setMatrixAt(i, dummyObj.matrix);
+        }
+        asteroidInstanced.instanceMatrix.needsUpdate = true;
       }
-      asteroidInstanced.instanceMatrix.needsUpdate = true;
 
-      // Real Keplerian Orbital Motions & Axial Rotations
+      // Planetary Motions & Rotations
       ORDER.forEach((name) => {
         const d = DATA[name];
         const bodyGrp = planetBodyMap[name];
         const sphere = planetSphereMap[name];
 
-        if (d.orbitRadius > 0 && bodyGrp) {
-          // Keplerian orbital speed (inversely proportional to orbital period)
+        // Orbit motion only in orbit layout mode
+        if (layoutModeRef.current === "orbit" && d.orbitRadius > 0 && bodyGrp) {
           const orbitSpeed = (365.25 / d.orbitDays) * 0.012 * speedFactor;
           planetAngles[name] += orbitSpeed;
           const curAng = planetAngles[name];
@@ -1017,7 +1185,7 @@ export default function Home() {
           );
         }
 
-        // Axial Spin
+        // Axial Spin (Rotasi pada poros)
         if (sphere) {
           const spinSpeed = (24.0 / d.rotationHours) * 0.02 * speedFactor;
           sphere.rotation.y += spinSpeed;
@@ -1039,7 +1207,7 @@ export default function Home() {
         }
       });
 
-      // Active Satellites Orbiting active planet
+      // Active Satellites
       activeSatellites.forEach((sat) => {
         const u = sat.userData;
         const targetBody = planetBodyMap[u.targetPlanet];
@@ -1055,12 +1223,14 @@ export default function Home() {
         }
       });
 
-      // Smooth tracking of active planet if user is observing it
-      const activeBody = planetBodyMap[activeKey];
-      if (activeBody) {
-        const targetPos = new THREE.Vector3();
-        activeBody.getWorldPosition(targetPos);
-        controls.target.lerp(targetPos, 0.08);
+      // Smooth tracking of active planet in orbit mode
+      if (layoutModeRef.current === "orbit") {
+        const activeBody = planetBodyMap[activeKey];
+        if (activeBody) {
+          const targetPos = new THREE.Vector3();
+          activeBody.getWorldPosition(targetPos);
+          controls.target.lerp(targetPos, 0.08);
+        }
       }
 
       controls.update();
@@ -1157,6 +1327,18 @@ export default function Home() {
         </div>
 
         <div className="nav-right-cluster">
+          {/* LAYOUT MODE TOGGLE (Orbit 3D vs Berjajar) */}
+          <button
+            className={`view-mode-pill ${layoutMode === "linear" ? "active" : ""}`}
+            onClick={() => {
+              const nextMode = layoutMode === "orbit" ? "linear" : "orbit";
+              switchLayoutModeRef.current(nextMode);
+            }}
+            title="Ganti Mode Tampilan (Orbit 3D / Berjajar Sejajar)"
+          >
+            {layoutMode === "orbit" ? "🪐 Mode: Orbit 3D" : "📏 Mode: Berjajar"}
+          </button>
+
           {/* BACKGROUND MUSIC TOGGLE */}
           <button
             className={`audio-toggle-btn ${isAudioPlaying ? "playing" : ""}`}
@@ -1183,7 +1365,7 @@ export default function Home() {
             }}
             title="Buka Simulasi Orbit Real-Time Solar System Scope"
           >
-            🪐 Live Orrery 3D
+            🔭 Live Orrery 3D
           </button>
 
           <button
@@ -1287,6 +1469,25 @@ export default function Home() {
 
       {/* STELLARIUM DOCK */}
       <div className={`stellarium-dock ${drawerOpen ? "hidden-dock" : ""}`}>
+        {/* Layout Mode Selector in Dock */}
+        <button
+          className={`dock-btn ${layoutMode === "orbit" ? "active" : ""}`}
+          onClick={() => switchLayoutModeRef.current("orbit")}
+          title="Mode Orbit Heliosentris 3D Realistis"
+        >
+          🪐 Orbit 3D
+        </button>
+
+        <button
+          className={`dock-btn ${layoutMode === "linear" ? "active" : ""}`}
+          onClick={() => switchLayoutModeRef.current("linear")}
+          title="Mode Berjajar Sejajar (Perbandingan Planet)"
+        >
+          📏 Berjajar
+        </button>
+
+        <div className="dock-divider"></div>
+
         <button
           className={`dock-btn ${showMilkyWay ? "active" : ""}`}
           onClick={() => {
