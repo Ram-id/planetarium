@@ -898,8 +898,39 @@ export default function Home() {
     if (!canvasRef.current) return;
     playSfx("polaroid");
     try {
-      const dataUrl = canvasRef.current.toDataURL("image/png");
-      setPolaroidImgUrl(dataUrl);
+      const srcCanvas = canvasRef.current;
+      const srcW = srcCanvas.width;
+      const srcH = srcCanvas.height;
+      const squareSize = Math.min(srcW, srcH);
+      const sx = (srcW - squareSize) / 2;
+      const sy = (srcH - squareSize) / 2;
+
+      // Render crisp 1:1 square image so planets never get squished/stretched
+      const squareCanvas = document.createElement("canvas");
+      squareCanvas.width = 1080;
+      squareCanvas.height = 1080;
+      const sqCtx = squareCanvas.getContext("2d");
+      if (sqCtx) {
+        sqCtx.imageSmoothingEnabled = true;
+        sqCtx.imageSmoothingQuality = "high";
+        sqCtx.drawImage(
+          srcCanvas,
+          sx,
+          sy,
+          squareSize,
+          squareSize,
+          0,
+          0,
+          1080,
+          1080
+        );
+        const dataUrl = squareCanvas.toDataURL("image/png");
+        setPolaroidImgUrl(dataUrl);
+      } else {
+        const dataUrl = srcCanvas.toDataURL("image/png");
+        setPolaroidImgUrl(dataUrl);
+      }
+
       setPolaroidCaption(`Bersama ${activePlanetName} — Di Bawah Langit Semesta ✨`);
       setShowPolaroidModal(true);
       showToast(`📸 Mengabadikan momen kosmik di orbit ${activePlanetName}...`);
@@ -945,22 +976,31 @@ export default function Home() {
         ctx.filter = "none";
       }
 
-      ctx.drawImage(img, 50, 50, 800, 800);
+      // Maintain perfect 1:1 square aspect ratio without stretching/distorting
+      const imgW = img.naturalWidth || img.width;
+      const imgH = img.naturalHeight || img.height;
+      const cropSize = Math.min(imgW, imgH);
+      const sx = (imgW - cropSize) / 2;
+      const sy = (imgH - cropSize) / 2;
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, sx, sy, cropSize, cropSize, 50, 50, 800, 800);
       ctx.filter = "none";
 
       // Badge Stamp on Photo Top-Right
       ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
       if (ctx.roundRect) {
         ctx.beginPath();
-        ctx.roundRect(580, 70, 250, 44, 8);
+        ctx.roundRect(560, 70, 270, 44, 8);
         ctx.fill();
       } else {
-        ctx.fillRect(580, 70, 250, 44);
+        ctx.fillRect(560, 70, 270, 44);
       }
       ctx.fillStyle = "#38bdf8";
-      ctx.font = "bold 17px sans-serif";
+      ctx.font = "bold 16px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(`🪐 ${activePlanetName} • ${DATA[activePlanetName].realAU}`, 705, 98);
+      ctx.fillText(`🪐 ${activePlanetName} • ${DATA[activePlanetName].realAU}`, 695, 98);
 
       // Handwritten Caption
       ctx.fillStyle = "#1e293b";
