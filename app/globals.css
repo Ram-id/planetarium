@@ -1591,6 +1591,496 @@ html, body {
 }
 
 /* ===================================================
+   DEDICATED LANTERN SANCTUARY ROOM (RUANG LAMPION HARAPAN)
+   =================================================== */
+
+.sanctuary-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(4, 7, 20, 0.95);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 16px;
+}
+
+.sanctuary-modal-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sanctuary-room-window {
+  width: 96vw;
+  max-width: 1240px;
+  height: 90vh;
+  max-height: 880px;
+  background: radial-gradient(circle at 50% 10%, #171d42 0%, #0c102b 50%, #040716 100%);
+  border: 1px solid rgba(251, 146, 60, 0.35);
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 50px rgba(251, 146, 60, 0.15);
+  position: relative;
+  animation: modalScaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sanctuary-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: rgba(10, 15, 38, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 10;
+}
+
+.sanctuary-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sanctuary-icon-glow {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f97316, #ec4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+  flex-shrink: 0;
+}
+
+.sanctuary-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.sanctuary-subtitle {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin: 2px 0 0 0;
+}
+
+.sanctuary-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sanctuary-nav-tabs {
+  display: flex;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 4px;
+}
+
+.sanctuary-tab-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sanctuary-tab-btn.active {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.35), rgba(236, 72, 153, 0.35));
+  color: #fed7aa;
+  border: 1px solid rgba(249, 115, 22, 0.55);
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.25);
+}
+
+.sanctuary-ignite-btn {
+  background: linear-gradient(135deg, #f97316, #ef4444);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+  transition: all 0.25s ease;
+}
+
+.sanctuary-ignite-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 0 30px rgba(249, 115, 22, 0.65);
+}
+
+.sanctuary-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sanctuary-close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.sanctuary-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.sanctuary-sky-view {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.sanctuary-sky-canvas {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 100%, #1e1b4b 0%, #0c102a 40%, #030511 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sanctuary-stars-bg {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                    radial-gradient(1.5px 1.5px at 100px 150px, #fbcfe8, rgba(0,0,0,0)),
+                    radial-gradient(1px 1px at 250px 80px, #fed7aa, rgba(0,0,0,0)),
+                    radial-gradient(2px 2px at 400px 220px, #e0e7ff, rgba(0,0,0,0)),
+                    radial-gradient(1px 1px at 600px 120px, #fdf4ff, rgba(0,0,0,0)),
+                    radial-gradient(1.5px 1.5px at 800px 300px, #fed7aa, rgba(0,0,0,0));
+  background-size: 550px 550px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.sanctuary-aurora-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: radial-gradient(ellipse at 50% 120%, rgba(249, 115, 22, 0.2), rgba(236, 72, 153, 0.14), transparent 70%);
+  pointer-events: none;
+}
+
+.sanctuary-sky-prompt-bar {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(251, 146, 60, 0.35);
+  color: #fed7aa;
+  padding: 7px 20px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
+  z-index: 5;
+  pointer-events: none;
+  text-align: center;
+  max-width: 90%;
+}
+
+.sanctuary-lanterns-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+}
+
+.sanctuary-floating-lantern {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: sanctuaryFloatKeyframes ease-in-out infinite alternate;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.2s;
+  z-index: 2;
+}
+
+.sanctuary-floating-lantern:hover {
+  transform: translate(-50%, -50%) scale(1.18);
+  z-index: 20;
+}
+
+@keyframes sanctuaryFloatKeyframes {
+  0% {
+    transform: translate(-50%, -50%) translateY(0px) rotate(-2deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(-24px) rotate(2deg);
+  }
+}
+
+.sanctuary-floating-lantern .lantern-bulb {
+  width: 48px;
+  height: 58px;
+  border-radius: 18px 18px 22px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.sanctuary-floating-lantern .lantern-emoji {
+  font-size: 26px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+}
+
+.sanctuary-floating-lantern .lantern-sparkle-halo {
+  position: absolute;
+  inset: -6px;
+  border-radius: 24px;
+  border: 1px dashed;
+  opacity: 0.6;
+  animation: rotateHalo 8s linear infinite;
+}
+
+.sanctuary-floating-lantern .lantern-floating-tag {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 4px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  max-width: 170px;
+  text-align: center;
+}
+
+.sanctuary-floating-lantern .lantern-tag-author {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.sanctuary-floating-lantern .lantern-tag-snippet {
+  font-size: 9.5px;
+  color: #cbd5e1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.sanctuary-floating-lantern .lantern-tag-likes {
+  font-size: 9px;
+  color: #f472b6;
+  font-weight: 600;
+}
+
+.sanctuary-bottom-cta {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+.sanctuary-floating-ignite-cta {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.92), rgba(236, 72, 153, 0.92));
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 10px 24px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 25px rgba(249, 115, 22, 0.55);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.sanctuary-floating-ignite-cta:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 30px rgba(249, 115, 22, 0.75);
+}
+
+.sanctuary-archive-view {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sanctuary-archive-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sanctuary-archive-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.sanctuary-archive-header p {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.sanctuary-archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.sanctuary-archive-card {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sanctuary-archive-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(249, 115, 22, 0.45);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(249, 115, 22, 0.2);
+  background: rgba(30, 41, 59, 0.85);
+}
+
+.archive-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.archive-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.archive-date {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.archive-quote {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #ffffff;
+  font-style: italic;
+}
+
+.archive-blessing {
+  background: rgba(244, 114, 182, 0.1);
+  border-left: 3px solid #f472b6;
+  padding: 8px 12px;
+  border-radius: 0 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.blessing-author {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f472b6;
+}
+
+.blessing-text {
+  font-size: 11.5px;
+  color: #e2e8f0;
+  line-height: 1.45;
+}
+
+.archive-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.archive-author {
+  font-size: 11.5px;
+  color: #cbd5e1;
+}
+
+.archive-like-btn {
+  background: rgba(244, 114, 182, 0.15);
+  border: 1px solid rgba(244, 114, 182, 0.35);
+  color: #f472b6;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.archive-like-btn:hover {
+  background: rgba(244, 114, 182, 0.3);
+  transform: scale(1.08);
+}
+
+/* ===================================================
    FEATURE 1: COSMIC SKY LANTERNS (LAMPION HARAPAN KOSMIK)
    =================================================== */
 
@@ -3305,6 +3795,90 @@ html, body {
   .lantern-actions-row {
     flex-direction: column;
     gap: 8px;
+  }
+
+  .sanctuary-room-window {
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+
+  .sanctuary-header {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .sanctuary-icon-glow {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+
+  .sanctuary-title {
+    font-size: 14.5px;
+  }
+
+  .sanctuary-subtitle {
+    font-size: 10.5px;
+    line-height: 1.3;
+  }
+
+  .sanctuary-header-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .sanctuary-nav-tabs {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .sanctuary-tab-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .sanctuary-ignite-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .sanctuary-close-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .sanctuary-sky-prompt-bar {
+    top: 10px;
+    font-size: 10px;
+    padding: 6px 12px;
+    width: 92%;
+  }
+
+  .sanctuary-bottom-cta {
+    bottom: 16px;
+    width: 90%;
+  }
+
+  .sanctuary-floating-ignite-cta {
+    width: 100%;
+    font-size: 11.5px;
+    padding: 9px 14px;
+    text-align: center;
+  }
+
+  .sanctuary-archive-view {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .sanctuary-archive-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .polaroid-modal-window {
