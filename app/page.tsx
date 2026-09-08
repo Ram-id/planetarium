@@ -248,10 +248,10 @@ export default function Home() {
   // Solar System Scope Orrery Modal state
   const [showOrreryModal, setShowOrreryModal] = useState(false);
 
-  const [showCosmoModal, setShowCosmoModal] = useState(false);
-  const [cosmoInput, setCosmoInput] = useState("");
-  const [cosmoReply, setCosmoReply] = useState("");
-  const [cosmoLoading, setCosmoLoading] = useState(false);
+  const [showDhaniModal, setShowDhaniModal] = useState(false);
+  const [dhaniInput, setDhaniInput] = useState("");
+  const [dhaniReply, setDhaniReply] = useState("");
+  const [dhaniLoading, setDhaniLoading] = useState(false);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const navigateToPlanetRef = useRef<(name: PlanetName) => void>(() => {});
@@ -340,11 +340,11 @@ export default function Home() {
     } catch {}
   };
 
-  const askCosmo = async (customPrompt?: string) => {
-    const query = customPrompt || cosmoInput;
+  const askDhani = async (customPrompt?: string) => {
+    const query = customPrompt || dhaniInput;
     if (!query) return;
-    setCosmoLoading(true);
-    setCosmoReply("");
+    setDhaniLoading(true);
+    setDhaniReply("");
     playSfx("click");
 
     try {
@@ -359,14 +359,14 @@ export default function Home() {
       });
       const data = await res.json();
       if (data.reply) {
-        setCosmoReply(data.reply);
+        setDhaniReply(data.reply);
       } else {
-        setCosmoReply(data.error || "Sinyal radio terganggu medan magnet kosmik.");
+        setDhaniReply(data.error || "Mas Dhani lagi di sini nemenin kamu, Nana sayang!");
       }
     } catch {
-      setCosmoReply("Cosmo: Langit antariksa sangat cerah hari ini, Nana!");
+      setDhaniReply("Halo Nana sayang! ✨ Mas Dhani lagi di sini nemenin kamu. Sinyal antariksa sempat berkedip, tapi tanyakan apa saja lagi ya, Mas siap jawab! 🪐💖");
     } finally {
-      setCosmoLoading(false);
+      setDhaniLoading(false);
     }
   };
 
@@ -893,10 +893,10 @@ export default function Home() {
             className="nav-cta-btn"
             onClick={() => {
               playSfx("click");
-              setShowCosmoModal(true);
+              setShowDhaniModal(true);
             }}
           >
-            Ask Cosmo AI
+            💬 Tanya Mas Dhani
           </button>
         </div>
       </nav>
@@ -1235,46 +1235,126 @@ export default function Home() {
         </div>
       </div>
 
-      {/* AI COSMO MODAL */}
-      <div id="cosmo-modal" className={showCosmoModal ? "show" : ""}>
-        <div className="cosmo-dialog">
+      {/* TANYA MAS DHANI MODAL */}
+      <div id="cosmo-modal" className={showDhaniModal ? "show" : ""}>
+        <div className="masdhani-dialog">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "#ffffff" }}>
-              Cosmo AI — Asisten Antariksa
-            </h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div className="masdhani-avatar">🪐</div>
+              <div>
+                <h3 style={{ fontSize: "1.15rem", fontWeight: 700, color: "#ffffff", letterSpacing: "0.5px" }}>
+                  Tanya Mas Dhani ✨
+                </h3>
+                <div style={{ fontSize: "11px", color: "#f472b6", fontWeight: 600 }}>
+                  Observatorium & Ruang Obrolan Khusus Nana
+                </div>
+              </div>
+            </div>
             <button
-              style={{ background: "none", border: "none", color: "#94a3b8", cursor: "pointer", fontSize: "16px" }}
-              onClick={() => setShowCosmoModal(false)}
+              className="orrery-close-btn"
+              onClick={() => setShowDhaniModal(false)}
+              title="Tutup Obrolan"
             >
               ✕
             </button>
           </div>
 
-          <p style={{ fontSize: "12.5px", color: "#94a3b8" }}>
-            Tanyakan apa saja seputar misteri astronomi, rasi bintang Stellarium, atau fakta planet {activePlanetName}!
-          </p>
+          {/* WARM GREETING BUBBLE */}
+          <div className="masdhani-greeting-box">
+            <div style={{ fontSize: "20px" }}>💖</div>
+            <div>
+              <strong>Halo Nana sayang!</strong> Mau tahu atau nanya apa hari ini seputar keajaiban tata surya, rasi bintang, atau hal-hal seru lainnya? Mas Dhani siap temani dan ceritain semuanya buat kamu! ✨
+            </div>
+          </div>
 
+          {/* INTERACTIVE FAQ CHIPS */}
+          <div>
+            <div className="faq-title-label">💡 PILIHAN PERTANYAAN SERU UNTUK NANA:</div>
+            <div className="faq-chips-grid">
+              <button
+                className="faq-chip-btn"
+                onClick={() => {
+                  setDhaniInput("Kenapa Bumi jadi tempat paling istimewa di tata surya Mas?");
+                  askDhani("Kenapa Bumi jadi tempat paling istimewa di tata surya Mas?");
+                }}
+              >
+                🌍 Kenapa Bumi paling istimewa?
+              </button>
+              <button
+                className="faq-chip-btn"
+                onClick={() => {
+                  setDhaniInput("Cincin Saturnus itu terbuat dari apa sih Mas?");
+                  askDhani("Cincin Saturnus itu terbuat dari apa sih Mas?");
+                }}
+              >
+                👑 Cincin Saturnus dari apa?
+              </button>
+              <button
+                className="faq-chip-btn"
+                onClick={() => {
+                  setDhaniInput("Mas Dhani, kenapa kamu suka banget sama astronomi?");
+                  askDhani("Mas Dhani, kenapa kamu suka banget sama astronomi?");
+                }}
+              >
+                💖 Kenapa Mas suka astronomi?
+              </button>
+              <button
+                className="faq-chip-btn"
+                onClick={() => {
+                  setDhaniInput("Kalau kita liburan ke luar angkasa berdua, planet mana yang paling seru dikunjungi?");
+                  askDhani("Kalau kita liburan ke luar angkasa berdua, planet mana yang paling seru dikunjungi?");
+                }}
+              >
+                🚀 Rekomendasi liburan antariksa?
+              </button>
+              <button
+                className="faq-chip-btn"
+                onClick={() => {
+                  setDhaniInput("Kenapa Matahari bisa terus bersinar tanpa pernah padam?");
+                  askDhani("Kenapa Matahari bisa terus bersinar tanpa pernah padam?");
+                }}
+              >
+                ☀️ Kenapa Matahari nggak padam?
+              </button>
+              <button
+                className="faq-chip-btn"
+                onClick={() => {
+                  setDhaniInput(`Ceritain fakta paling keren dan romantis tentang planet ${activePlanetName} dong Mas!`);
+                  askDhani(`Ceritain fakta paling keren dan romantis tentang planet ${activePlanetName} dong Mas!`);
+                }}
+              >
+                🪐 Cerita seru tentang {activePlanetName}
+              </button>
+            </div>
+          </div>
+
+          {/* CUSTOM QUERY INPUT */}
           <div className="cosmo-input-row">
             <input
               type="text"
               className="cosmo-input-field"
-              placeholder="Tanyakan ke Cosmo..."
-              value={cosmoInput}
-              onChange={(e) => setCosmoInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && askCosmo()}
+              placeholder="Ketik pertanyaan apa saja untuk Mas Dhani..."
+              value={dhaniInput}
+              onChange={(e) => setDhaniInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && askDhani()}
             />
             <button
               className="cosmo-send-btn"
-              onClick={() => askCosmo()}
-              disabled={cosmoLoading}
+              onClick={() => askDhani()}
+              disabled={dhaniLoading}
+              style={{ background: "linear-gradient(135deg, #f472b6, #38bdf8)" }}
             >
-              {cosmoLoading ? "..." : "Tanya"}
+              {dhaniLoading ? "..." : "Tanya Mas"}
             </button>
           </div>
 
-          {cosmoReply && (
-            <div className="cosmo-feed">
-              {cosmoReply}
+          {/* MAS DHANI REPLY */}
+          {dhaniReply && (
+            <div className="masdhani-reply-bubble">
+              <div style={{ color: "#f472b6", fontWeight: 700, fontSize: "12px", marginBottom: "6px" }}>
+                💬 Mas Dhani:
+              </div>
+              {dhaniReply}
             </div>
           )}
         </div>
