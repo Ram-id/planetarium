@@ -594,48 +594,6 @@ export default function Home() {
     scene.add(constGroup);
     constellationGroupRef.current = constGroup;
 
-    // 3. SATURN RING TEXTURE
-    const createSaturnRingTexture = () => {
-      const size = 1024;
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return new THREE.Texture();
-
-      const cx = size / 2;
-      const cy = size / 2;
-      const rInner = size * 0.32;
-      const rOuter = size * 0.48;
-
-      const grad = ctx.createRadialGradient(cx, cy, rInner, cx, cy, rOuter);
-      grad.addColorStop(0.0, "rgba(224, 199, 150, 0.0)");
-      grad.addColorStop(0.04, "rgba(180, 160, 120, 0.5)");
-      grad.addColorStop(0.22, "rgba(215, 190, 145, 0.85)");
-      grad.addColorStop(0.55, "rgba(235, 210, 165, 0.95)");
-      grad.addColorStop(0.58, "rgba(20, 20, 20, 0.05)");
-      grad.addColorStop(0.64, "rgba(20, 20, 20, 0.05)");
-      grad.addColorStop(0.68, "rgba(200, 175, 135, 0.75)");
-      grad.addColorStop(0.92, "rgba(210, 185, 140, 0.65)");
-      grad.addColorStop(0.96, "rgba(180, 155, 115, 0.2)");
-      grad.addColorStop(1.0, "rgba(180, 155, 115, 0.0)");
-
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, rOuter, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.beginPath();
-      ctx.arc(cx, cy, rInner, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalCompositeOperation = "source-over";
-
-      const tex = new THREE.CanvasTexture(canvas);
-      tex.needsUpdate = true;
-      return tex;
-    };
-
     // 4. FULL LIVING SOLAR SYSTEM (All planets present in 3D space!)
     const planetMeshes: Record<string, THREE.Group> = {};
     const clickablePlanetMeshes: THREE.Object3D[] = [];
@@ -693,19 +651,46 @@ export default function Home() {
       }
 
       if (d.ring) {
-        const ringGeo = new THREE.PlaneGeometry(d.size * 2.8, d.size * 2.8);
-        const ringMat = new THREE.MeshBasicMaterial({
-          map: createSaturnRingTexture(),
+        const innerR = d.size * 1.24;
+        const outerR = d.size * 2.38;
+        const ringGeo = new THREE.RingGeometry(innerR, outerR, 128, 16);
+
+        // Map radial UV from [0, 1] across inner to outer radius
+        const posAttr = ringGeo.attributes.position;
+        const uvAttr = ringGeo.attributes.uv;
+        for (let i = 0; i < posAttr.count; i++) {
+          const x = posAttr.getX(i);
+          const y = posAttr.getY(i);
+          const r = Math.sqrt(x * x + y * y);
+          const u = (r - innerR) / (outerR - innerR);
+          uvAttr.setXY(i, u, 0.5);
+        }
+        uvAttr.needsUpdate = true;
+        ringGeo.rotateX(Math.PI / 2);
+
+        const ringTex = texLoader.load("/textures/saturn-ring.png");
+        ringTex.colorSpace = THREE.SRGBColorSpace;
+        ringTex.generateMipmaps = true;
+        ringTex.minFilter = THREE.LinearMipmapLinearFilter;
+        ringTex.magFilter = THREE.LinearFilter;
+
+        const ringMat = new THREE.MeshStandardMaterial({
+          map: ringTex,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.92,
-          depthWrite: false,
+          roughness: 0.65,
+          metalness: 0.05,
+          alphaTest: 0.02,
+          depthWrite: true,
         });
         const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-        ringMesh.rotation.x = Math.PI / 2.3;
         ringMesh.userData = { planetName: name, isRing: true };
         grp.add(ringMesh);
         clickablePlanetMeshes.push(ringMesh);
+
+        // Realistic Saturn axial tilt of ~26.7°
+        grp.rotation.z = THREE.MathUtils.degToRad(-26.7);
+        grp.rotation.x = THREE.MathUtils.degToRad(12.0);
       }
 
       scene.add(grp);
