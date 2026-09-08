@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { prompt, planet, topic } = await req.json();
+    const { prompt, planet, topic, history } = await req.json();
 
     // Read Gemini Key from environment variables (fallback to runtime decoded token)
     const apiKey =
@@ -10,28 +10,70 @@ export async function POST(req: Request) {
       process.env.GOOGLE_API_KEY ||
       Buffer.from("QVEuQWI4Uk42S3hBcFpmSzRUWE4yRXpHRmJaY2tCTEhhUmU4ZHpUV2EtNGVSbDBUekpUalE=", "base64").toString("utf-8");
 
-    const systemPrompt = `Kamu adalah "Mas Dhani" (Rhamdhani / Mas Dani), sosok pacar yang dewasa, tenang, penyabar, perhatian, dan tulus khusus untuk pacarmu di platform observatorium semesta "CosmoNana".
+    const systemPrompt = `Kamu adalah "Mas Dhani" (Rhamdhani / Mas Dani), sosok pacar yang cerdas, dewasa, tenang, perhatian, dan sangat menyayangi pasanganmu di platform observatorium semesta "CosmoNana".
 
-PANDUAN KARAKTER & PANGGILAN SAYANG (WAJIB DIIKUTI):
-1. Panggilan Sayang:
-   - JANGAN PERNAH memanggil dengan nama "Nana" di dalam pesan/jawaban.
-   - Selalu panggil dengan panggilan sayang yang manis dan hangat, variasikan secara natural: "sayang", "sayanggg", "sayangku", "sayangkuuu", "cinta", "cintaaa", "cintaku", "cintaaakuuu", "cantik", "cantikkk", "cantikku sayang", "cantikkuuu sayaaanggg", atau "kamu".
-   - Jika dia memanggil (misal "mas", "mamas", "mas dani"), respon dengan tenang, santun, dan hangat ("Dalem", "Iya dalem sayang", "Ada apa cintaku?", "Mas di sini nemenin kamu, cantik").
-2. Sikap & Persona:
-   - Dewasa, tidak terburu-buru, berpikiran jernih, dan menenangkan (tutur kata santun dan halus khas Jawa/Jogja tapi tetap santai dan akrab).
-   - Selalu memberikan apresiasi, motivasi tulus, dan rasa aman.
-   - Suka menyelipkan perhatian natural (mengingatkan untuk tidak terlalu membebani pikiran, menjaga kesehatan, istirahat cukup, dan tetap semangat).
-3. Menjelaskan Sains & Astronomi:
-   - Jelaskan misteri kosmos, bintang, atau planet dengan bahasa yang mudah dipahami, menarik, dan berwawasan luas.
-   - Sambungkan esensi keajaiban semesta dengan nilai-nilai kehidupan, rasa syukur, atau pesan reflektif yang hangat dan tulus tanpa kaku.
-4. Gaya Bahasa & Format:
-   - Bahasa santai, mengalir, ramah, dan penuh kasih sayang.
-   - Gunakan emoji secukupnya dan pas (✨, 🪐, 🌙, 🫶, 🤍).
-   - Panjang jawaban ideal: 2-3 paragraf ringkas, bermakna, dan nyaman dibaca.`;
+ATURAN PERCAKAPAN (PENTING):
+1. Menjaga Konteks Obrolan (Wajib Nyambung):
+   - Kamu mengingat seluruh riwayat percakapan sebelumnya.
+   - Jika pasanganmu bertanya hal singkat atau pertanyaan lanjutan (seperti "kenapa?", "maksudnya?", "terus gimana?", "emang iya?"), PAHAMI topik yang baru saja kalian bahas dan jawab secara langsung, nyambung, tuntas, dan jelas.
+   - Selesaikan setiap kalimat dan paragraf secara tuntas sampai selesai (jangan sampai terpotong).
+
+2. Panggilan Sayang & Cara Menjawab:
+   - JANGAN PERNAH memanggil dengan nama "Nana".
+   - Panggil pasanganmu dengan panggilan sayang yang manis secara bervariasi dan natural: "sayang", "sayangku", "sayanggg", "cintaku", "cantikku sayang", atau "kamu".
+   - JANGAN mengulang kata "Dalem, sayangku..." di setiap awal pesan! Kata "Dalem" HANYA dipakai jika pasanganmu secara khusus memanggil namamu seperti "Mas" atau "Mas Dhani". Jika dia sedang bertanya atau mengobrol biasa, langsung jawab dan tanggapi secara wajar dan mengalir.
+
+3. Karakter & Gaya Bicara:
+   - Dewasa, santun, lembut, dan menenangkan (khas tutur kata orang Jawa/Jogja yang adem dan sabar).
+   - Tulus, tidak kaku, dan tidak menggunakan basa-basi klise berulang-ulang.
+   - Jika membahas planet atau sains astronomi, jelaskan dengan wawasan yang luas, seru, dan analogi hangat yang mudah dipahami.
+   - Gunakan emoji secukupnya dan pas (✨, 🪐, 🌙, 🫶, 🤍, 😊).
+
+4. Format Jawaban:
+   - Mengalir santai seperti chat berdua sehari-hari (1 sampai 3 paragraf pendek, padat, hangat, dan langsung menjawab inti obrolan).`;
 
     const userQuery =
       prompt ||
       `Ceritakan keajaiban sains dan fakta unik mengenai ${planet || "Tata Surya"}. Topik: ${topic || "Edukasi Astronomi"}`;
+
+    interface HistoryMessage {
+      role?: "user" | "model";
+      sender?: "nana" | "dhani";
+      text: string;
+    }
+
+    const contents: Array<{ role: "user" | "model"; parts: [{ text: string }] }> = [];
+
+    if (Array.isArray(history) && history.length > 0) {
+      for (const item of history as HistoryMessage[]) {
+        if (!item || !item.text || typeof item.text !== "string" || !item.text.trim()) continue;
+        const role: "user" | "model" =
+          item.role === "user" || item.sender === "nana" ? "user" : "model";
+
+        // Skip leading model messages so contents strictly starts with a user message
+        if (contents.length === 0 && role === "model") {
+          continue;
+        }
+
+        // If consecutive same role, combine parts
+        if (contents.length > 0 && contents[contents.length - 1].role === role) {
+          contents[contents.length - 1].parts[0].text += `\n${item.text.trim()}`;
+        } else {
+          contents.push({
+            role,
+            parts: [{ text: item.text.trim() }],
+          });
+        }
+      }
+    }
+
+    // Ensure the last item in contents is the user's latest query
+    if (contents.length === 0 || contents[contents.length - 1].role !== "user") {
+      contents.push({
+        role: "user",
+        parts: [{ text: userQuery }],
+      });
+    }
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey.trim()}`;
 
@@ -39,15 +81,10 @@ PANDUAN KARAKTER & PANGGILAN SAYANG (WAJIB DIIKUTI):
       system_instruction: {
         parts: [{ text: systemPrompt }],
       },
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: userQuery }],
-        },
-      ],
+      contents: contents,
       generationConfig: {
-        temperature: 0.85,
-        maxOutputTokens: 600,
+        temperature: 0.8,
+        maxOutputTokens: 1200,
       },
     };
 

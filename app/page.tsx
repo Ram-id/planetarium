@@ -507,15 +507,16 @@ export default function Home() {
     const now = new Date();
     const timeStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
 
-    // Append Nana's outgoing message
+    // Append user outgoing message
     const userMsg: ChatMessage = {
-      id: `nana-${Date.now()}`,
+      id: `user-${Date.now()}`,
       sender: "nana",
       text: query,
       time: timeStr,
     };
 
-    setChatMessages((prev) => [...prev, userMsg]);
+    const nextHistory = [...chatMessages, userMsg];
+    setChatMessages(nextHistory);
     setDhaniInput("");
     setDhaniLoading(true);
     playSfx("click");
@@ -528,6 +529,11 @@ export default function Home() {
           prompt: query,
           planet: activePlanetName,
           topic: activeTab === "science" ? "Fakta Sains & Anatomi Planet" : "Refleksi Manis & Keajaiban Semesta",
+          history: nextHistory.slice(-8).map((m) => ({
+            role: m.sender === "nana" ? "user" : "model",
+            sender: m.sender,
+            text: m.text,
+          })),
         }),
       });
       const data = await res.json();
@@ -1300,7 +1306,7 @@ export default function Home() {
               <div className="chat-name-col">
                 <div className="chat-name-title">Mas Dhani 💖</div>
                 <div className="chat-status-subtitle">
-                  <span>●</span> Online • Siap nemenin Nana
+                  <span>●</span> Online • Selalu ada buat kamu
                 </div>
               </div>
             </div>
